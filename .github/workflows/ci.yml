@@ -7,6 +7,10 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  # SymPy's output can depend on hash order and on its ground types; pin both
+  # so the regenerated cases are byte-identical to the committed ones.
+  PYTHONHASHSEED: "0"
+  SYMPY_GROUND_TYPES: python
 
 jobs:
   rust:

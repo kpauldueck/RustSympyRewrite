@@ -70,7 +70,7 @@ def eq(a, b, want, why=None, assumptions=None):
     got = app_equivalent(_parse(a, assumptions), _parse(b, assumptions))
     assert got == want, (a, b, got)
     note = APP if why is None else f"{APP}; {why}"
-    return case("equivalent", [a, b], got, options=_options(assumptions), note=note)
+    return case("equivalent", [a, b], got, options=_options(assumptions), note=note, source="app")
 
 
 def spec_eq(a, b, want, why, assumptions=None, function=False):
@@ -152,7 +152,7 @@ def rel_app(a, b, want, why):
     got = app_relation(r1, r2)
     assert got == want, (a, b, got)
     _check_decided(r1, r2, want)
-    return case("equivalent_relation", [a, b], got, note=f"{APP} (one side, up to sign); {why}")
+    return case("equivalent_relation", [a, b], got, note=f"{APP} (one side, up to sign); {why}", source="app")
 
 
 def rel_set(a, b, want, why):
@@ -162,7 +162,7 @@ def rel_set(a, b, want, why):
     assert got == want, (a, b, got)
     return case(
         "equivalent_relation", [a, b], got,
-        note=f"same solution set over the reals (solveset); {why}",
+        note=f"same solution set over the reals (solveset); {why}", source="app",
     )
 
 

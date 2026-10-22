@@ -13,12 +13,23 @@ A case is one JSON object:
                   error kind (see below)
   expected_latex  SymPy's latex() of the answer, when it is an expression
   compare         exact | equivalent | set | antiderivative | error
-  source          "sympy": SymPy computed `expected` (the default)
-                  "spec":   we decided `expected` on purpose, because SymPy is
-                            wrong for students, has no such operation, or the
-                            homework app needs different behaviour. Spec cases
-                            carry `note` (why) and, where SymPy has a
-                            comparable call, `sympy_gives` (what it does).
+  source          where `expected` came from:
+                  "sympy": a SymPy call computed it (the default)
+                  "app":   SymPy pieces computed it, but the rule is ours or
+                           the homework app's (e.g. the app's answer-equivalence
+                           check), not one SymPy API; it is only as right as
+                           that rule
+                  "spec":  we decided it on purpose, because SymPy is wrong
+                           for students, has no such operation, or the app
+                           needs different behaviour. Spec cases carry `note`
+                           (why) and, where SymPy has a comparable call,
+                           `sympy_gives` (what it does).
+  profile         which rsympy profile must pass the case (docs/PLAN.md):
+                  "both":   the parity (`sympy`) and `strict` profiles agree
+                  "strict": only the strict profile; spec cases, and ops that
+                            exist only in the strict layer (STRICT_OPS)
+                  "parity": only the parity profile; for SymPy behaviour the
+                            strict profile deliberately changes
 
 Error kinds for compare="error" are "refused:<thing>", where <thing> is the
 LaTeX command or construct the parser refuses by name (e.g. "refused:\\overline",
@@ -27,6 +38,26 @@ than unsupported (e.g. "invalid:dimension_mismatch").
 """
 
 import sympy as sp
+
+# Ops that exist only in rsympy's strict layer: SymPy has no such call, so a
+# case using one can only bind the strict profile, whatever its source.
+STRICT_OPS = frozenset({
+    "equivalent",
+    "equivalent_relation",
+    "equivalent_factors",
+    "is_factored",
+    "is_expanded",
+    "is_simplified_fraction",
+    "is_slope_intercept",
+    "is_simplified_radical",
+    "parse_number",
+    "sig_figs",
+    "parse_quantity",
+    "quantity_equivalent",
+    "within_resolution",
+})
+SOURCES = ("sympy", "app", "spec")
+PROFILES = ("both", "strict", "parity")
 
 
 def _symbols_in(arg):
@@ -61,8 +92,20 @@ def _has_latex(value):
     return isinstance(value, sp.Basic) and not isinstance(value, sp.logic.boolalg.BooleanAtom)
 
 
-def case(op, args, result, compare="exact", *, options=None, note=None):
-    """A case whose expected answer SymPy computed (`result`)."""
+def case(op, args, result, compare="exact", *, options=None, note=None, source="sympy", profile=None):
+    """A case whose expected answer SymPy computed (`result`).
+
+    `source` is "sympy" or "app" (see the module docstring). `profile`
+    defaults to "strict" for STRICT_OPS and "both" otherwise.
+    """
+    if source not in ("sympy", "app"):
+        raise ValueError(f"case() source must be sympy or app, not {source!r}; use spec_case()")
+    if profile is None:
+        profile = "strict" if op in STRICT_OPS else "both"
+    if profile not in PROFILES:
+        raise ValueError(f"unknown profile {profile!r}")
+    if op in STRICT_OPS and profile != "strict":
+        raise ValueError(f"{op} exists only in the strict profile")
     out = {"op": op, "args": [_text(a) for a in args]}
     if options:
         out["options"] = options
@@ -73,7 +116,8 @@ def case(op, args, result, compare="exact", *, options=None, note=None):
     if _has_latex(result):
         out["expected_latex"] = sp.latex(result)
     out["compare"] = compare
-    out["source"] = "sympy"
+    out["source"] = source
+    out["profile"] = profile
     if note:
         out["note"] = note
     return out
@@ -105,6 +149,7 @@ def spec_case(op, args, expected, note, compare="exact", *, options=None, sympy_
         out["expected_latex"] = exp_latex
     out["compare"] = compare
     out["source"] = "spec"
+    out["profile"] = "strict"
     out["note"] = note
     if sympy_gives is not None:
         out["sympy_gives"] = run_sympy(sympy_gives)

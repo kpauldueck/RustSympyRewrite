@@ -11,6 +11,7 @@
    "expected_latex": "\\frac{x^{2}}{2} + 3 x - 1",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "printing-000"
   },
   {
@@ -22,6 +23,7 @@
    "expected_latex": "\\frac{\\sqrt{x}}{x + 1}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "printing-001"
   },
   {
@@ -33,6 +35,7 @@
    "expected_latex": "\\sin^{2}{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "printing-002"
   },
   {
@@ -44,6 +47,7 @@
    "expected_latex": "- \\frac{3 x y}{4}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "printing-003"
   },
   {
@@ -55,6 +59,7 @@
    "expected_latex": "e^{- x} \\log{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "printing-004"
   },
   {
@@ -66,6 +71,7 @@
    "expected_latex": "\\left[0, 1\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "printing-005"
   },
   {
@@ -77,6 +83,7 @@
    "expected_latex": "x^{2} + 2 x + 1",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "printing-006"
   },
   {
@@ -88,6 +95,7 @@
    "expected_latex": "3 x - 3",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "printing-007"
   },
   {
@@ -99,6 +107,7 @@
    "expected_latex": "\\sin{\\left(x \\right)} + \\cos{\\left(2 x \\right)}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "printing-008"
   },
   {
@@ -110,6 +119,7 @@
    "expected_latex": "1024",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "printing-009"
   },
   {
@@ -121,6 +131,7 @@
    "expected_latex": "4 x",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "printing-010"
   }
  ]

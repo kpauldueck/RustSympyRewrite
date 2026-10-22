@@ -12,6 +12,7 @@
    "expected_latex": "3 x^{2} - 2",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-000"
   },
   {
@@ -24,6 +25,7 @@
    "expected_latex": "- \\sin^{2}{\\left(x \\right)} + \\cos^{2}{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-001"
   },
   {
@@ -36,6 +38,7 @@
    "expected_latex": "2 x e^{x^{2}}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-002"
   },
   {
@@ -48,6 +51,7 @@
    "expected_latex": "\\frac{2 x}{x^{2} + 1}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-003"
   },
   {
@@ -60,6 +64,7 @@
    "expected_latex": "- \\frac{x}{\\left(x + 1\\right)^{2}} + \\frac{1}{x + 1}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-004"
   },
   {
@@ -72,6 +77,7 @@
    "expected_latex": "\\tan^{2}{\\left(x \\right)} + 1",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-005"
   },
   {
@@ -84,6 +90,7 @@
    "expected_latex": "- \\frac{x}{\\sqrt{1 - x^{2}}}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-006"
   },
   {
@@ -96,6 +103,7 @@
    "expected_latex": "x^{x} \\left(\\log{\\left(x \\right)} + 1\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-007"
   },
   {
@@ -108,6 +116,7 @@
    "expected_latex": "\\frac{1}{\\sqrt{1 - x^{2}}}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-008"
   },
   {
@@ -121,6 +130,7 @@
    "expected_latex": "2 \\left(- \\sin^{2}{\\left(x \\right)} + \\cos^{2}{\\left(x \\right)}\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-009"
   },
   {
@@ -135,6 +145,7 @@
    "expected_latex": "1",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-010"
   },
   {
@@ -149,6 +160,7 @@
    "expected_latex": "e",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-011"
   },
   {
@@ -163,6 +175,7 @@
    "expected_latex": "2",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-012"
   },
   {
@@ -177,6 +190,7 @@
    "expected_latex": "\\infty",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-013"
   },
   {
@@ -191,6 +205,7 @@
    "expected_latex": "-\\infty",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-014"
   },
   {
@@ -205,6 +220,7 @@
    "expected_latex": "3",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-015"
   },
   {
@@ -219,6 +235,7 @@
    "expected_latex": "\\frac{1}{2}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-016"
   },
   {
@@ -233,6 +250,7 @@
    "expected_latex": "0",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-017"
   },
   {
@@ -245,6 +263,7 @@
    "expected_latex": "\\frac{x^{3}}{3} + \\frac{3 x^{2}}{2}",
    "compare": "antiderivative",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-018"
   },
   {
@@ -257,6 +276,7 @@
    "expected_latex": "\\log{\\left(x \\right)}",
    "compare": "antiderivative",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-019"
   },
   {
@@ -269,6 +289,7 @@
    "expected_latex": "\\frac{\\sin^{2}{\\left(x \\right)}}{2}",
    "compare": "antiderivative",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-020"
   },
   {
@@ -281,6 +302,7 @@
    "expected_latex": "\\left(x - 1\\right) e^{x}",
    "compare": "antiderivative",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-021"
   },
   {
@@ -293,6 +315,7 @@
    "expected_latex": "- x \\cos{\\left(x \\right)} + \\sin{\\left(x \\right)}",
    "compare": "antiderivative",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-022"
   },
   {
@@ -305,6 +328,7 @@
    "expected_latex": "\\frac{\\log{\\left(x - 1 \\right)}}{2} - \\frac{\\log{\\left(x + 1 \\right)}}{2}",
    "compare": "antiderivative",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-023"
   },
   {
@@ -317,6 +341,7 @@
    "expected_latex": "\\operatorname{atan}{\\left(x \\right)}",
    "compare": "antiderivative",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-024"
   },
   {
@@ -329,6 +354,7 @@
    "expected_latex": "\\sin{\\left(x^{2} \\right)}",
    "compare": "antiderivative",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-025"
   },
   {
@@ -341,6 +367,7 @@
    "expected_latex": "x \\log{\\left(x \\right)} - x",
    "compare": "antiderivative",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-026"
   },
   {
@@ -353,6 +380,7 @@
    "expected_latex": "\\frac{\\sin{\\left(x \\right)}}{\\cos{\\left(x \\right)}}",
    "compare": "antiderivative",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-027"
   },
   {
@@ -367,6 +395,7 @@
    "expected_latex": "9",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-028"
   },
   {
@@ -381,6 +410,7 @@
    "expected_latex": "2",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-029"
   },
   {
@@ -395,6 +425,7 @@
    "expected_latex": "1",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-030"
   },
   {
@@ -409,6 +440,7 @@
    "expected_latex": "1",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-031"
   },
   {
@@ -423,6 +455,7 @@
    "expected_latex": "1 + x + \\frac{x^{2}}{2} + \\frac{x^{3}}{6} + \\frac{x^{4}}{24} + \\frac{x^{5}}{120} + O\\left(x^{6}\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-032"
   },
   {
@@ -437,6 +470,7 @@
    "expected_latex": "x - \\frac{x^{3}}{6} + \\frac{x^{5}}{120} + O\\left(x^{6}\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-033"
   },
   {
@@ -451,6 +485,7 @@
    "expected_latex": "x - \\frac{x^{2}}{2} + \\frac{x^{3}}{3} - \\frac{x^{4}}{4} + \\frac{x^{5}}{5} + O\\left(x^{6}\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-034"
   },
   {
@@ -465,6 +500,7 @@
    "expected_latex": "1 + x + x^{2} + x^{3} + x^{4} + x^{5} + O\\left(x^{6}\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-035"
   },
   {
@@ -484,6 +520,7 @@
    "expected_latex": "385",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-036"
   },
   {
@@ -503,6 +540,7 @@
    "expected_latex": "2",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "calculus-037"
   }
  ]

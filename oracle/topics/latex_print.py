@@ -37,6 +37,7 @@ def _course(src, expected, note):
         "expected": expected,
         "compare": "exact",
         "source": "spec",
+        "profile": "strict",
         "note": note,
         "sympy_gives": run_sympy(lambda: sp.latex(sp.sympify(src))),
     }

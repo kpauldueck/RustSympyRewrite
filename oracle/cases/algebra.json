@@ -11,6 +11,7 @@
    "expected_latex": "x^{2} + 2 x + 1",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-000"
   },
   {
@@ -22,6 +23,7 @@
    "expected_latex": "x^{3} - 3 x^{2} y + 3 x y^{2} - y^{3}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-001"
   },
   {
@@ -33,6 +35,7 @@
    "expected_latex": "2 x^{2} - 7 x - 15",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-002"
   },
   {
@@ -44,6 +47,7 @@
    "expected_latex": "x^{2} + 2 x y + 2 x z + y^{2} + 2 y z + z^{2}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-003"
   },
   {
@@ -55,6 +59,7 @@
    "expected_latex": "x^{4} + x^{3} - x - 1",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-004"
   },
   {
@@ -66,6 +71,7 @@
    "expected_latex": "x^{2} + 2 \\sqrt{2} x + 2",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-005"
   },
   {
@@ -77,6 +83,7 @@
    "expected_latex": "\\left(x - 3\\right) \\left(x - 2\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-006"
   },
   {
@@ -88,6 +95,7 @@
    "expected_latex": "\\left(x - 1\\right) \\left(x^{2} + x + 1\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-007"
   },
   {
@@ -99,6 +107,7 @@
    "expected_latex": "\\left(2 x - 3 y\\right) \\left(2 x + 3 y\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-008"
   },
   {
@@ -110,6 +119,7 @@
    "expected_latex": "\\left(x - 2\\right) \\left(x + 2\\right) \\left(x^{2} + 4\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-009"
   },
   {
@@ -121,6 +131,7 @@
    "expected_latex": "\\left(2 x + 7\\right) \\left(3 x - 5\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-010"
   },
   {
@@ -132,6 +143,7 @@
    "expected_latex": "\\left(x + y\\right)^{3}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-011"
   },
   {
@@ -143,6 +155,7 @@
    "expected_latex": "2 x \\left(x - 1\\right) \\left(x + 1\\right)",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-012"
   },
   {
@@ -154,6 +167,7 @@
    "expected_latex": "x^{2} + 1",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-013"
   },
   {
@@ -165,6 +179,7 @@
    "expected_latex": "x + 1",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-014"
   },
   {
@@ -176,6 +191,7 @@
    "expected_latex": "\\frac{x + 2}{x - 2}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-015"
   },
   {
@@ -187,6 +203,7 @@
    "expected_latex": "\\frac{x^{2} + 2 x + 4}{x + 2}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-016"
   },
   {
@@ -198,6 +215,7 @@
    "expected_latex": "\\frac{x + y}{x y}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-017"
   },
   {
@@ -209,6 +227,7 @@
    "expected_latex": "- \\frac{2}{\\left(x - 1\\right) \\left(x + 1\\right)}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-018"
   },
   {
@@ -221,6 +240,7 @@
    "expected_latex": "- \\frac{1}{2 \\left(x + 1\\right)} + \\frac{1}{2 \\left(x - 1\\right)}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-019"
   },
   {
@@ -233,6 +253,7 @@
    "expected_latex": "\\frac{1}{x + 2} + \\frac{2}{x + 1}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-020"
   },
   {
@@ -245,6 +266,7 @@
    "expected_latex": "\\frac{2}{\\left(x - 1\\right)^{2}} + \\frac{1}{x}",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-021"
   },
   {
@@ -257,6 +279,7 @@
    "expected_latex": "x - 1",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-022"
   },
   {
@@ -270,6 +293,7 @@
    "expected_latex": "10",
    "compare": "exact",
    "source": "sympy",
+   "profile": "both",
    "id": "algebra-023"
   }
  ]

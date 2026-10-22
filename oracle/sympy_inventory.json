@@ -1,0 +1,1303 @@
+{
+ "sympy_version": "1.14.0",
+ "units": {
+  "algebras": {
+   "src_lines": 1669,
+   "test_lines": 437,
+   "test_functions": 20,
+   "files": 2,
+   "imports": [
+    "core",
+    "functions.elementary",
+    "integrals",
+    "matrices",
+    "simplify",
+    "utilities"
+   ]
+  },
+  "assumptions": {
+   "src_lines": 8589,
+   "test_lines": 3764,
+   "test_functions": 157,
+   "files": 28,
+   "imports": [
+    "core",
+    "functions",
+    "functions.elementary",
+    "logic",
+    "matrices",
+    "matrices.expressions",
+    "multipledispatch",
+    "ntheory",
+    "utilities"
+   ]
+  },
+  "benchmarks": {
+   "src_lines": 478,
+   "test_lines": 0,
+   "test_functions": 0,
+   "files": 4,
+   "imports": [
+    "core",
+    "core-misc",
+    "functions.elementary",
+    "functions.special",
+    "integrals",
+    "ntheory",
+    "polys",
+    "simplify"
+   ]
+  },
+  "calculus": {
+   "src_lines": 2714,
+   "test_lines": 1088,
+   "test_functions": 47,
+   "files": 6,
+   "imports": [
+    "core",
+    "functions.elementary",
+    "logic",
+    "matrices",
+    "multipledispatch",
+    "polys",
+    "series",
+    "sets",
+    "solvers",
+    "utilities"
+   ]
+  },
+  "categories": {
+   "src_lines": 3591,
+   "test_lines": 1128,
+   "test_functions": 12,
+   "files": 3,
+   "imports": [
+    "core",
+    "printing",
+    "sets",
+    "utilities"
+   ]
+  },
+  "codegen": {
+   "src_lines": 4468,
+   "test_lines": 2153,
+   "test_functions": 105,
+   "files": 17,
+   "imports": [
+    "assumptions",
+    "calculus",
+    "core",
+    "functions",
+    "functions.elementary",
+    "logic",
+    "matrices",
+    "matrices.expressions",
+    "printing",
+    "sets",
+    "simplify",
+    "tensor",
+    "utilities"
+   ]
+  },
+  "combinatorics": {
+   "src_lines": 21444,
+   "test_lines": 4969,
+   "test_functions": 175,
+   "files": 24,
+   "imports": [
+    "core",
+    "external",
+    "functions.combinatorial",
+    "matrices",
+    "multipledispatch",
+    "ntheory",
+    "polys",
+    "printing",
+    "sets",
+    "tensor",
+    "utilities"
+   ]
+  },
+  "concrete": {
+   "src_lines": 4251,
+   "test_lines": 2871,
+   "test_functions": 160,
+   "files": 8,
+   "imports": [
+    "calculus",
+    "core",
+    "functions",
+    "functions.combinatorial",
+    "functions.elementary",
+    "functions.special",
+    "integrals",
+    "logic",
+    "matrices",
+    "polys",
+    "series",
+    "sets",
+    "simplify",
+    "solvers",
+    "tensor",
+    "utilities"
+   ]
+  },
+  "core": {
+   "src_lines": 34576,
+   "test_lines": 24953,
+   "test_functions": 2066,
+   "files": 45,
+   "imports": [
+    "assumptions",
+    "calculus",
+    "concrete",
+    "core-misc",
+    "external",
+    "functions.combinatorial",
+    "functions.elementary",
+    "functions.special",
+    "integrals",
+    "logic",
+    "matrices",
+    "matrices.expressions",
+    "multipledispatch",
+    "ntheory",
+    "parsing",
+    "physics.quantum",
+    "polys",
+    "polys.numberfields",
+    "printing",
+    "series",
+    "sets",
+    "simplify",
+    "solvers",
+    "tensor",
+    "utilities"
+   ]
+  },
+  "core-misc": {
+   "src_lines": 775,
+   "test_lines": 0,
+   "test_functions": 0,
+   "files": 6,
+   "imports": [
+    "algebras",
+    "assumptions",
+    "calculus",
+    "concrete",
+    "core",
+    "discrete",
+    "external",
+    "functions",
+    "geometry",
+    "integrals",
+    "interactive",
+    "logic",
+    "matrices",
+    "ntheory",
+    "parsing",
+    "plotting",
+    "polys",
+    "printing",
+    "series",
+    "sets",
+    "simplify",
+    "solvers",
+    "tensor",
+    "utilities"
+   ]
+  },
+  "crypto": {
+   "src_lines": 3403,
+   "test_lines": 562,
+   "test_functions": 51,
+   "files": 2,
+   "imports": [
+    "core",
+    "external",
+    "functions.combinatorial",
+    "matrices",
+    "ntheory",
+    "polys",
+    "polys.domains",
+    "utilities"
+   ]
+  },
+  "diffgeom": {
+   "src_lines": 2432,
+   "test_lines": 611,
+   "test_functions": 24,
+   "files": 3,
+   "imports": [
+    "combinatorics",
+    "core",
+    "functions",
+    "functions.elementary",
+    "matrices",
+    "simplify",
+    "solvers",
+    "tensor",
+    "utilities"
+   ]
+  },
+  "discrete": {
+   "src_lines": 1208,
+   "test_lines": 605,
+   "test_functions": 14,
+   "files": 4,
+   "imports": [
+    "core",
+    "external",
+    "functions.elementary",
+    "ntheory",
+    "utilities"
+   ]
+  },
+  "external": {
+   "src_lines": 1508,
+   "test_lines": 1593,
+   "test_functions": 70,
+   "files": 5,
+   "imports": []
+  },
+  "functions": {
+   "src_lines": 115,
+   "test_lines": 0,
+   "test_functions": 0,
+   "files": 1,
+   "imports": [
+    "functions.combinatorial",
+    "functions.elementary",
+    "functions.special"
+   ]
+  },
+  "functions.combinatorial": {
+   "src_lines": 4330,
+   "test_lines": 1903,
+   "test_functions": 56,
+   "files": 3,
+   "imports": [
+    "concrete",
+    "core",
+    "core-misc",
+    "external",
+    "functions",
+    "functions.elementary",
+    "functions.special",
+    "integrals",
+    "ntheory",
+    "polys",
+    "simplify",
+    "utilities"
+   ]
+  },
+  "functions.elementary": {
+   "src_lines": 12105,
+   "test_lines": 8542,
+   "test_functions": 358,
+   "files": 11,
+   "imports": [
+    "assumptions",
+    "calculus",
+    "concrete",
+    "core",
+    "functions.combinatorial",
+    "functions.special",
+    "integrals",
+    "logic",
+    "matrices",
+    "multipledispatch",
+    "ntheory",
+    "polys",
+    "printing.pretty",
+    "series",
+    "sets",
+    "simplify",
+    "solvers",
+    "utilities"
+   ]
+  },
+  "functions.special": {
+   "src_lines": 12938,
+   "test_lines": 4543,
+   "test_functions": 151,
+   "files": 17,
+   "imports": [
+    "concrete",
+    "core",
+    "core-misc",
+    "external",
+    "functions",
+    "functions.combinatorial",
+    "functions.elementary",
+    "integrals",
+    "logic",
+    "matrices",
+    "polys",
+    "series",
+    "sets",
+    "simplify",
+    "solvers",
+    "utilities"
+   ]
+  },
+  "geometry": {
+   "src_lines": 12060,
+   "test_lines": 3490,
+   "test_functions": 117,
+   "files": 11,
+   "imports": [
+    "core",
+    "core-misc",
+    "functions",
+    "functions.elementary",
+    "functions.special",
+    "integrals",
+    "logic",
+    "matrices",
+    "matrices.expressions",
+    "multipledispatch",
+    "polys",
+    "printing",
+    "sets",
+    "simplify",
+    "solvers",
+    "utilities"
+   ]
+  },
+  "holonomic": {
+   "src_lines": 3272,
+   "test_lines": 892,
+   "test_functions": 32,
+   "files": 5,
+   "imports": [
+    "core",
+    "functions.combinatorial",
+    "functions.elementary",
+    "functions.special",
+    "integrals",
+    "matrices",
+    "polys",
+    "polys.domains",
+    "polys.matrices",
+    "printing",
+    "series",
+    "simplify",
+    "solvers"
+   ]
+  },
+  "integrals": {
+   "src_lines": 17783,
+   "test_lines": 8690,
+   "test_functions": 486,
+   "files": 17,
+   "imports": [
+    "calculus",
+    "concrete",
+    "core",
+    "core-misc",
+    "functions",
+    "functions.combinatorial",
+    "functions.elementary",
+    "functions.special",
+    "geometry",
+    "logic",
+    "matrices",
+    "ntheory",
+    "plotting",
+    "polys",
+    "polys.matrices",
+    "printing",
+    "series",
+    "simplify",
+    "solvers",
+    "strategies",
+    "tensor",
+    "utilities"
+   ]
+  },
+  "integrals.benchmarks": {
+   "src_lines": 34,
+   "test_lines": 0,
+   "test_functions": 0,
+   "files": 3,
+   "imports": [
+    "core",
+    "functions.elementary",
+    "integrals"
+   ]
+  },
+  "interactive": {
+   "src_lines": 1098,
+   "test_lines": 288,
+   "test_functions": 8,
+   "files": 4,
+   "imports": [
+    "core",
+    "core-misc",
+    "external",
+    "printing",
+    "utilities"
+   ]
+  },
+  "liealgebras": {
+   "src_lines": 1948,
+   "test_lines": 221,
+   "test_functions": 12,
+   "files": 13,
+   "imports": [
+    "core"
+   ]
+  },
+  "logic": {
+   "src_lines": 6121,
+   "test_lines": 2437,
+   "test_functions": 127,
+   "files": 12,
+   "imports": [
+    "assumptions",
+    "calculus",
+    "core",
+    "external",
+    "functions.elementary",
+    "matrices",
+    "printing",
+    "sets",
+    "simplify",
+    "solvers",
+    "utilities"
+   ]
+  },
+  "matrices": {
+   "src_lines": 19187,
+   "test_lines": 12573,
+   "test_functions": 624,
+   "files": 21,
+   "imports": [
+    "assumptions",
+    "combinatorics",
+    "core",
+    "discrete",
+    "functions.combinatorial",
+    "functions.elementary",
+    "functions.special",
+    "matrices.expressions",
+    "multipledispatch",
+    "physics",
+    "polys",
+    "polys.domains",
+    "polys.matrices",
+    "printing",
+    "simplify",
+    "tensor",
+    "utilities"
+   ]
+  },
+  "matrices.benchmarks": {
+   "src_lines": 21,
+   "test_lines": 0,
+   "test_functions": 0,
+   "files": 2,
+   "imports": [
+    "core",
+    "matrices"
+   ]
+  },
+  "matrices.expressions": {
+   "src_lines": 5906,
+   "test_lines": 3934,
+   "test_functions": 266,
+   "files": 25,
+   "imports": [
+    "assumptions",
+    "combinatorics",
+    "concrete",
+    "core",
+    "external",
+    "functions",
+    "functions.elementary",
+    "functions.special",
+    "logic",
+    "matrices",
+    "multipledispatch",
+    "polys",
+    "sets",
+    "simplify",
+    "strategies",
+    "tensor",
+    "utilities"
+   ]
+  },
+  "multipledispatch": {
+   "src_lines": 680,
+   "test_lines": 559,
+   "test_functions": 37,
+   "files": 5,
+   "imports": []
+  },
+  "ntheory": {
+   "src_lines": 9742,
+   "test_lines": 2213,
+   "test_functions": 89,
+   "files": 15,
+   "imports": [
+    "core",
+    "external",
+    "functions",
+    "functions.combinatorial",
+    "functions.elementary",
+    "functions.special",
+    "polys",
+    "polys.domains",
+    "solvers",
+    "utilities"
+   ]
+  },
+  "parsing": {
+   "src_lines": 2788,
+   "test_lines": 8277,
+   "test_functions": 75,
+   "files": 6,
+   "imports": [
+    "assumptions",
+    "concrete",
+    "core",
+    "core-misc",
+    "external",
+    "functions.elementary",
+    "functions.special",
+    "parsing.c",
+    "parsing.fortran",
+    "printing",
+    "simplify",
+    "utilities"
+   ]
+  },
+  "parsing.autolev": {
+   "src_lines": 6601,
+   "test_lines": 0,
+   "test_functions": 0,
+   "files": 24,
+   "imports": [
+    "core-misc",
+    "external",
+    "physics.mechanics",
+    "utilities"
+   ]
+  },
+  "parsing.c": {
+   "src_lines": 1060,
+   "test_lines": 0,
+   "test_functions": 0,
+   "files": 2,
+   "imports": [
+    "codegen",
+    "core",
+    "external",
+    "logic"
+   ]
+  },
+  "parsing.fortran": {
+   "src_lines": 348,
+   "test_lines": 0,
+   "test_functions": 0,
+   "files": 2,
+   "imports": [
+    "codegen",
+    "core",
+    "external"
+   ]
+  },
+  "parsing.latex": {
+   "src_lines": 5954,
+   "test_lines": 0,
+   "test_functions": 0,
+   "files": 10,
+   "imports": [
+    "core-misc",
+    "external",
+    "physics.quantum",
+    "printing",
+    "utilities"
+   ]
+  },
+  "physics": {
+   "src_lines": 5299,
+   "test_lines": 1903,
+   "test_functions": 85,
+   "files": 9,
+   "imports": [
+    "concrete",
+    "core",
+    "functions",
+    "functions.combinatorial",
+    "functions.elementary",
+    "functions.special",
+    "matrices",
+    "matrices.expressions",
+    "physics.quantum",
+    "printing",
+    "utilities"
+   ]
+  },
+  "physics.biomechanics": {
+   "src_lines": 4162,
+   "test_lines": 2928,
+   "test_functions": 0,
+   "files": 5,
+   "imports": [
+    "core",
+    "functions.elementary",
+    "matrices",
+    "physics.mechanics",
+    "physics.vector",
+    "printing"
+   ]
+  },
+  "physics.continuum_mechanics": {
+   "src_lines": 6861,
+   "test_lines": 1362,
+   "test_functions": 34,
+   "files": 5,
+   "imports": [
+    "core",
+    "core-misc",
+    "external",
+    "functions",
+    "functions.elementary",
+    "geometry",
+    "integrals",
+    "matrices",
+    "physics.units",
+    "plotting",
+    "printing",
+    "series",
+    "sets",
+    "solvers",
+    "solvers.ode",
+    "utilities"
+   ]
+  },
+  "physics.control": {
+   "src_lines": 6153,
+   "test_lines": 2605,
+   "test_functions": 49,
+   "files": 3,
+   "imports": [
+    "core",
+    "core-misc",
+    "external",
+    "functions",
+    "functions.elementary",
+    "geometry",
+    "integrals",
+    "matrices",
+    "matrices.expressions",
+    "plotting",
+    "polys",
+    "polys.domains",
+    "printing",
+    "series",
+    "solvers",
+    "solvers.ode",
+    "utilities"
+   ]
+  },
+  "physics.hep": {
+   "src_lines": 716,
+   "test_lines": 427,
+   "test_functions": 5,
+   "files": 2,
+   "imports": [
+    "core",
+    "matrices",
+    "matrices.expressions",
+    "tensor"
+   ]
+  },
+  "physics.mechanics": {
+   "src_lines": 11177,
+   "test_lines": 8127,
+   "test_functions": 124,
+   "files": 19,
+   "imports": [
+    "core",
+    "core-misc",
+    "functions.elementary",
+    "matrices",
+    "physics",
+    "physics.vector",
+    "polys",
+    "simplify",
+    "utilities"
+   ]
+  },
+  "physics.optics": {
+   "src_lines": 2984,
+   "test_lines": 491,
+   "test_functions": 16,
+   "files": 6,
+   "imports": [
+    "core",
+    "functions.elementary",
+    "geometry",
+    "matrices",
+    "physics.quantum",
+    "physics.units",
+    "polys",
+    "printing",
+    "series",
+    "simplify",
+    "utilities"
+   ]
+  },
+  "physics.quantum": {
+   "src_lines": 16457,
+   "test_lines": 10143,
+   "test_functions": 298,
+   "files": 38,
+   "imports": [
+    "concrete",
+    "core",
+    "external",
+    "functions",
+    "functions.combinatorial",
+    "functions.elementary",
+    "functions.special",
+    "integrals",
+    "matrices",
+    "matrices.expressions",
+    "multipledispatch",
+    "ntheory",
+    "physics",
+    "printing",
+    "printing.pretty",
+    "sets",
+    "simplify",
+    "utilities"
+   ]
+  },
+  "physics.units": {
+   "src_lines": 3346,
+   "test_lines": 1225,
+   "test_functions": 72,
+   "files": 16,
+   "imports": [
+    "core",
+    "core-misc",
+    "functions.elementary",
+    "matrices",
+    "utilities"
+   ]
+  },
+  "physics.vector": {
+   "src_lines": 4931,
+   "test_lines": 2610,
+   "test_functions": 112,
+   "files": 8,
+   "imports": [
+    "core",
+    "core-misc",
+    "integrals",
+    "interactive",
+    "physics.mechanics",
+    "printing",
+    "printing.pretty",
+    "simplify",
+    "utilities"
+   ]
+  },
+  "plotting": {
+   "src_lines": 10530,
+   "test_lines": 4517,
+   "test_functions": 134,
+   "files": 35,
+   "imports": [
+    "calculus",
+    "concrete",
+    "core",
+    "external",
+    "functions",
+    "functions.elementary",
+    "geometry",
+    "logic",
+    "polys",
+    "printing",
+    "sets",
+    "simplify",
+    "tensor",
+    "utilities",
+    "vector"
+   ]
+  },
+  "polys": {
+   "src_lines": 49017,
+   "test_lines": 19551,
+   "test_functions": 907,
+   "files": 43,
+   "imports": [
+    "combinatorics",
+    "concrete",
+    "core",
+    "external",
+    "functions",
+    "functions.combinatorial",
+    "functions.elementary",
+    "logic",
+    "matrices",
+    "multipledispatch",
+    "ntheory",
+    "polys.domains",
+    "polys.matrices",
+    "polys.numberfields",
+    "printing",
+    "printing.pretty",
+    "simplify",
+    "solvers",
+    "tensor",
+    "utilities"
+   ]
+  },
+  "polys.agca": {
+   "src_lines": 2935,
+   "test_lines": 848,
+   "test_functions": 37,
+   "files": 5,
+   "imports": [
+    "core",
+    "matrices",
+    "polys",
+    "polys.domains",
+    "printing",
+    "utilities"
+   ]
+  },
+  "polys.benchmarks": {
+   "src_lines": 634,
+   "test_lines": 0,
+   "test_functions": 0,
+   "files": 4,
+   "imports": [
+    "core",
+    "ntheory",
+    "polys",
+    "polys.domains"
+   ]
+  },
+  "polys.domains": {
+   "src_lines": 6947,
+   "test_lines": 1579,
+   "test_functions": 57,
+   "files": 32,
+   "imports": [
+    "core",
+    "external",
+    "ntheory",
+    "polys",
+    "polys.agca",
+    "polys.numberfields",
+    "printing",
+    "utilities"
+   ]
+  },
+  "polys.matrices": {
+   "src_lines": 10762,
+   "test_lines": 5838,
+   "test_functions": 315,
+   "files": 15,
+   "imports": [
+    "core",
+    "external",
+    "matrices",
+    "ntheory",
+    "polys",
+    "polys.agca",
+    "polys.domains",
+    "utilities"
+   ]
+  },
+  "polys.numberfields": {
+   "src_lines": 6852,
+   "test_lines": 2398,
+   "test_functions": 123,
+   "files": 11,
+   "imports": [
+    "combinatorics",
+    "core",
+    "functions.elementary",
+    "ntheory",
+    "polys",
+    "polys.domains",
+    "polys.matrices",
+    "printing",
+    "simplify",
+    "utilities"
+   ]
+  },
+  "printing": {
+   "src_lines": 20048,
+   "test_lines": 18145,
+   "test_functions": 1068,
+   "files": 36,
+   "imports": [
+    "assumptions",
+    "categories",
+    "codegen",
+    "combinatorics",
+    "concrete",
+    "core",
+    "core-misc",
+    "external",
+    "functions",
+    "functions.elementary",
+    "functions.special",
+    "integrals",
+    "logic",
+    "matrices",
+    "matrices.expressions",
+    "physics.control",
+    "polys",
+    "printing.pretty",
+    "series",
+    "sets",
+    "simplify",
+    "tensor",
+    "utilities",
+    "vector"
+   ]
+  },
+  "printing.pretty": {
+   "src_lines": 4217,
+   "test_lines": 7972,
+   "test_functions": 156,
+   "files": 4,
+   "imports": [
+    "categories",
+    "combinatorics",
+    "core",
+    "functions.elementary",
+    "functions.special",
+    "logic",
+    "matrices",
+    "matrices.expressions",
+    "physics.control",
+    "physics.units",
+    "printing",
+    "simplify",
+    "utilities",
+    "vector"
+   ]
+  },
+  "sandbox": {
+   "src_lines": 80,
+   "test_lines": 25,
+   "test_functions": 1,
+   "files": 2,
+   "imports": [
+    "core",
+    "integrals",
+    "tensor"
+   ]
+  },
+  "series": {
+   "src_lines": 6329,
+   "test_lines": 5093,
+   "test_functions": 489,
+   "files": 18,
+   "imports": [
+    "calculus",
+    "concrete",
+    "core",
+    "core-misc",
+    "discrete",
+    "functions",
+    "functions.combinatorial",
+    "functions.elementary",
+    "functions.special",
+    "integrals",
+    "matrices",
+    "polys",
+    "sets",
+    "simplify",
+    "solvers",
+    "tensor",
+    "utilities"
+   ]
+  },
+  "sets": {
+   "src_lines": 6574,
+   "test_lines": 3937,
+   "test_functions": 224,
+   "files": 17,
+   "imports": [
+    "calculus",
+    "core",
+    "functions",
+    "functions.elementary",
+    "logic",
+    "multipledispatch",
+    "polys",
+    "series",
+    "simplify",
+    "solvers",
+    "solvers.diophantine",
+    "utilities"
+   ]
+  },
+  "simplify": {
+   "src_lines": 13214,
+   "test_lines": 5660,
+   "test_functions": 318,
+   "files": 17,
+   "imports": [
+    "concrete",
+    "core",
+    "core-misc",
+    "external",
+    "functions",
+    "functions.combinatorial",
+    "functions.elementary",
+    "functions.special",
+    "integrals",
+    "logic",
+    "matrices",
+    "matrices.expressions",
+    "ntheory",
+    "physics.units",
+    "polys",
+    "polys.domains",
+    "polys.numberfields",
+    "printing",
+    "series",
+    "sets",
+    "solvers",
+    "strategies",
+    "utilities"
+   ]
+  },
+  "solvers": {
+   "src_lines": 13559,
+   "test_lines": 8400,
+   "test_functions": 441,
+   "files": 11,
+   "imports": [
+    "calculus",
+    "concrete",
+    "core",
+    "core-misc",
+    "external",
+    "functions",
+    "functions.combinatorial",
+    "functions.elementary",
+    "integrals",
+    "logic",
+    "matrices",
+    "ntheory",
+    "physics.units",
+    "polys",
+    "polys.domains",
+    "polys.matrices",
+    "sets",
+    "simplify",
+    "solvers.diophantine",
+    "solvers.ode",
+    "strategies",
+    "utilities"
+   ]
+  },
+  "solvers.benchmarks": {
+   "src_lines": 12,
+   "test_lines": 0,
+   "test_functions": 0,
+   "files": 2,
+   "imports": [
+    "core",
+    "matrices",
+    "solvers"
+   ]
+  },
+  "solvers.diophantine": {
+   "src_lines": 3985,
+   "test_lines": 1071,
+   "test_functions": 51,
+   "files": 2,
+   "imports": [
+    "core",
+    "external",
+    "functions.elementary",
+    "matrices",
+    "ntheory",
+    "polys",
+    "simplify",
+    "solvers",
+    "utilities"
+   ]
+  },
+  "solvers.ode": {
+   "src_lines": 11837,
+   "test_lines": 7783,
+   "test_functions": 144,
+   "files": 9,
+   "imports": [
+    "core",
+    "functions",
+    "functions.combinatorial",
+    "functions.elementary",
+    "integrals",
+    "logic",
+    "matrices",
+    "polys",
+    "polys.domains",
+    "polys.matrices",
+    "series",
+    "sets",
+    "simplify",
+    "solvers",
+    "utilities"
+   ]
+  },
+  "stats": {
+   "src_lines": 16651,
+   "test_lines": 5013,
+   "test_functions": 225,
+   "files": 20,
+   "imports": [
+    "concrete",
+    "core",
+    "external",
+    "functions.combinatorial",
+    "functions.elementary",
+    "functions.special",
+    "integrals",
+    "logic",
+    "matrices",
+    "matrices.expressions",
+    "polys",
+    "series",
+    "sets",
+    "simplify",
+    "solvers",
+    "stats.sampling",
+    "tensor",
+    "utilities"
+   ]
+  },
+  "stats.sampling": {
+   "src_lines": 371,
+   "test_lines": 384,
+   "test_functions": 17,
+   "files": 4,
+   "imports": [
+    "core",
+    "external",
+    "functions.elementary",
+    "stats",
+    "utilities"
+   ]
+  },
+  "strategies": {
+   "src_lines": 790,
+   "test_lines": 616,
+   "test_functions": 50,
+   "files": 11,
+   "imports": [
+    "core",
+    "utilities"
+   ]
+  },
+  "tensor": {
+   "src_lines": 13225,
+   "test_lines": 6987,
+   "test_functions": 239,
+   "files": 26,
+   "imports": [
+    "assumptions",
+    "combinatorics",
+    "concrete",
+    "core",
+    "core-misc",
+    "external",
+    "functions",
+    "functions.special",
+    "matrices",
+    "matrices.expressions",
+    "multipledispatch",
+    "printing",
+    "simplify",
+    "strategies",
+    "utilities"
+   ]
+  },
+  "testing": {
+   "src_lines": 3447,
+   "test_lines": 1155,
+   "test_functions": 33,
+   "files": 8,
+   "imports": [
+    "core",
+    "external",
+    "interactive",
+    "plotting",
+    "printing.pretty",
+    "utilities"
+   ]
+  },
+  "unify": {
+   "src_lines": 428,
+   "test_lines": 324,
+   "test_functions": 33,
+   "files": 4,
+   "imports": [
+    "assumptions",
+    "core",
+    "matrices",
+    "sets",
+    "strategies",
+    "utilities"
+   ]
+  },
+  "utilities": {
+   "src_lines": 12661,
+   "test_lines": 11550,
+   "test_functions": 830,
+   "files": 26,
+   "imports": [
+    "core",
+    "core-misc",
+    "external",
+    "functions",
+    "functions.elementary",
+    "functions.special",
+    "integrals",
+    "interactive",
+    "matrices",
+    "printing",
+    "sets",
+    "simplify",
+    "tensor",
+    "testing"
+   ]
+  },
+  "vector": {
+   "src_lines": 5009,
+   "test_lines": 2002,
+   "test_functions": 67,
+   "files": 15,
+   "imports": [
+    "core",
+    "functions.elementary",
+    "geometry",
+    "integrals",
+    "matrices",
+    "ntheory",
+    "polys",
+    "printing",
+    "printing.pretty",
+    "sets",
+    "simplify",
+    "solvers",
+    "utilities"
+   ]
+  }
+ }
+}

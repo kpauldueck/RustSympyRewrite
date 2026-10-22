@@ -3,7 +3,10 @@
 Run with the pinned SymPy (see requirements.txt):
 
     python -m venv .venv && .venv/bin/pip install -r oracle/requirements.txt
-    .venv/bin/python oracle/gen_cases.py
+    PYTHONHASHSEED=0 SYMPY_GROUND_TYPES=python .venv/bin/python oracle/gen_cases.py
+
+(CI sets the same environment.) Each topic starts from cleared caches and a
+seeded RNG, so a topic's answers do not depend on what ran before it.
 
 Writes one JSON file per topic into oracle/cases/. The Rust conformance
 runner (crates/rsympy/tests/oracle.rs) reads those files; Rust CI never needs
@@ -23,6 +26,7 @@ in oracle/topics/ (each defines TOPIC and generate()).
 import importlib
 import json
 import pathlib
+import random
 
 import sympy as sp
 from sympy import (
@@ -31,10 +35,13 @@ from sympy import (
     simplify, sin, solveset, sqrt, symbols, tan, together, trigsimp,
 )
 
-from caselib import case
+from caselib import PROFILES, SOURCES, STRICT_OPS, case
 
 PINNED = "1.14.0"
 assert sp.__version__ == PINNED, f"need sympy=={PINNED}, have {sp.__version__}"
+from sympy.external.gmpy import GROUND_TYPES  # noqa: E402
+
+assert GROUND_TYPES == "python", "set SYMPY_GROUND_TYPES=python (gmpy2/flint change some outputs)"
 
 x, y, z, t = symbols("x y z t")
 n = symbols("n", integer=True)
@@ -275,6 +282,48 @@ def topic_modules():
         yield mod.TOPIC, mod.generate
 
 
+def fresh_state():
+    """Reset what makes SymPy's answers depend on history: its caches (incl.
+    the factorint cache) and the random module some algorithms draw from."""
+    sp.core.cache.clear_cache()
+    from sympy.ntheory import factor_
+
+    factor_.factor_cache.clear()
+    random.seed(0)
+
+
+COMPARES = ("exact", "equivalent", "set", "antiderivative", "error")
+
+
+def check_schema(c):
+    """Catch cases built by hand (not through caselib) that miss a field."""
+    for key in ("op", "args", "expected", "compare", "source", "profile"):
+        assert key in c, f"{c.get('id')}: missing {key}"
+    assert c["compare"] in COMPARES, f"{c['id']}: compare {c['compare']!r}"
+    assert c["source"] in SOURCES, f"{c['id']}: source {c['source']!r}"
+    assert c["profile"] in PROFILES, f"{c['id']}: profile {c['profile']!r}"
+    if c["source"] == "spec" or c["op"] in STRICT_OPS:
+        assert c["profile"] == "strict", f"{c['id']}: must be profile strict"
+    if c["source"] == "spec":
+        assert c.get("note"), f"{c['id']}: spec cases need a note"
+
+
+def check_consistent(by_topic):
+    """The same call must have one answer wherever it appears, unless the two
+    cases bind different profiles (a spec case may overrule SymPy)."""
+    seen = {}
+    clashes = []
+    for topic, cases in by_topic.items():
+        for c in cases:
+            key = json.dumps([c["op"], c["args"], c.get("options"), c.get("assumptions")], sort_keys=True)
+            for other in seen.get(key, []):
+                overlap = "both" in (c["profile"], other["profile"]) or c["profile"] == other["profile"]
+                if overlap and c["expected"] != other["expected"]:
+                    clashes.append(f"{other['id']} vs {c['id']}: {other['expected']!r} != {c['expected']!r}")
+            seen.setdefault(key, []).append(c)
+    assert not clashes, "contradictory cases:\n  " + "\n  ".join(clashes)
+
+
 def main():
     OUT.mkdir(exist_ok=True)
     generators = dict(TOPICS)
@@ -283,11 +332,17 @@ def main():
         generators[topic] = gen
     stale = {p.stem for p in OUT.glob("*.json")} - set(generators)
     assert not stale, f"cases with no generator: {sorted(stale)}"
-    total = 0
+    by_topic = {}
     for topic, gen in generators.items():
+        fresh_state()
         cases = gen()
         for i, c in enumerate(cases):
             c["id"] = f"{topic}-{i:03d}"
+            check_schema(c)
+        by_topic[topic] = cases
+    check_consistent(by_topic)
+    total = 0
+    for topic, cases in by_topic.items():
         doc = {"sympy_version": PINNED, "topic": topic, "cases": cases}
         (OUT / f"{topic}.json").write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
         total += len(cases)
