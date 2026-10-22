@@ -37,3 +37,9 @@ jobs:
       - run: pip install -r oracle/requirements.txt
       - run: python oracle/gen_cases.py
       - run: git diff --exit-code oracle/cases
+      # A case whose answer depends on hash order can't be copied 1:1; catch
+      # it here (and classify it `unstable`) instead of in a flaky port.
+      - run: python oracle/gen_cases.py
+        env:
+          PYTHONHASHSEED: "1"
+      - run: git diff --exit-code oracle/cases

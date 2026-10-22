@@ -10,7 +10,6 @@
    "expected": "- \\frac{3}{4}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-000"
   },
   {
@@ -21,7 +20,6 @@
    "expected": "\\frac{3 x}{4}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-001"
   },
   {
@@ -32,7 +30,6 @@
    "expected": "\\frac{x + 1}{x - 1}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-002"
   },
   {
@@ -43,7 +40,6 @@
    "expected": "\\frac{1}{x^{2}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "A negative power prints as a fraction.",
    "id": "latex_print-003"
   },
@@ -55,7 +51,6 @@
    "expected": "\\frac{2 x}{3} + \\frac{1}{3}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy distributes 1/3 over the sum at construction, so the key prints as two fractions.",
    "id": "latex_print-004"
   },
@@ -67,7 +62,6 @@
    "expected": "- \\frac{x}{2} - \\frac{1}{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy distributes -1/2 over the sum at construction.",
    "id": "latex_print-005"
   },
@@ -79,7 +73,6 @@
    "expected": "2 \\sqrt{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy simplifies the radical at construction.",
    "id": "latex_print-006"
   },
@@ -91,7 +84,6 @@
    "expected": "\\frac{1}{2} + \\frac{\\sqrt{5}}{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy distributes 1/2, so the golden ratio prints as two fractions.",
    "id": "latex_print-007"
   },
@@ -103,7 +95,6 @@
    "expected": "\\sqrt[3]{x}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-008"
   },
   {
@@ -114,7 +105,6 @@
    "expected": "\\frac{1}{\\sqrt{x}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-009"
   },
   {
@@ -125,7 +115,6 @@
    "expected": "x^{\\frac{3}{2}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Only unit-numerator rational powers print as radicals.",
    "id": "latex_print-010"
   },
@@ -137,7 +126,6 @@
    "expected": "\\sqrt{2} \\sqrt{x}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy splits off the numeric factor: sqrt(2)*sqrt(x).",
    "id": "latex_print-011"
   },
@@ -149,7 +137,6 @@
    "expected": "\\frac{\\pi}{6}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-012"
   },
   {
@@ -160,7 +147,6 @@
    "expected": "2 \\pi",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-013"
   },
   {
@@ -171,7 +157,6 @@
    "expected": "\\frac{3 \\pi}{4}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-014"
   },
   {
@@ -182,7 +167,6 @@
    "expected": "\\frac{4 \\pi r^{3}}{3}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-015"
   },
   {
@@ -193,8 +177,7 @@
    "expected": "\\log{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy prints natural log as \\log; see the course cases for \\ln.",
+   "note": "By default SymPy prints natural log as \\log; see the ln_notation cases for \\ln.",
    "id": "latex_print-016"
   },
   {
@@ -205,7 +188,6 @@
    "expected": "\\frac{\\log{\\left(x \\right)}}{\\log{\\left(2 \\right)}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy stores log(x, 2) as log(x)/log(2) and prints the quotient.",
    "id": "latex_print-017"
   },
@@ -217,7 +199,6 @@
    "expected": "3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy evaluates an exact integer logarithm before printing.",
    "id": "latex_print-018"
   },
@@ -229,7 +210,6 @@
    "expected": "\\frac{\\log{\\left(x \\right)}}{\\log{\\left(10 \\right)}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-019"
   },
   {
@@ -240,7 +220,6 @@
    "expected": "\\log{\\left(x \\right)}^{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "The power goes after the argument, not on the function name.",
    "id": "latex_print-020"
   },
@@ -252,7 +231,6 @@
    "expected": "e^{- x}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-021"
   },
   {
@@ -263,7 +241,6 @@
    "expected": "400 \\left(\\frac{3}{4}\\right)^{t}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-022"
   },
   {
@@ -274,7 +251,6 @@
    "expected": "400 e^{t \\log{\\left(\\frac{3}{4} \\right)}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-023"
   },
   {
@@ -285,7 +261,6 @@
    "expected": "\\sin^{2}{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Powers of trig functions print on the function name.",
    "id": "latex_print-024"
   },
@@ -297,7 +272,6 @@
    "expected": "\\sin^{2}{\\left(x \\right)} + \\cos^{2}{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Terms print in SymPy's order: sin before cos.",
    "id": "latex_print-025"
   },
@@ -309,7 +283,6 @@
    "expected": "\\frac{1}{\\tan{\\left(x \\right)}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy does not rewrite 1/tan as cot.",
    "id": "latex_print-026"
   },
@@ -321,7 +294,6 @@
    "expected": "\\operatorname{asin}{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy prints \\operatorname{asin}, not \\arcsin or \\sin^{-1}.",
    "id": "latex_print-027"
   },
@@ -333,7 +305,6 @@
    "expected": "\\sin{\\left(x \\right)} \\cos{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-028"
   },
   {
@@ -344,7 +315,6 @@
    "expected": "\\frac{\\pi}{3}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy evaluates the special angle before printing.",
    "id": "latex_print-029"
   },
@@ -356,7 +326,6 @@
    "expected": "\\left[0, 1\\right]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-030"
   },
   {
@@ -367,7 +336,6 @@
    "expected": "\\left[0, 1\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-031"
   },
   {
@@ -378,7 +346,6 @@
    "expected": "\\left[-2, \\infty\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "An infinite endpoint is always open.",
    "id": "latex_print-032"
   },
@@ -390,7 +357,6 @@
    "expected": "\\left(-\\infty, -2\\right) \\cup \\left(3, \\infty\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-033"
   },
   {
@@ -401,7 +367,6 @@
    "expected": "\\left\\{-1, 2\\right\\}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-034"
   },
   {
@@ -412,7 +377,6 @@
    "expected": "\\emptyset",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-035"
   },
   {
@@ -423,8 +387,7 @@
    "expected": "\\left\\{2 \\pi n + \\frac{\\pi}{6}\\; \\middle|\\; n \\in \\mathbb{Z}\\right\\}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The shape solveset gives for a trig equation's solutions.",
+   "note": "An ImageSet over the integers built with an ordinary Symbol n; solveset's own ImageSets use a Dummy _n, which prints the term as '2 n \\pi' instead.",
    "id": "latex_print-036"
   },
   {
@@ -435,7 +398,6 @@
    "expected": "\\left[\\begin{matrix}1 & 2\\\\3 & 4\\end{matrix}\\right]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-037"
   },
   {
@@ -446,7 +408,6 @@
    "expected": "\\left[\\begin{matrix}1\\\\2\\end{matrix}\\right]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-038"
   },
   {
@@ -457,7 +418,6 @@
    "expected": "\\left[\\begin{matrix}\\frac{1}{2} & 0\\\\0 & 2\\end{matrix}\\right]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-039"
   },
   {
@@ -468,7 +428,6 @@
    "expected": "\\begin{cases} x & \\text{for}\\: x \\geq 0 \\\\- x & \\text{otherwise} \\end{cases}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-040"
   },
   {
@@ -479,7 +438,6 @@
    "expected": "\\begin{cases} x^{2} & \\text{for}\\: x < 1 \\\\2 x - 1 & \\text{otherwise} \\end{cases}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-041"
   },
   {
@@ -490,7 +448,6 @@
    "expected": "- x^{2} + 3 x - 2",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "A negative leading term prints with a spaced minus sign.",
    "id": "latex_print-042"
   },
@@ -502,8 +459,7 @@
    "expected": "1 - x",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy puts the positive constant first.",
+   "note": "A two-term sum of a positive Number or NumberSymbol and a negative Number times one factor prints the constant first (special case in Expr.as_ordered_terms); longer sums such as -x + y + 1, and -x + sqrt(2), keep the leading negative term.",
    "id": "latex_print-043"
   },
   {
@@ -514,7 +470,6 @@
    "expected": "- \\frac{\\sqrt{2}}{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-044"
   },
   {
@@ -525,7 +480,6 @@
    "expected": "x^{2} + x + 3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Polynomial terms print by descending degree.",
    "id": "latex_print-045"
   },
@@ -537,7 +491,6 @@
    "expected": "x^{2} y + x y^{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-046"
   },
   {
@@ -548,7 +501,6 @@
    "expected": "\\sqrt{3} x",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "The numeric radical prints before the symbol.",
    "id": "latex_print-047"
   },
@@ -560,7 +512,6 @@
    "expected": "\\left(x - 3\\right) \\left(x - 2\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Factors print in SymPy's canonical order, not as typed.",
    "id": "latex_print-048"
   },
@@ -572,7 +523,6 @@
    "expected": "x \\left(x + 1\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-049"
   },
   {
@@ -583,7 +533,6 @@
    "expected": "2 \\left(x + 1\\right)^{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-050"
   },
   {
@@ -594,7 +543,6 @@
    "expected": "y = 2 x + 1",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-051"
   },
   {
@@ -605,7 +553,6 @@
    "expected": "x \\leq 3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-052"
   },
   {
@@ -616,7 +563,6 @@
    "expected": "x \\neq 0",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-053"
   },
   {
@@ -627,7 +573,6 @@
    "expected": "x > -1 \\wedge x < 3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "A compound inequality prints with \\wedge.",
    "id": "latex_print-054"
   },
@@ -639,7 +584,6 @@
    "expected": "\\left|{x - 3}\\right|",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-055"
   },
   {
@@ -650,7 +594,6 @@
    "expected": "-\\infty",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-056"
   },
   {
@@ -661,7 +604,6 @@
    "expected": "x_{1}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-057"
   },
   {
@@ -672,7 +614,6 @@
    "expected": "v_{0x}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-058"
   },
   {
@@ -683,7 +624,6 @@
    "expected": "F_{net}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "latex_print-059"
   },
   {
@@ -694,8 +634,7 @@
    "expected": "\\Delta_{x}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy subscripts the part after the underscore; see the course case.",
+   "note": "A Greek-letter name before the underscore prints as the Greek command, and the rest as a subscript.",
    "id": "latex_print-060"
   },
   {
@@ -704,14 +643,11 @@
     "log(x)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
    "expected": "\\ln{\\left(x \\right)}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Course convention: natural log prints as \\ln (the shape of SymPy's ln_notation=True).",
-   "sympy_gives": "\\log{\\left(x \\right)}",
+   "source": "sympy",
    "id": "latex_print-061"
   },
   {
@@ -720,14 +656,12 @@
     "log(x)**2"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
    "expected": "\\ln{\\left(x \\right)}^{2}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Course convention: natural log prints as \\ln (the shape of SymPy's ln_notation=True).",
-   "sympy_gives": "\\log{\\left(x \\right)}^{2}",
+   "source": "sympy",
+   "note": "The power goes after the argument, as with \\log.",
    "id": "latex_print-062"
   },
   {
@@ -736,14 +670,11 @@
     "log(x)/2"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
    "expected": "\\frac{\\ln{\\left(x \\right)}}{2}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Course convention: natural log prints as \\ln (the shape of SymPy's ln_notation=True).",
-   "sympy_gives": "\\frac{\\log{\\left(x \\right)}}{2}",
+   "source": "sympy",
    "id": "latex_print-063"
   },
   {
@@ -752,14 +683,12 @@
     "1/log(x)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
    "expected": "\\frac{1}{\\ln{\\left(x \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Near miss: a log only in the denominator is not a change of base; it stays a natural log.",
-   "sympy_gives": "\\frac{1}{\\log{\\left(x \\right)}}",
+   "source": "sympy",
+   "note": "A log only in the denominator.",
    "id": "latex_print-064"
   },
   {
@@ -768,14 +697,12 @@
     "log(10)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
    "expected": "\\ln{\\left(10 \\right)}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Near miss: the natural log of 10 is not the base-10 log, so it prints \\ln, never a bare \\log.",
-   "sympy_gives": "\\log{\\left(10 \\right)}",
+   "source": "sympy",
+   "note": "The natural log of 10 is an unevaluated log(10), not a base-10 log.",
    "id": "latex_print-065"
   },
   {
@@ -784,14 +711,12 @@
     "log(x, 2)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
-   "expected": "\\log_{2}{\\left(x \\right)}",
+   "expected": "\\frac{\\ln{\\left(x \\right)}}{\\ln{\\left(2 \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Course convention: log(a)/log(b) prints as \\log_{b}{\\left(a \\right)}.",
-   "sympy_gives": "\\frac{\\log{\\left(x \\right)}}{\\log{\\left(2 \\right)}}",
+   "source": "sympy",
+   "note": "SymPy stores log(x, 2) as log(x)/log(2), so both logs print as \\ln.",
    "id": "latex_print-066"
   },
   {
@@ -800,14 +725,12 @@
     "log(x)/log(2)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
-   "expected": "\\log_{2}{\\left(x \\right)}",
+   "expected": "\\frac{\\ln{\\left(x \\right)}}{\\ln{\\left(2 \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A typed quotient of logs is the same expression as log(x, 2), so it prints the same way.",
-   "sympy_gives": "\\frac{\\log{\\left(x \\right)}}{\\log{\\left(2 \\right)}}",
+   "source": "sympy",
+   "note": "The same tree as log(x, 2).",
    "id": "latex_print-067"
   },
   {
@@ -816,14 +739,12 @@
     "log(x, 10)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
-   "expected": "\\log{\\left(x \\right)}",
+   "expected": "\\frac{\\ln{\\left(x \\right)}}{\\ln{\\left(10 \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Decision: base 10 prints as a bare \\log, because parse_latex reads a bare \\log as base 10 and natural log always prints as \\ln.",
-   "sympy_gives": "\\frac{\\log{\\left(x \\right)}}{\\log{\\left(10 \\right)}}",
+   "source": "sympy",
+   "note": "Base 10 is stored as log(x)/log(10) like any other base.",
    "id": "latex_print-068"
   },
   {
@@ -832,14 +753,12 @@
     "3*log(x)/log(5)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
-   "expected": "3 \\log_{5}{\\left(x \\right)}",
+   "expected": "\\frac{3 \\ln{\\left(x \\right)}}{\\ln{\\left(5 \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A numeric coefficient stays in front of the \\log_{b} term.",
-   "sympy_gives": "\\frac{3 \\log{\\left(x \\right)}}{\\log{\\left(5 \\right)}}",
+   "source": "sympy",
+   "note": "A numeric coefficient over a log of the base.",
    "id": "latex_print-069"
   },
   {
@@ -848,14 +767,11 @@
     "log(x + 1, 3)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
-   "expected": "\\log_{3}{\\left(x + 1 \\right)}",
+   "expected": "\\frac{\\ln{\\left(x + 1 \\right)}}{\\ln{\\left(3 \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Course convention: log(a)/log(b) prints as \\log_{b}{\\left(a \\right)}.",
-   "sympy_gives": "\\frac{\\log{\\left(x + 1 \\right)}}{\\log{\\left(3 \\right)}}",
+   "source": "sympy",
    "id": "latex_print-070"
   },
   {
@@ -864,14 +780,12 @@
     "log(x, b)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
-   "expected": "\\log_{b}{\\left(x \\right)}",
+   "expected": "\\frac{\\ln{\\left(x \\right)}}{\\ln{\\left(b \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A symbolic base is written as the subscript.",
-   "sympy_gives": "\\frac{\\log{\\left(x \\right)}}{\\log{\\left(b \\right)}}",
+   "source": "sympy",
+   "note": "A symbolic base: log(x)/log(b).",
    "id": "latex_print-071"
   },
   {
@@ -880,14 +794,12 @@
     "log(x, 2) + 1"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
-   "expected": "\\log_{2}{\\left(x \\right)} + 1",
+   "expected": "\\frac{\\ln{\\left(x \\right)}}{\\ln{\\left(2 \\right)}} + 1",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "The \\log_{b} form works inside a sum.",
-   "sympy_gives": "\\frac{\\log{\\left(x \\right)}}{\\log{\\left(2 \\right)}} + 1",
+   "source": "sympy",
+   "note": "The change-of-base quotient inside a sum.",
    "id": "latex_print-072"
   },
   {
@@ -896,14 +808,12 @@
     "log(8)/log(2)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
-   "expected": "\\log_{2}{\\left(8 \\right)}",
+   "expected": "\\frac{\\ln{\\left(8 \\right)}}{\\ln{\\left(2 \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "An unevaluated quotient log(8)/log(2) prints as \\log_{2} 8; printing never evaluates.",
-   "sympy_gives": "\\frac{\\log{\\left(8 \\right)}}{\\log{\\left(2 \\right)}}",
+   "source": "sympy",
+   "note": "Typed as a quotient, unlike log(8, 2), this stays unevaluated.",
    "id": "latex_print-073"
   },
   {
@@ -912,14 +822,12 @@
     "log(2)/log(x)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
-   "expected": "\\log_{x}{\\left(2 \\right)}",
+   "expected": "\\frac{\\ln{\\left(2 \\right)}}{\\ln{\\left(x \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Any quotient of two logs reads as a change of base, whichever is symbolic.",
-   "sympy_gives": "\\frac{\\log{\\left(2 \\right)}}{\\log{\\left(x \\right)}}",
+   "source": "sympy",
+   "note": "The symbolic log is in the denominator.",
    "id": "latex_print-074"
   },
   {
@@ -928,14 +836,12 @@
     "log(x)/(2*log(3))"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
-   "expected": "\\frac{\\log_{3}{\\left(x \\right)}}{2}",
+   "expected": "\\frac{\\ln{\\left(x \\right)}}{2 \\ln{\\left(3 \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "The other factors of the quotient stay as a fraction around the \\log_{b} term.",
-   "sympy_gives": "\\frac{\\log{\\left(x \\right)}}{2 \\log{\\left(3 \\right)}}",
+   "source": "sympy",
+   "note": "A numeric factor and a log share the denominator.",
    "id": "latex_print-075"
   },
   {
@@ -944,14 +850,12 @@
     "x*log(y, 2)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
-   "expected": "x \\log_{2}{\\left(y \\right)}",
+   "expected": "\\frac{x \\ln{\\left(y \\right)}}{\\ln{\\left(2 \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A symbolic factor stays in front of the \\log_{b} term.",
-   "sympy_gives": "\\frac{x \\log{\\left(y \\right)}}{\\log{\\left(2 \\right)}}",
+   "source": "sympy",
+   "note": "A symbolic factor in front of a change-of-base quotient.",
    "id": "latex_print-076"
   },
   {
@@ -960,14 +864,12 @@
     "log(x, 1/2)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
-   "expected": "- \\log_{2}{\\left(x \\right)}",
+   "expected": "- \\frac{\\ln{\\left(x \\right)}}{\\ln{\\left(2 \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy rewrites log(1/2) as -log(2) at construction, so base 1/2 displays as -\\log_{2}.",
-   "sympy_gives": "- \\frac{\\log{\\left(x \\right)}}{\\log{\\left(2 \\right)}}",
+   "source": "sympy",
+   "note": "SymPy rewrites log(1/2) as -log(2) at construction, so the sign moves out front.",
    "id": "latex_print-077"
   },
   {
@@ -976,14 +878,12 @@
     "400*exp(t*log(3/4))"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
    "expected": "400 e^{t \\ln{\\left(\\frac{3}{4} \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Natural log inside an exponent also prints as \\ln.",
-   "sympy_gives": "400 e^{t \\log{\\left(\\frac{3}{4} \\right)}}",
+   "source": "sympy",
+   "note": "A natural log inside an exponent.",
    "id": "latex_print-078"
   },
   {
@@ -992,14 +892,12 @@
     "exp(x)"
    ],
    "options": {
-    "conventions": "course"
+    "ln_notation": true
    },
    "expected": "e^{x}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Course conventions change only logs and vocabulary symbols; exp prints as e^{x}.",
-   "sympy_gives": "e^{x}",
+   "source": "sympy",
+   "note": "ln_notation changes only log; exp still prints as e^{x}.",
    "id": "latex_print-079"
   },
   {
@@ -1007,15 +905,10 @@
    "args": [
     "Delta_y/Delta_x"
    ],
-   "options": {
-    "conventions": "course"
-   },
-   "expected": "\\frac{\\Delta y}{\\Delta x}",
+   "expected": "\\frac{\\Delta_{y}}{\\Delta_{x}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Decision: course printing inverts the parse_latex vocabulary so a key round-trips through LaTeX; SymPy prints the raw symbol name.",
-   "sympy_gives": "\\frac{\\Delta_{y}}{\\Delta_{x}}",
+   "source": "sympy",
+   "note": "A Greek-letter name before the underscore prints as \\Delta with a subscript.",
    "id": "latex_print-080"
   },
   {
@@ -1023,15 +916,10 @@
    "args": [
     "seg_AB"
    ],
-   "options": {
-    "conventions": "course"
-   },
-   "expected": "\\overline{AB}",
+   "expected": "seg_{AB}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Decision: course printing inverts the parse_latex vocabulary so a key round-trips through LaTeX; SymPy prints the raw symbol name.",
-   "sympy_gives": "seg_{AB}",
+   "source": "sympy",
+   "note": "seg is neither a Greek letter nor a printer modifier, so latex() emits the bare letters seg (no command, no \\text{}) with AB as a subscript.",
    "id": "latex_print-081"
   },
   {
@@ -1039,15 +927,10 @@
    "args": [
     "angle_ABC"
    ],
-   "options": {
-    "conventions": "course"
-   },
-   "expected": "\\angle ABC",
+   "expected": "angle_{ABC}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Decision: course printing inverts the parse_latex vocabulary so a key round-trips through LaTeX; SymPy prints the raw symbol name.",
-   "sympy_gives": "angle_{ABC}",
+   "source": "sympy",
+   "note": "angle is neither a Greek letter nor a printer modifier, so latex() emits the bare letters angle (no command, no \\text{}) with ABC as a subscript.",
    "id": "latex_print-082"
   },
   {
@@ -1055,15 +938,10 @@
    "args": [
     "vec_v"
    ],
-   "options": {
-    "conventions": "course"
-   },
-   "expected": "\\vec{v}",
+   "expected": "vec_{v}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Decision: course printing inverts the parse_latex vocabulary so a key round-trips through LaTeX; SymPy prints the raw symbol name.",
-   "sympy_gives": "vec_{v}",
+   "source": "sympy",
+   "note": "SymPy turns vec into \\vec{} only as a name suffix (vvec), not as a prefix before an underscore.",
    "id": "latex_print-083"
   },
   {
@@ -1071,15 +949,10 @@
    "args": [
     "3*hat_i - 4*hat_j"
    ],
-   "options": {
-    "conventions": "course"
-   },
-   "expected": "3 \\hat{i} - 4 \\hat{j}",
+   "expected": "3 hat_{i} - 4 hat_{j}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Decision: course printing inverts the parse_latex vocabulary so a key round-trips through LaTeX; SymPy prints the raw symbol name.",
-   "sympy_gives": "3 hat_{i} - 4 hat_{j}",
+   "source": "sympy",
+   "note": "SymPy turns hat into \\hat{} only as a name suffix (ihat), not as a prefix before an underscore.",
    "id": "latex_print-084"
   }
  ]

@@ -1,6 +1,6 @@
 [package]
 name = "rsympy-num"
-description = "Exact numbers for rsympy: integers, rationals, arbitrary-precision floats"
+description = "Exact numbers for rsympy: integers, rationals, modular integers, Python-compatible RNG"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

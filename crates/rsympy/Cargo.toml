@@ -1,6 +1,6 @@
 [package]
 name = "rsympy"
-description = "A computer algebra system for high-school to early-college math, modelled on SymPy"
+description = "SymPy 1.14 rewritten in Rust, matching its behaviour 1:1"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

@@ -7,13 +7,13 @@
    "args": [
     "\\Delta x"
    ],
-   "expected": "Delta_x",
-   "expected_latex": "\\Delta_{x}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "\\Delta plus a letter is one symbol Delta_x (the app's fallback parser reads Delta*x).",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\Delta x ^",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar knows \\delta but has no \\Delta.",
    "id": "latex_parse-000"
   },
   {
@@ -21,13 +21,13 @@
    "args": [
     "\\frac{\\Delta y}{\\Delta x}"
    ],
-   "expected": "Delta_y/Delta_x",
-   "expected_latex": "\\frac{\\Delta_{y}}{\\Delta_{x}}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Each \\Delta pair is one symbol, so the Deltas never cancel to y/x.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 7 \\frac{\\Delta y}{\\Delta x} ^",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The unknown \\Delta sits inside a fraction.",
    "id": "latex_parse-001"
   },
   {
@@ -35,13 +35,13 @@
    "args": [
     "\\Delta x^{2}"
    ],
-   "expected": "Delta_x**2",
-   "expected_latex": "\\Delta_{x}^{2}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "The superscript binds to the atom before it, which is the whole symbol Delta_x.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\Delta x^{2} ^",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\Delta command.",
    "id": "latex_parse-002"
   },
   {
@@ -49,13 +49,13 @@
    "args": [
     "\\Delta v_{x}"
    ],
-   "expected": "Delta_v_x",
-   "expected_latex": "\\Delta_{v x}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "\\Delta followed by a subscripted symbol is one symbol named Delta_<symbol>.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\Delta v_{x} ^",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\Delta command.",
    "id": "latex_parse-003"
   },
   {
@@ -63,13 +63,13 @@
    "args": [
     "F\\Delta t = m\\Delta v"
    ],
-   "expected": "Eq(Delta_t*F, Delta_v*m)",
-   "expected_latex": "\\Delta_{t} F = \\Delta_{v} m",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Impulse-momentum: a letter before \\Delta multiplies the Delta symbol; never F*Delta*t.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 2 F\\Delta t = m\\Delta v ^",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The unknown \\Delta follows an implicit product, in an equation.",
    "id": "latex_parse-004"
   },
   {
@@ -77,12 +77,13 @@
    "args": [
     "\\frac{dy}{dx}"
    ],
-   "expected": "refused:derivative",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Leibniz notation is refused by default; never read as (d*y)/(d*x) = y/x.",
-   "sympy_gives": "(derivative, x)",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "(derivative, x)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A bare Leibniz fraction returns the Python tuple ('derivative', x), not a SymPy object.",
    "id": "latex_parse-005"
   },
   {
@@ -90,12 +91,14 @@
    "args": [
     "\\frac{d}{dx}x^{2}"
    ],
-   "expected": "refused:derivative",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "The d/dx operator is refused by default (SymPy builds an unevaluated Derivative).",
-   "sympy_gives": "Derivative(x**2, x)",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Derivative(x**2, x)",
+   "expected_latex": "\\frac{d}{d x} x^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "d/dx in front of an expression builds an unevaluated Derivative.",
    "id": "latex_parse-006"
   },
   {
@@ -103,12 +106,13 @@
    "args": [
     "\\frac{d^{2}y}{dx^{2}}"
    ],
-   "expected": "refused:derivative",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Second-derivative Leibniz notation is refused by name like the first.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches 'y' in the current parser context, at line 1 col 12 \\frac{d^{2}y}{dx^{2}} ^",
+   "source": "sympy",
+   "note": "Fails at the y after d^{2}: a power cannot be followed by a letter, so the input never reaches the fraction.",
    "id": "latex_parse-007"
   },
   {
@@ -116,12 +120,14 @@
    "args": [
     "\\frac{d}{t}"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "d/t",
    "expected_latex": "\\frac{d}{t}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "d alone is an ordinary variable (distance over time); only d/d<var> is a derivative.",
+   "note": "The denominator t does not start with d, so the numerator is the plain Symbol d and the result is the quotient d/t. Only a denominator of d followed by an implicit-product factor gives the ('derivative', factor) tuple, whatever the numerator.",
    "id": "latex_parse-008"
   },
   {
@@ -129,64 +135,30 @@
    "args": [
     "\\overline{AB}"
    ],
-   "expected": "refused:\\overline",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Without the geometry vocabulary \\overline is refused, never conjugate(A)*conjugate(B).",
-   "sympy_gives": "conjugate(A)*conjugate(B)",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "conjugate(A)*conjugate(B)",
+   "expected_latex": "\\overline{A} \\overline{B}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "\\overline is complex conjugation, applied to the product A*B.",
    "id": "latex_parse-009"
   },
   {
    "op": "parse_latex",
    "args": [
-    "\\overline{AB}"
-   ],
-   "options": {
-    "vocabulary": [
-     "geometry"
-    ]
-   },
-   "expected": "seg_AB",
-   "expected_latex": "seg_{AB}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Geometry vocabulary: a segment is one named length.",
-   "sympy_gives": "conjugate(A)*conjugate(B)",
-   "id": "latex_parse-010"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
     "AB"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "A*B",
    "expected_latex": "A B",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Without the geometry vocabulary a run of capitals keeps the algebra reading A*B.",
-   "id": "latex_parse-011"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
-    "AB"
-   ],
-   "options": {
-    "vocabulary": [
-     "geometry"
-    ]
-   },
-   "expected": "seg_AB",
-   "expected_latex": "seg_{AB}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Geometry vocabulary: a run of 2+ capital letters names a segment.",
-   "sympy_gives": "A*B",
-   "id": "latex_parse-012"
+   "note": "A run of capital letters is an implicit product of symbols.",
+   "id": "latex_parse-010"
   },
   {
    "op": "parse_latex",
@@ -194,18 +166,14 @@
     "AB^{2} + BC^{2} = AC^{2}"
    ],
    "options": {
-    "vocabulary": [
-     "geometry"
-    ]
+    "backend": "lark"
    },
-   "expected": "Eq(seg_AB**2 + seg_BC**2, seg_AC**2)",
-   "expected_latex": "seg_{AB}^{2} + seg_{BC}^{2} = seg_{AC}^{2}",
+   "expected": "Eq(A*B**2 + B*C**2, A*C**2)",
+   "expected_latex": "A B^{2} + B C^{2} = A C^{2}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Pythagorean relation between segments; the superscript applies to the whole segment name.",
-   "sympy_gives": "Eq(A*B**2 + B*C**2, A*C**2)",
-   "id": "latex_parse-013"
+   "source": "sympy",
+   "note": "Each exponent binds to the last letter only, giving A*B**2.",
+   "id": "latex_parse-011"
   },
   {
    "op": "parse_latex",
@@ -213,17 +181,14 @@
     "\\frac{1}{2}bh"
    ],
    "options": {
-    "vocabulary": [
-     "geometry"
-    ]
+    "backend": "lark"
    },
    "expected": "b*h/2",
    "expected_latex": "\\frac{b h}{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The geometry vocabulary leaves lowercase products alone, so SymPy's reading is right.",
-   "id": "latex_parse-014"
+   "note": "An implicit product follows the fraction.",
+   "id": "latex_parse-012"
   },
   {
    "op": "parse_latex",
@@ -231,18 +196,13 @@
     "\\angle ABC"
    ],
    "options": {
-    "vocabulary": [
-     "geometry"
-    ]
+    "backend": "lark"
    },
-   "expected": "angle_ABC",
-   "expected_latex": "angle_{ABC}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Geometry vocabulary: an angle is one named measure.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\angle ABC ^",
-   "id": "latex_parse-015"
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\angle command.",
+   "id": "latex_parse-013"
   },
   {
    "op": "parse_latex",
@@ -250,31 +210,13 @@
     "m\\angle ABC = 90^{\\circ}"
    ],
    "options": {
-    "vocabulary": [
-     "geometry"
-    ]
+    "backend": "lark"
    },
-   "expected": "Eq(angle_ABC, pi/2)",
-   "expected_latex": "angle_{ABC} = \\frac{\\pi}{2}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "m\\angle reads as the angle's measure; degrees become exact radians.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 2 m\\angle ABC = 90^{\\circ} ^",
-   "id": "latex_parse-016"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
-    "\\angle ABC"
-   ],
-   "expected": "refused:\\angle",
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Without the geometry vocabulary \\angle is refused by name.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\angle ABC ^",
-   "id": "latex_parse-017"
+   "source": "sympy",
+   "note": "The Lark grammar has no \\angle command.",
+   "id": "latex_parse-014"
   },
   {
    "op": "parse_latex",
@@ -282,17 +224,13 @@
     "\\triangle ABC"
    ],
    "options": {
-    "vocabulary": [
-     "geometry"
-    ]
+    "backend": "lark"
    },
-   "expected": "refused:\\triangle",
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A triangle names a figure, not an expression, so it is refused even with geometry.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\triangle ABC ^",
-   "id": "latex_parse-018"
+   "source": "sympy",
+   "note": "The Lark grammar has no \\triangle command.",
+   "id": "latex_parse-015"
   },
   {
    "op": "parse_latex",
@@ -300,17 +238,13 @@
     "AB \\cong CD"
    ],
    "options": {
-    "vocabulary": [
-     "geometry"
-    ]
+    "backend": "lark"
    },
-   "expected": "refused:\\cong",
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Congruence is a statement, not an expression.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 4 AB \\cong CD ^",
-   "id": "latex_parse-019"
+   "source": "sympy",
+   "note": "The Lark grammar has no \\cong command.",
+   "id": "latex_parse-016"
   },
   {
    "op": "parse_latex",
@@ -318,145 +252,69 @@
     "AB \\parallel CD"
    ],
    "options": {
-    "vocabulary": [
-     "geometry"
-    ]
+    "backend": "lark"
    },
-   "expected": "refused:\\parallel",
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Parallelism is a statement, not an expression.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 4 AB \\parallel CD ^",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\parallel command.",
+   "id": "latex_parse-017"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\vec{v}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\vec command.",
+   "id": "latex_parse-018"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\hat{i}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\hat command.",
+   "id": "latex_parse-019"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\mathbf{v}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\mathbf command.",
    "id": "latex_parse-020"
   },
   {
    "op": "parse_latex",
    "args": [
-    "\\vec{v}"
+    "\\overrightarrow{AB}"
    ],
-   "expected": "refused:\\vec",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Without the vectors vocabulary \\vec is refused by name.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\vec{v} ^",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\overrightarrow command.",
    "id": "latex_parse-021"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
-    "\\vec{v}"
-   ],
-   "options": {
-    "vocabulary": [
-     "vectors"
-    ]
-   },
-   "expected": "vec_v",
-   "expected_latex": "vec_{v}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Vectors vocabulary: an arrow vector is one symbol vec_<name>.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\vec{v} ^",
-   "id": "latex_parse-022"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
-    "\\hat{i}"
-   ],
-   "expected": "refused:\\hat",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Without the vectors vocabulary \\hat is refused by name.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\hat{i} ^",
-   "id": "latex_parse-023"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
-    "\\hat{i}"
-   ],
-   "options": {
-    "vocabulary": [
-     "vectors"
-    ]
-   },
-   "expected": "hat_i",
-   "expected_latex": "hat_{i}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Vectors vocabulary: a unit vector is one symbol hat_<name>.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\hat{i} ^",
-   "id": "latex_parse-024"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
-    "\\mathbf{v}"
-   ],
-   "expected": "refused:\\mathbf",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Without the vectors vocabulary \\mathbf is refused by name.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\mathbf{v} ^",
-   "id": "latex_parse-025"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
-    "\\mathbf{v}"
-   ],
-   "options": {
-    "vocabulary": [
-     "vectors"
-    ]
-   },
-   "expected": "vec_v",
-   "expected_latex": "vec_{v}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Vectors vocabulary: bold v is the same vector as \\vec{v}.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\mathbf{v} ^",
-   "id": "latex_parse-026"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
-    "\\overrightarrow{AB}"
-   ],
-   "expected": "refused:\\overrightarrow",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Without the vectors vocabulary \\overrightarrow is refused by name.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\overrightarrow{AB} ^",
-   "id": "latex_parse-027"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
-    "\\overrightarrow{AB}"
-   ],
-   "options": {
-    "vocabulary": [
-     "vectors"
-    ]
-   },
-   "expected": "vec_AB",
-   "expected_latex": "vec_{AB}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Vectors vocabulary: the vector from A to B is one symbol.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\overrightarrow{AB} ^",
-   "id": "latex_parse-028"
   },
   {
    "op": "parse_latex",
@@ -464,342 +322,329 @@
     "3\\hat{i} - 4\\hat{j}"
    ],
    "options": {
-    "vocabulary": [
-     "vectors"
-    ]
+    "backend": "lark"
    },
-   "expected": "3*hat_i - 4*hat_j",
-   "expected_latex": "3 hat_{i} - 4 hat_{j}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Component form: unit vectors multiply like symbols.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 2 3\\hat{i} - 4\\hat{j} ^",
-   "id": "latex_parse-029"
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The unknown \\hat follows a number, in a sum.",
+   "id": "latex_parse-022"
   },
   {
    "op": "parse_latex",
    "args": [
     "30^{\\circ}"
    ],
-   "expected": "pi/6",
-   "expected_latex": "\\frac{\\pi}{6}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Degrees are always on and become exact radians: 30*pi/180.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 5 30^{\\circ} ^",
-   "id": "latex_parse-030"
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The grammar has no \\circ, so a braced degree mark does not parse.",
+   "id": "latex_parse-023"
   },
   {
    "op": "parse_latex",
    "args": [
     "30^\\circ"
    ],
-   "expected": "pi/6",
-   "expected_latex": "\\frac{\\pi}{6}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Unbraced ^\\circ means the same as ^{\\circ}.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 4 30^\\circ ^",
-   "id": "latex_parse-031"
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The unbraced degree mark does not parse either.",
+   "id": "latex_parse-024"
   },
   {
    "op": "parse_latex",
    "args": [
     "30\\degree"
    ],
-   "expected": "pi/6",
-   "expected_latex": "\\frac{\\pi}{6}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "\\degree means the same as ^{\\circ}.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 3 30\\degree ^",
-   "id": "latex_parse-032"
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\degree command.",
+   "id": "latex_parse-025"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\sin(30^{\\circ})"
    ],
-   "expected": "1/2",
-   "expected_latex": "\\frac{1}{2}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Degrees convert before the function applies; SymPy then evaluates sin(pi/6).",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 10 \\sin(30^{\\circ}) ^",
-   "id": "latex_parse-033"
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The degree mark is inside a function's parentheses.",
+   "id": "latex_parse-026"
   },
   {
    "op": "parse_latex",
    "args": [
     "(2x+10)^{\\circ}"
    ],
-   "expected": "pi*(2*x + 10)/180",
-   "expected_latex": "\\frac{\\pi \\left(2 x + 10\\right)}{180}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A degree mark on a parenthesised expression scales it by pi/180, as in angle-algebra items.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 10 (2x+10)^{\\circ} ^",
-   "id": "latex_parse-034"
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The degree mark is on a parenthesised expression.",
+   "id": "latex_parse-027"
   },
   {
    "op": "parse_latex",
    "args": [
     "f \\circ g"
    ],
-   "expected": "refused:\\circ",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Outside a superscript \\circ is function composition, which the parser does not support.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 3 f \\circ g ^",
-   "id": "latex_parse-035"
+   "source": "sympy",
+   "note": "\\circ as function composition is not in the grammar either.",
+   "id": "latex_parse-028"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\mathrm{m/s}"
    ],
-   "expected": "refused:\\mathrm",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Units are parsed only by parse_quantity, never as letters.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\mathrm{m/s} ^",
-   "id": "latex_parse-036"
+   "source": "sympy",
+   "note": "The grammar has \\mathrm only in the fixed differential token \\mathrm{d}, so \\mathrm{m/s} matches no terminal.",
+   "id": "latex_parse-029"
   },
   {
    "op": "parse_latex",
    "args": [
     "9.8\\,\\mathrm{m/s^2}"
    ],
-   "expected": "refused:\\mathrm",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A quantity with units is refused by name here; the \\, spacing is not the problem.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 6 9.8\\,\\mathrm{m/s^2} ^",
-   "id": "latex_parse-037"
+   "source": "sympy",
+   "note": "The \\, spacing parses; the parse fails at \\mathrm{m/s^2}, which is not the token \\mathrm{d}.",
+   "id": "latex_parse-030"
   },
   {
    "op": "parse_latex",
    "args": [
     "5\\text{ cm}"
    ],
-   "expected": "refused:\\text",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "\\text is refused by name, never read as letters.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 2 5\\text{ cm} ^",
-   "id": "latex_parse-038"
+   "source": "sympy",
+   "note": "The grammar has \\text only in the fixed differential token \\text{d}, so \\text{ cm} matches no terminal.",
+   "id": "latex_parse-031"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\int x \\mathrm{d}x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Integral(x, x)",
+   "expected_latex": "\\int x\\, dx",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "\\mathrm{d} is the upright differential of an integral.",
+   "id": "latex_parse-032"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\lim_{x \\to 0} \\frac{\\sin x}{x}"
    ],
-   "expected": "refused:\\lim",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Limits are refused on purpose after the lim-collapse-to-0 incident (SymPy builds a Limit).",
-   "sympy_gives": "Limit(sin(x)/x, x, 0, dir='+-')",
-   "id": "latex_parse-039"
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Limit(sin(x)/x, x, 0, dir='+-')",
+   "expected_latex": "\\lim_{x \\to 0}\\left(\\frac{\\sin{\\left(x \\right)}}{x}\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A limit is built unevaluated, two-sided (dir='+-'), not computed.",
+   "id": "latex_parse-033"
   },
   {
    "op": "parse_latex",
    "args": [
     "x\\in[0,1]"
    ],
-   "expected": "refused:\\in",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Set membership is refused by name; intervals go through other ops.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 2 x\\in[0,1] ^",
-   "id": "latex_parse-040"
+   "source": "sympy",
+   "note": "The Lark grammar has no \\in command.",
+   "id": "latex_parse-034"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}"
    ],
-   "expected": "refused:\\begin{pmatrix}",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Matrices are not expressions here; the refusal names the environment.",
-   "sympy_gives": "Matrix([[1, 2], [3, 4]])",
-   "id": "latex_parse-041"
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Matrix([[1, 2], [3, 4]])",
+   "expected_latex": "\\left[\\begin{matrix}1 & 2\\\\3 & 4\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A pmatrix environment becomes a Matrix.",
+   "id": "latex_parse-035"
   },
   {
    "op": "parse_latex",
    "args": [
     "x_1"
    ],
-   "expected": "x_1",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "x_{1}",
    "expected_latex": "x_{1}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Subscripts join the name with a bare underscore (SymPy names it x_{1}).",
-   "sympy_gives": "x_{1}",
-   "id": "latex_parse-042"
+   "source": "sympy",
+   "note": "x_1 becomes one Symbol named x_{1}: the transformer always writes the subscript in braces, even when none were typed.",
+   "id": "latex_parse-036"
   },
   {
    "op": "parse_latex",
    "args": [
     "v_{0x}"
    ],
-   "expected": "v_0x",
-   "expected_latex": "v_{0x}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A letters-and-digits subscript becomes part of the name.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '_' in the current parser context, at line 1 col 2 v_{0x} ^",
-   "id": "latex_parse-043"
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A braced subscript of a digit then a letter does not tokenize.",
+   "id": "latex_parse-037"
   },
   {
    "op": "parse_latex",
    "args": [
     "F_{net}"
    ],
-   "expected": "F_net",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "F_{net}",
    "expected_latex": "F_{net}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Multi-letter subscripts are names, not products.",
-   "sympy_gives": "F_{net}",
-   "id": "latex_parse-044"
+   "source": "sympy",
+   "note": "A braced all-letter subscript is part of one Symbol's name.",
+   "id": "latex_parse-038"
   },
   {
    "op": "parse_latex",
    "args": [
     "a_{c}"
    ],
-   "expected": "a_c",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "a_{c}",
    "expected_latex": "a_{c}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A braced one-letter subscript is the same as an unbraced one.",
-   "sympy_gives": "a_{c}",
-   "id": "latex_parse-045"
+   "source": "sympy",
+   "note": "A braced one-letter subscript.",
+   "id": "latex_parse-039"
   },
   {
    "op": "parse_latex",
    "args": [
     "x_{12}"
    ],
-   "expected": "x_12",
-   "expected_latex": "x_{12}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A multi-digit braced subscript is part of the name.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '_' in the current parser context, at line 1 col 2 x_{12} ^",
-   "id": "latex_parse-046"
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A braced multi-digit subscript does not tokenize, though x_1 does.",
+   "id": "latex_parse-040"
   },
   {
    "op": "parse_latex",
    "args": [
     "v_{0}t + \\frac{1}{2}at^{2}"
    ],
-   "expected": "a*t**2/2 + t*v_0",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "a*t**2/2 + t*v_{0}",
    "expected_latex": "\\frac{a t^{2}}{2} + t v_{0}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Kinematics: subscripted symbols take part in implicit products.",
-   "sympy_gives": "a*t**2/2 + t*v_{0}",
-   "id": "latex_parse-047"
+   "source": "sympy",
+   "note": "Subscripted symbols take part in implicit products.",
+   "id": "latex_parse-041"
   },
   {
    "op": "parse_latex",
    "args": [
     "v_x^{2}"
    ],
-   "expected": "v_x**2",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "v_{x}**2",
    "expected_latex": "v_{x}^{2}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A superscript after a subscript squares the whole symbol.",
-   "sympy_gives": "v_{x}**2",
-   "id": "latex_parse-048"
+   "source": "sympy",
+   "note": "The exponent applies to the subscripted symbol.",
+   "id": "latex_parse-042"
   },
   {
    "op": "parse_latex",
    "args": [
     "a_n"
    ],
-   "expected": "a_n",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "a_{n}",
    "expected_latex": "a_{n}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Without the sequences vocabulary a_n is an ordinary symbol.",
-   "sympy_gives": "a_{n}",
-   "id": "latex_parse-049"
+   "source": "sympy",
+   "id": "latex_parse-043"
   },
   {
    "op": "parse_latex",
    "args": [
     "a_{n-1}"
    ],
-   "expected": "refused:subscript_expression",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A subscript with an operator is refused unless the sequences vocabulary is on.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '_' in the current parser context, at line 1 col 2 a_{n-1} ^",
-   "id": "latex_parse-050"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
-    "a_{n-1}"
-   ],
-   "options": {
-    "vocabulary": [
-     "sequences"
-    ]
-   },
-   "expected": "a(n - 1)",
-   "expected_latex": "a{\\left(n - 1 \\right)}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Sequences vocabulary: a subscript is the argument of the sequence a.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '_' in the current parser context, at line 1 col 2 a_{n-1} ^",
-   "id": "latex_parse-051"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
-    "a_n"
-   ],
-   "options": {
-    "vocabulary": [
-     "sequences"
-    ]
-   },
-   "expected": "a(n)",
-   "expected_latex": "a{\\left(n \\right)}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Sequences vocabulary: a_n is the sequence a at n.",
-   "sympy_gives": "a_{n}",
-   "id": "latex_parse-052"
+   "source": "sympy",
+   "note": "A subscript containing an operator does not tokenize.",
+   "id": "latex_parse-044"
   },
   {
    "op": "parse_latex",
@@ -807,516 +652,550 @@
     "a_{n+1} = 2a_n"
    ],
    "options": {
-    "vocabulary": [
-     "sequences"
-    ]
+    "backend": "lark"
    },
-   "expected": "Eq(a(n + 1), 2*a(n))",
-   "expected_latex": "a{\\left(n + 1 \\right)} = 2 a{\\left(n \\right)}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A recurrence relation reads as an equation between sequence terms.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '_' in the current parser context, at line 1 col 2 a_{n+1} = 2a_n ^",
-   "id": "latex_parse-053"
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A recurrence: the subscript with an operator fails first.",
+   "id": "latex_parse-045"
   },
   {
    "op": "parse_latex",
    "args": [
     "400e^{\\ln(0.75)t}"
    ],
-   "expected": "400*exp(t*log(3/4))",
-   "expected_latex": "400 e^{t \\log{\\left(\\frac{3}{4} \\right)}}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "400*e**log(0.75*t)",
+   "expected_latex": "400 e^{\\log{\\left(0.75 t \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "e^{...} takes the whole braced exponent; the app reads 300.0*t today.",
-   "sympy_gives": "400*e**log(0.75*t)",
-   "id": "latex_parse-054"
+   "source": "sympy",
+   "note": "e is the Symbol e, and the argument of \\ln(0.75) runs on over the following t.",
+   "id": "latex_parse-046"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\ln\\sqrt{x}^{2}"
    ],
-   "expected": "log(x)",
-   "expected_latex": "\\log{\\left(x \\right)}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [log(x), log(sqrt(x))**2])",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "The superscript binds to \\sqrt{x}, giving log(sqrt(x)**2), which SymPy simplifies to log(x).",
-   "sympy_gives": "ambiguous: log(sqrt(x))**2 | log(x)",
-   "id": "latex_parse-055"
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings.",
+   "id": "latex_parse-047"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\sin 2x"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "sin(2*x)",
    "expected_latex": "\\sin{\\left(2 x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "An unparenthesised argument runs over the implicit product 2x.",
-   "id": "latex_parse-056"
+   "id": "latex_parse-048"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\ln x^{2}"
    ],
-   "expected": "log(x**2)",
-   "expected_latex": "\\log{\\left(x^{2} \\right)}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [log(x**2), log(x)**2])",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "The superscript binds to x, not to ln x (Lark returns both readings).",
-   "sympy_gives": "ambiguous: log(x)**2 | log(x**2)",
-   "id": "latex_parse-057"
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings.",
+   "id": "latex_parse-049"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\sin x^{2}"
    ],
-   "expected": "sin(x**2)",
-   "expected_latex": "\\sin{\\left(x^{2} \\right)}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [sin(x**2), sin(x)**2])",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "The superscript binds to x, as textbooks read sin x^2.",
-   "sympy_gives": "ambiguous: sin(x)**2 | sin(x**2)",
-   "id": "latex_parse-058"
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings.",
+   "id": "latex_parse-050"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\sin(x)^{2}"
    ],
-   "expected": "sin(x)**2",
-   "expected_latex": "\\sin^{2}{\\left(x \\right)}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [sin(x**2), sin(x)**2])",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A parenthesised call is itself the atom, so the square applies to sin(x), as calculators read it.",
-   "sympy_gives": "ambiguous: sin(x)**2 | sin(x**2)",
-   "id": "latex_parse-059"
+   "source": "sympy",
+   "note": "Ambiguous even with parentheses: both readings come back in a Tree('_ambig').",
+   "id": "latex_parse-051"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\ln x + \\ln y"
    ],
-   "expected": "log(x) + log(y)",
-   "expected_latex": "\\log{\\left(x \\right)} + \\log{\\left(y \\right)}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [log(x + log(y)), log(x) + log(y)])",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "An unparenthesised argument stops at + or -.",
-   "sympy_gives": "ambiguous: log(x + log(y)) | log(x) + log(y)",
-   "id": "latex_parse-060"
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings. One reading is log(x + log(y)).",
+   "id": "latex_parse-052"
   },
   {
    "op": "parse_latex",
    "args": [
     "2\\sin x\\cos x"
    ],
-   "expected": "2*sin(x)*cos(x)",
-   "expected_latex": "2 \\sin{\\left(x \\right)} \\cos{\\left(x \\right)}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [2*sin(x*cos(x)), 2*sin(x)*cos(x)])",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "An unparenthesised argument stops at the next function name (double-angle identity).",
-   "sympy_gives": "ambiguous: 2*sin(x)*cos(x) | 2*sin(x*cos(x))",
-   "id": "latex_parse-061"
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings. One reading is 2*sin(x*cos(x)).",
+   "id": "latex_parse-053"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\sin^{2}x+\\cos^{2}x"
    ],
-   "expected": "sin(x)**2 + cos(x)**2",
-   "expected_latex": "\\sin^{2}{\\left(x \\right)} + \\cos^{2}{\\left(x \\right)}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [sin(x + cos(x)**2)**2, sin(x)**2 + cos(x)**2])",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Power-of-function notation; each argument stops at the +.",
-   "sympy_gives": "ambiguous: sin(x + cos(x)**2)**2 | sin(x)**2 + cos(x)**2",
-   "id": "latex_parse-062"
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings. One reading is sin(x + cos(x)**2)**2.",
+   "id": "latex_parse-054"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\sqrt{x}^{2}"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "x",
    "expected_latex": "x",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy simplifies sqrt(x)**2 to x.",
-   "id": "latex_parse-063"
+   "note": "sqrt(x)**2 evaluates to x at construction.",
+   "id": "latex_parse-055"
   },
   {
    "op": "parse_latex",
    "args": [
     "x^2y"
    ],
-   "expected": "x**2*y",
-   "expected_latex": "x^{2} y",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "An implicit product may follow a power (Lark rejects this input).",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches 'y' in the current parser context, at line 1 col 4 x^2y ^",
-   "id": "latex_parse-064"
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A power followed by a letter does not parse: no implicit-product rule takes a power as its left factor.",
+   "id": "latex_parse-056"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "x^{2}y"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "Bracing the exponent does not help: a power still cannot be followed by a letter.",
+   "id": "latex_parse-057"
   },
   {
    "op": "parse_latex",
    "args": [
     "x(x+1)"
    ],
-   "expected": "x*(x + 1)",
-   "expected_latex": "x \\left(x + 1\\right)",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [x(x + 1), x*(x + 1)])",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A single letter before parentheses is multiplication by default, never a function x.",
-   "sympy_gives": "ambiguous: x(x + 1) | x*(x + 1)",
-   "id": "latex_parse-065"
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings. One reading applies an undefined function x to x + 1.",
+   "id": "latex_parse-058"
   },
   {
    "op": "parse_latex",
    "args": [
     "-x^2"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "-x**2",
    "expected_latex": "- x^{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The minus sign applies after the power.",
-   "id": "latex_parse-066"
+   "note": "Unary minus versus the power.",
+   "id": "latex_parse-059"
   },
   {
    "op": "parse_latex",
    "args": [
     "-2^2"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "-4",
    "expected_latex": "-4",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The minus sign applies after the power.",
-   "id": "latex_parse-067"
+   "note": "Unary minus versus the power, on numbers.",
+   "id": "latex_parse-060"
   },
   {
    "op": "parse_latex",
    "args": [
     "e"
    ],
-   "expected": "E",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "e",
    "expected_latex": "e",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A lone e is Euler's number, not a symbol.",
-   "sympy_gives": "e",
-   "id": "latex_parse-068"
+   "source": "sympy",
+   "note": "A lone e is the plain Symbol e, not Euler's number E.",
+   "id": "latex_parse-061"
   },
   {
    "op": "parse_latex",
    "args": [
     "e^{x}"
    ],
-   "expected": "exp(x)",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "e**x",
    "expected_latex": "e^{x}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "e^{...} is the exponential function.",
-   "sympy_gives": "e**x",
-   "id": "latex_parse-069"
+   "source": "sympy",
+   "note": "A power of the Symbol e, not exp(x).",
+   "id": "latex_parse-062"
   },
   {
    "op": "parse_latex",
    "args": [
     "e^{\\ln 5}"
    ],
-   "expected": "5",
-   "expected_latex": "5",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "e**log(5)",
+   "expected_latex": "e^{\\log{\\left(5 \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "With e as Euler's number, SymPy simplifies exp(log(5)) to 5.",
-   "sympy_gives": "e**log(5)",
-   "id": "latex_parse-070"
+   "source": "sympy",
+   "note": "With e a Symbol, e**log(5) does not reduce to 5.",
+   "id": "latex_parse-063"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\pi"
    ],
-   "expected": "pi",
-   "expected_latex": "\\pi",
-   "compare": "exact",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
    "source": "sympy",
-   "profile": "both",
-   "note": "Lark lacks \\pi; computed as the app does (placeholder symbol, then .subs(..., pi)).",
-   "id": "latex_parse-071"
+   "note": "The Lark grammar has no \\pi command.",
+   "id": "latex_parse-064"
   },
   {
    "op": "parse_latex",
    "args": [
     "2\\pi r"
    ],
-   "expected": "2*pi*r",
-   "expected_latex": "2 \\pi r",
-   "compare": "exact",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
    "source": "sympy",
-   "profile": "both",
-   "note": "Lark lacks \\pi; computed as the app does (placeholder symbol, then .subs(..., pi)).",
-   "id": "latex_parse-072"
+   "note": "The Lark grammar has no \\pi command.",
+   "id": "latex_parse-065"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\frac{3\\pi}{4}"
    ],
-   "expected": "3*pi/4",
-   "expected_latex": "\\frac{3 \\pi}{4}",
-   "compare": "exact",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
    "source": "sympy",
-   "profile": "both",
-   "note": "Lark lacks \\pi; computed as the app does (placeholder symbol, then .subs(..., pi)).",
-   "id": "latex_parse-073"
+   "note": "The Lark grammar has no \\pi command.",
+   "id": "latex_parse-066"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\cos\\left(\\frac{\\pi}{3}\\right)"
    ],
-   "expected": "1/2",
-   "expected_latex": "\\frac{1}{2}",
-   "compare": "exact",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
    "source": "sympy",
-   "profile": "both",
-   "note": "Lark lacks \\pi; computed as the app does (placeholder symbol, then .subs(..., pi)).",
-   "id": "latex_parse-074"
+   "note": "The Lark grammar has no \\pi command.",
+   "id": "latex_parse-067"
   },
   {
    "op": "parse_latex",
    "args": [
     "0.75"
    ],
-   "expected": "3/4",
-   "expected_latex": "\\frac{3}{4}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "0.750000000000000",
+   "expected_latex": "0.75",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Typed decimals are exact rationals (SymPy gives Float).",
-   "sympy_gives": "0.750000000000000",
-   "id": "latex_parse-075"
+   "source": "sympy",
+   "note": "A typed decimal becomes a Float.",
+   "id": "latex_parse-068"
   },
   {
    "op": "parse_latex",
    "args": [
     "0.1+0.2"
    ],
-   "expected": "3/10",
-   "expected_latex": "\\frac{3}{10}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "0.300000000000000",
+   "expected_latex": "0.3",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Exact decimals add exactly; no binary rounding.",
-   "sympy_gives": "0.300000000000000",
-   "id": "latex_parse-076"
+   "source": "sympy",
+   "note": "The Floats are added at construction.",
+   "id": "latex_parse-069"
   },
   {
    "op": "parse_latex",
    "args": [
     "1.5x"
    ],
-   "expected": "3*x/2",
-   "expected_latex": "\\frac{3 x}{2}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "1.5*x",
+   "expected_latex": "1.5 x",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A decimal coefficient is exact.",
-   "sympy_gives": "1.5*x",
-   "id": "latex_parse-077"
+   "source": "sympy",
+   "note": "A Float coefficient.",
+   "id": "latex_parse-070"
   },
   {
    "op": "parse_latex",
    "args": [
     ".5"
    ],
-   "expected": "1/2",
-   "expected_latex": "\\frac{1}{2}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A decimal without a leading zero is still a number.",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '.' in the current parser context, at line 1 col 1 .5 ^",
-   "id": "latex_parse-078"
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A decimal without a leading digit does not tokenize.",
+   "id": "latex_parse-071"
   },
   {
    "op": "parse_latex",
    "args": [
     "-0.5"
    ],
-   "expected": "-1/2",
-   "expected_latex": "- \\frac{1}{2}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "-0.500000000000000",
+   "expected_latex": "-0.5",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A negative typed decimal is an exact negative rational (SymPy gives Float).",
-   "sympy_gives": "-0.500000000000000",
-   "id": "latex_parse-079"
+   "source": "sympy",
+   "note": "A negative Float.",
+   "id": "latex_parse-072"
   },
   {
    "op": "parse_latex",
    "args": [
     "x^{0.5}"
    ],
-   "expected": "sqrt(x)",
-   "expected_latex": "\\sqrt{x}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "x**0.5",
+   "expected_latex": "x^{0.5}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A decimal exponent is exact, so x^{0.5} is sqrt(x).",
-   "sympy_gives": "x**0.5",
-   "id": "latex_parse-080"
+   "source": "sympy",
+   "note": "A Float exponent, not sqrt(x).",
+   "id": "latex_parse-073"
   },
   {
    "op": "parse_latex",
    "args": [
     "(0.75)^{t}"
    ],
-   "expected": "(3/4)**t",
-   "expected_latex": "\\left(\\frac{3}{4}\\right)^{t}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "0.75**t",
+   "expected_latex": "{0.75}^{t}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A decimal base is exact.",
-   "sympy_gives": "0.75**t",
-   "id": "latex_parse-081"
+   "source": "sympy",
+   "note": "A Float base.",
+   "id": "latex_parse-074"
   },
   {
    "op": "parse_latex",
    "args": [
     "2x"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "2*x",
    "expected_latex": "2 x",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-082"
+   "id": "latex_parse-075"
   },
   {
    "op": "parse_latex",
    "args": [
     "3(x+1)"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "3*x + 3",
    "expected_latex": "3 x + 3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy distributes a number over a sum at construction.",
-   "id": "latex_parse-083"
+   "id": "latex_parse-076"
   },
   {
    "op": "parse_latex",
    "args": [
     "xy"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "x*y",
    "expected_latex": "x y",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-084"
+   "id": "latex_parse-077"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\frac12"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "1/2",
    "expected_latex": "\\frac{1}{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Brace-less \\frac with two digits.",
-   "id": "latex_parse-085"
+   "id": "latex_parse-078"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\frac{x^2-1}{x-1}"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "(x**2 - 1)/(x - 1)",
    "expected_latex": "\\frac{x^{2} - 1}{x - 1}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Parsing does not cancel the removable factor.",
-   "id": "latex_parse-086"
+   "id": "latex_parse-079"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\frac{1}{1+\\frac{1}{x}}"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "1/(1 + 1/x)",
    "expected_latex": "\\frac{1}{1 + \\frac{1}{x}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "A nested fraction stays nested.",
-   "id": "latex_parse-087"
+   "id": "latex_parse-080"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\sqrt{50}"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "5*sqrt(2)",
    "expected_latex": "5 \\sqrt{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy simplifies the radical at construction.",
-   "id": "latex_parse-088"
+   "id": "latex_parse-081"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\sqrt[3]{x}"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "x**(1/3)",
    "expected_latex": "\\sqrt[3]{x}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-089"
-  },
-  {
-   "op": "parse_latex",
-   "args": [
-    "\\sqrt{x^{2}}"
-   ],
-   "expected": "sqrt(x**2)",
-   "expected_latex": "\\sqrt{x^{2}}",
-   "compare": "exact",
-   "source": "sympy",
-   "profile": "both",
-   "note": "Without assumptions sqrt(x**2) does not simplify.",
-   "id": "latex_parse-090"
+   "id": "latex_parse-082"
   },
   {
    "op": "parse_latex",
@@ -1324,378 +1203,427 @@
     "\\sqrt{x^{2}}"
    ],
    "options": {
-    "assumptions": {
-     "x": {
-      "positive": true
-     }
-    }
+    "backend": "lark"
    },
-   "expected": "x",
-   "expected_latex": "x",
+   "expected": "sqrt(x**2)",
+   "expected_latex": "\\sqrt{x^{2}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "With x positive, sqrt(x**2) is x.",
-   "id": "latex_parse-091"
+   "note": "Without assumptions sqrt(x**2) does not simplify.",
+   "id": "latex_parse-083"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\left(x+1\\right)^2"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "(x + 1)**2",
    "expected_latex": "\\left(x + 1\\right)^{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-092"
+   "id": "latex_parse-084"
   },
   {
    "op": "parse_latex",
    "args": [
     "2\\cdot3"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "6",
    "expected_latex": "6",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-093"
+   "id": "latex_parse-085"
   },
   {
    "op": "parse_latex",
    "args": [
     "2 \\times x"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "2*x",
    "expected_latex": "2 x",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-094"
+   "id": "latex_parse-086"
   },
   {
    "op": "parse_latex",
    "args": [
     "6\\div 3"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "2",
    "expected_latex": "2",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-095"
+   "id": "latex_parse-087"
   },
   {
    "op": "parse_latex",
    "args": [
     "|x|"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "Abs(x)",
    "expected_latex": "\\left|{x}\\right|",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-096"
+   "id": "latex_parse-088"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\left|x\\right|"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "Abs(x)",
    "expected_latex": "\\left|{x}\\right|",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-097"
+   "id": "latex_parse-089"
   },
   {
    "op": "parse_latex",
    "args": [
     "|2x+1| = 5"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "Eq(Abs(2*x + 1), 5)",
    "expected_latex": "\\left|{2 x + 1}\\right| = 5",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-098"
+   "id": "latex_parse-090"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\sin^{-1} x"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "asin(x)",
    "expected_latex": "\\operatorname{asin}{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "^{-1} on a trig function is the inverse function, not a reciprocal.",
-   "id": "latex_parse-099"
+   "id": "latex_parse-091"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\arcsin x"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "asin(x)",
    "expected_latex": "\\operatorname{asin}{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-100"
+   "id": "latex_parse-092"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\cos^{-1}\\left(\\frac{1}{2}\\right)"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "pi/3",
    "expected_latex": "\\frac{\\pi}{3}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy evaluates acos(1/2) to pi/3.",
-   "id": "latex_parse-101"
+   "note": "acos(1/2) evaluates to pi/3 at construction.",
+   "id": "latex_parse-093"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\log_2 x"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "log(x)/log(2)",
    "expected_latex": "\\frac{\\log{\\left(x \\right)}}{\\log{\\left(2 \\right)}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-102"
+   "id": "latex_parse-094"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\log_{10}(x)"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "log(x)/log(10)",
    "expected_latex": "\\frac{\\log{\\left(x \\right)}}{\\log{\\left(10 \\right)}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-103"
+   "id": "latex_parse-095"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\log_2 8"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "3",
    "expected_latex": "3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy evaluates an exact integer logarithm.",
-   "id": "latex_parse-104"
+   "note": "An exact integer logarithm evaluates.",
+   "id": "latex_parse-096"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\log x"
    ],
-   "expected": "log(x)/log(10)",
-   "expected_latex": "\\frac{\\log{\\left(x \\right)}}{\\log{\\left(10 \\right)}}",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "log(x)",
+   "expected_latex": "\\log{\\left(x \\right)}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Unsubscripted \\log is the common (base-10) log, as US high-school and AP Precalculus texts read it; SymPy's log is natural (\\ln is natural).",
-   "sympy_gives": "log(x)",
-   "id": "latex_parse-105"
+   "source": "sympy",
+   "note": "An unsubscripted \\log is the natural log, the same as \\ln.",
+   "id": "latex_parse-097"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\log(100)"
    ],
-   "expected": "2",
-   "expected_latex": "2",
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "log(100)",
+   "expected_latex": "\\log{\\left(100 \\right)}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Base-10 \\log reads as log(100, 10), which SymPy evaluates to 2 exactly as it does for \\log_{10}(100); SymPy's natural log(100) would misgrade log(100) = 2 items.",
-   "sympy_gives": "log(100)",
-   "id": "latex_parse-106"
+   "source": "sympy",
+   "note": "The natural log of 100 stays unevaluated.",
+   "id": "latex_parse-098"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\ln x"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "log(x)",
    "expected_latex": "\\log{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-107"
+   "id": "latex_parse-099"
   },
   {
    "op": "parse_latex",
    "args": [
     "2\\ln x"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "2*log(x)",
    "expected_latex": "2 \\log{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-108"
+   "id": "latex_parse-100"
   },
   {
    "op": "parse_latex",
    "args": [
     "x^{-1/2}"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "1/sqrt(x)",
    "expected_latex": "\\frac{1}{\\sqrt{x}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-109"
+   "id": "latex_parse-101"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\sigma"
    ],
-   "expected": "sigma",
-   "expected_latex": "\\sigma",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Every lowercase Greek letter is a symbol (Lark's grammar lacks \\sigma).",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 1 \\sigma ^",
-   "id": "latex_parse-110"
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The grammar's Greek letters leave out \\sigma (and \\pi).",
+   "id": "latex_parse-102"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\sin\\theta"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "sin(theta)",
    "expected_latex": "\\sin{\\left(\\theta \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "A Greek letter is a valid unparenthesised function argument.",
-   "id": "latex_parse-111"
+   "id": "latex_parse-103"
   },
   {
    "op": "parse_latex",
    "args": [
     "-2x+5"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "5 - 2*x",
    "expected_latex": "5 - 2 x",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-112"
+   "id": "latex_parse-104"
   },
   {
    "op": "parse_latex",
    "args": [
     "-(x-3)"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "3 - x",
    "expected_latex": "3 - x",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-113"
+   "id": "latex_parse-105"
   },
   {
    "op": "parse_latex",
    "args": [
     "x = 3"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "Eq(x, 3)",
    "expected_latex": "x = 3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-114"
+   "id": "latex_parse-106"
   },
   {
    "op": "parse_latex",
    "args": [
     "2x+1 \\le 5"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "2*x + 1 <= 5",
    "expected_latex": "2 x + 1 \\leq 5",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-115"
+   "id": "latex_parse-107"
   },
   {
    "op": "parse_latex",
    "args": [
     "2x - 1 > 3"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "2*x - 1 > 3",
    "expected_latex": "2 x - 1 > 3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "A strict inequality stays strict (StrictGreaterThan), as inequality_1d keys need.",
-   "id": "latex_parse-116"
+   "note": "A strict inequality is a StrictGreaterThan.",
+   "id": "latex_parse-108"
   },
   {
    "op": "parse_latex",
    "args": [
     "x \\geq -2"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "x >= -2",
    "expected_latex": "x \\geq -2",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-117"
+   "id": "latex_parse-109"
   },
   {
    "op": "parse_latex",
    "args": [
     "x \\ne 0"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "Ne(x, 0)",
    "expected_latex": "x \\neq 0",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-118"
+   "id": "latex_parse-110"
   },
   {
    "op": "parse_latex",
    "args": [
     "\\infty"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "oo",
    "expected_latex": "\\infty",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-119"
+   "id": "latex_parse-111"
   },
   {
    "op": "parse_latex",
    "args": [
     "-\\infty"
    ],
+   "options": {
+    "backend": "lark"
+   },
    "expected": "-oo",
    "expected_latex": "-\\infty",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "latex_parse-120"
+   "id": "latex_parse-112"
   }
  ]
 }

@@ -12,12 +12,10 @@ Writes one JSON file per topic into oracle/cases/. The Rust conformance
 runner (crates/rsympy/tests/oracle.rs) reads those files; Rust CI never needs
 Python. Do not edit the JSON by hand -- change this script and regenerate.
 
-The case format is documented in caselib.py. Compare modes:
-  exact          our canonical str() must equal the expected one
-  equivalent     same value (numeric spot checks + simplify(a - b) == 0)
-  set            same solution set, any order
-  antiderivative d/dx(ours) must be equivalent to the integrand
-  error          we must refuse the input with the expected error kind
+The case format is documented in caselib.py. rsympy copies SymPy 1:1, so a
+case passes only when rsympy's str() of the answer equals SymPy's exactly
+(compare "exact"), or when rsympy raises the same exception class SymPy
+raised (compare "error"). There is no "close enough".
 
 Topics live in two places: the general ones below, and one module per topic
 in oracle/topics/ (each defines TOPIC and generate()).
@@ -30,12 +28,12 @@ import random
 
 import sympy as sp
 from sympy import (
-    Interval, Matrix, Rational, S, apart, cancel, cos, diff, exp, expand,
+    Matrix, Rational, S, apart, cancel, cos, diff, exp, expand,
     factor, factorint, gcd, integrate, lcm, limit, log, oo, pi, series,
     simplify, sin, solveset, sqrt, symbols, tan, together, trigsimp,
 )
 
-from caselib import PROFILES, SOURCES, STRICT_OPS, case
+from caselib import SOURCES, case
 
 PINNED = "1.14.0"
 assert sp.__version__ == PINNED, f"need sympy=={PINNED}, have {sp.__version__}"
@@ -51,6 +49,9 @@ OUT = pathlib.Path(__file__).parent / "cases"
 
 
 def numbers():
+    """Ops: sympify [text] = sympify(text); expand [text] = expand(sympify(text));
+    gcd/lcm [m, k] = gcd(m, k) / lcm(m, k); factorint [m] = factorint(m) as a
+    Dict; evalf [e, n] = e.evalf(n)."""
     # Inputs are strings: building them in Python would evaluate them before
     # we could record the question.
     srcs = [
@@ -67,8 +68,8 @@ def numbers():
         "factorial(20)",
         "binomial(30, 12)",
     ]
-    out = [case("eval", [s], sp.sympify(s)) for s in srcs]
-    # SymPy leaves complex products unexpanded; expand() is what a student wants.
+    out = [case("sympify", [s], sp.sympify(s)) for s in srcs]
+    # SymPy leaves complex products unexpanded; expand() multiplies them out.
     for s in ["(1 + I)*(2 - 3*I)", "(3 + 4*I)/(1 - 2*I)"]:
         out.append(case("expand", [s], expand(sp.sympify(s))))
     # Integer functions.
@@ -83,6 +84,8 @@ def numbers():
 
 
 def algebra():
+    """Ops: expand/factor/cancel/together [e] = f(e); apart [e, x] = apart(e, x);
+    gcd [a, b] = gcd(a, b); subs [e, x, v] = e.subs(x, v)."""
     out = []
     for e in [
         (x + 1) ** 2,
@@ -124,6 +127,9 @@ def algebra():
 
 
 def equations():
+    """Ops: solveset [e, x, domain] = solveset(e, x, domain), domain being
+    S.Reals or S.Complexes (printed "Reals"/"Complexes"); linsolve [eqs, syms]
+    = linsolve(list(eqs), *syms)."""
     out = []
     eqs = [
         2 * x + 3 - 11,
@@ -139,21 +145,25 @@ def equations():
         abs(x - 3) - 5,
     ]
     for e in eqs:
-        out.append(case("solveset", [e, x, "Reals"], solveset(e, x, S.Reals), compare="set"))
+        out.append(case("solveset", [e, x, "Reals"], solveset(e, x, S.Reals)))
     for e in [sin(x) - S.Half, 2 * cos(x) + 1]:
-        out.append(case("solveset", [e, x, "Reals"], solveset(e, x, S.Reals), compare="set"))
+        out.append(case("solveset", [e, x, "Reals"], solveset(e, x, S.Reals)))
     for e in [x**2 + 1, x**2 + 2 * x + 5]:
         out.append(
-            case("solveset", [e, x, "Complexes"], solveset(e, x, S.Complexes), compare="set")
+            case("solveset", [e, x, "Complexes"], solveset(e, x, S.Complexes))
         )
     for ineq in [2 * x - 3 > 5, x**2 - 4 < 0, (x - 1) / (x + 2) >= 0, abs(x - 1) <= 3]:
-        out.append(case("solveset", [ineq, x, "Reals"], solveset(ineq, x, S.Reals), compare="set"))
+        out.append(case("solveset", [ineq, x, "Reals"], solveset(ineq, x, S.Reals)))
     system = [x + y - 5, 2 * x - y - 1]
-    out.append(case("linsolve", [sp.Tuple(*system), sp.Tuple(x, y)], sp.linsolve(system, x, y), compare="set"))
+    out.append(case("linsolve", [sp.Tuple(*system), sp.Tuple(x, y)], sp.linsolve(system, x, y)))
     return out
 
 
 def calculus():
+    """Ops: diff [e, x] or [e, x, k] = diff(e, x[, k]); limit [e, x, x0, dir] =
+    limit(e, x, x0, dir); integrate [e, x] = integrate(e, x), and
+    integrate [e, x, lo, hi] = integrate(e, (x, lo, hi)); series [e, x, x0, n]
+    = series(e, x, x0, n); summation [e, k, lo, hi] = summation(e, (k, lo, hi))."""
     out = []
     for e in [
         x**3 - 2 * x,
@@ -191,9 +201,9 @@ def calculus():
         log(x),
         1 / cos(x) ** 2,
     ]:
-        out.append(case("integrate", [e, x], integrate(e, x), compare="antiderivative"))
+        out.append(case("integrate", [e, x], integrate(e, x)))
     for e, lo, hi in [(x**2, 0, 3), (sin(x), 0, pi), (exp(-x), 0, oo), (1 / x**2, 1, oo)]:
-        out.append(case("integrate_definite", [e, x, lo, hi], integrate(e, (x, lo, hi))))
+        out.append(case("integrate", [e, x, lo, hi], integrate(e, (x, lo, hi))))
     for e in [exp(x), sin(x), log(1 + x), 1 / (1 - x)]:
         out.append(case("series", [e, x, 0, 6], series(e, x, 0, 6)))
     out.append(case("summation", [n**2, n, 1, 10], sp.summation(n**2, (n, 1, 10))))
@@ -202,6 +212,8 @@ def calculus():
 
 
 def simplification():
+    """Ops: simplify/radsimp/trigsimp [e] = f(e); logcombine/expand_log [e] =
+    f(e, **options), options being {"force": True}."""
     out = []
     for e in [
         sin(x) ** 2 + cos(x) ** 2,
@@ -211,18 +223,24 @@ def simplification():
         exp(x) * exp(y),
         (1 - cos(x) ** 2) / sin(x),
     ]:
-        out.append(case("simplify", [e], simplify(e), compare="equivalent"))
+        out.append(case("simplify", [e], simplify(e)))
     for e in [1 / sqrt(2), 1 / (1 + sqrt(2)), 3 / (sqrt(5) - sqrt(2))]:
         out.append(case("radsimp", [e], sp.radsimp(e)))
+    # force=True skips the positivity checks; with these assumption-free
+    # symbols both calls would otherwise return the input unchanged.
+    force = {"force": True}
     for e in [log(x) + log(y), 2 * log(x) - log(y)]:
-        out.append(case("logcombine", [e], sp.logcombine(e, force=True)))
+        out.append(case("logcombine", [e], sp.logcombine(e, **force), options=dict(force)))
     for e in [log(x * y), log(x**2 / y)]:
-        out.append(case("expand_log", [e], sp.expand_log(e, force=True)))
-    out.append(case("trigsimp", [sin(x) / cos(x)], trigsimp(sin(x) / cos(x)), compare="equivalent"))
+        out.append(case("expand_log", [e], sp.expand_log(e, **force), options=dict(force)))
+    out.append(case("trigsimp", [sin(x) / cos(x)], trigsimp(sin(x) / cos(x))))
     return out
 
 
 def matrices():
+    """Ops on a Matrix M: det = M.det(); inv = M.inv(); rref = M.rref()[0] (the
+    reduced matrix, without the pivot tuple); rank = M.rank(); eigenvals =
+    M.eigenvals() as a Dict."""
     out = []
     mats = [
         Matrix([[1, 2], [3, 4]]),
@@ -236,30 +254,7 @@ def matrices():
     out.append(case("rref", [m], m.rref()[0]))
     out.append(case("rank", [m], S(m.rank())))
     for e in [Matrix([[2, 1], [1, 2]]), Matrix([[4, 1], [2, 3]])]:
-        out.append(case("eigenvals", [e], sp.Dict(e.eigenvals()), compare="set"))
-    return out
-
-
-def printing():
-    out = []
-    for e in [
-        x**2 / 2 + 3 * x - 1,
-        sqrt(x) / (x + 1),
-        sin(x) ** 2,
-        Rational(-3, 4) * x * y,
-        exp(-x) * log(x),
-        Interval(0, 1, right_open=True),
-    ]:
-        out.append(case("print", [e], e))
-    # Parsing: plain-text input as a student would type it.
-    from sympy.parsing.sympy_parser import (
-        convert_xor, implicit_multiplication_application, parse_expr,
-        standard_transformations,
-    )
-
-    tr = standard_transformations + (implicit_multiplication_application, convert_xor)
-    for src in ["x^2 + 2x + 1", "3(x - 1)", "sin x + cos(2x)", "2^10", "sqrt(16)x"]:
-        out.append(case("parse", [src], parse_expr(src, transformations=tr)))
+        out.append(case("eigenvals", [e], sp.Dict(e.eigenvals())))
     return out
 
 
@@ -270,7 +265,6 @@ TOPICS = {
     "calculus": calculus,
     "simplify": simplification,
     "matrices": matrices,
-    "printing": printing,
 }
 
 
@@ -284,43 +278,44 @@ def topic_modules():
 
 def fresh_state():
     """Reset what makes SymPy's answers depend on history: its caches (incl.
-    the factorint cache) and the random module some algorithms draw from."""
+    the factorint cache) and all three random streams it draws from: Python's
+    global `random`, sympy.core.random.rng (sample points in Expr.equals,
+    random_complex_number, ...) and the assumptions shuffler (sympy's seed()
+    resets both of SymPy's own)."""
     sp.core.cache.clear_cache()
+    from sympy.core.random import seed
     from sympy.ntheory import factor_
 
     factor_.factor_cache.clear()
     random.seed(0)
+    seed(0)
 
 
-COMPARES = ("exact", "equivalent", "set", "antiderivative", "error")
+COMPARES = ("exact", "error")
 
 
 def check_schema(c):
     """Catch cases built by hand (not through caselib) that miss a field."""
-    for key in ("op", "args", "expected", "compare", "source", "profile"):
+    for key in ("op", "args", "expected", "compare", "source"):
         assert key in c, f"{c.get('id')}: missing {key}"
     assert c["compare"] in COMPARES, f"{c['id']}: compare {c['compare']!r}"
     assert c["source"] in SOURCES, f"{c['id']}: source {c['source']!r}"
-    assert c["profile"] in PROFILES, f"{c['id']}: profile {c['profile']!r}"
-    if c["source"] == "spec" or c["op"] in STRICT_OPS:
-        assert c["profile"] == "strict", f"{c['id']}: must be profile strict"
-    if c["source"] == "spec":
-        assert c.get("note"), f"{c['id']}: spec cases need a note"
+    if c["compare"] == "error":
+        assert c["expected"].isidentifier(), f"{c['id']}: error cases expect an exception class name"
+    for gone in ("profile", "sympy_gives"):
+        assert gone not in c, f"{c['id']}: {gone} is no longer part of the format"
 
 
 def check_consistent(by_topic):
-    """The same call must have one answer wherever it appears, unless the two
-    cases bind different profiles (a spec case may overrule SymPy)."""
+    """The same call must have one answer wherever it appears."""
     seen = {}
     clashes = []
-    for topic, cases in by_topic.items():
+    for cases in by_topic.values():
         for c in cases:
             key = json.dumps([c["op"], c["args"], c.get("options"), c.get("assumptions")], sort_keys=True)
-            for other in seen.get(key, []):
-                overlap = "both" in (c["profile"], other["profile"]) or c["profile"] == other["profile"]
-                if overlap and c["expected"] != other["expected"]:
-                    clashes.append(f"{other['id']} vs {c['id']}: {other['expected']!r} != {c['expected']!r}")
-            seen.setdefault(key, []).append(c)
+            if key in seen and seen[key]["expected"] != c["expected"]:
+                clashes.append(f"{seen[key]['id']} vs {c['id']}: {seen[key]['expected']!r} != {c['expected']!r}")
+            seen.setdefault(key, c)
     assert not clashes, "contradictory cases:\n  " + "\n  ".join(clashes)
 
 

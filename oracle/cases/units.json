@@ -3,627 +3,990 @@
  "topic": "units",
  "cases": [
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "12 m/s"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "12*meter/second",
    "expected_latex": "\\frac{12 \\text{m}}{\\text{s}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; the basic case (fails in the app's numeric grader today)",
-   "sympy_gives": "12*meter/second",
+   "source": "sympy",
+   "note": "m and s are meter and second in the units namespace, not plain Symbols.",
    "id": "units-000"
   },
   {
-   "op": "parse_quantity",
-   "args": [
-    "12\\,\\mathrm{m/s}"
-   ],
-   "expected": "12*meter/second",
-   "expected_latex": "\\frac{12 \\text{m}}{\\text{s}}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; LaTeX: thin space and \\mathrm wrapper (refused by the app today)",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 5 12\\,\\mathrm{m/s} ^",
-   "id": "units-001"
-  },
-  {
-   "op": "parse_quantity",
-   "args": [
-    "12\\,\\frac{\\mathrm{m}}{\\mathrm{s}}"
-   ],
-   "expected": "12*meter/second",
-   "expected_latex": "\\frac{12 \\text{m}}{\\text{s}}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; unit written as a LaTeX fraction",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 11 12\\,\\frac{\\mathrm{m}}{\\mathrm{s}} ^",
-   "id": "units-002"
-  },
-  {
-   "op": "parse_quantity",
-   "args": [
-    "9.8\\,\\mathrm{m/s^2}"
-   ],
-   "expected": "49*meter/(5*second**2)",
-   "expected_latex": "\\frac{49 \\text{m}}{5 \\text{s}^{2}}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; exact decimal magnitude and a squared unit",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 6 9.8\\,\\mathrm{m/s^2} ^",
-   "id": "units-003"
-  },
-  {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "9.8 m/s²"
    ],
-   "expected": "49*meter/(5*second**2)",
-   "expected_latex": "\\frac{49 \\text{m}}{5 \\text{s}^{2}}",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "9.8*meter/s²",
+   "expected_latex": "\\frac{9.8 \\text{m}}{s²}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; unicode superscript two",
-   "sympy_gives": "9.8*meter/s²",
-   "id": "units-004"
+   "source": "sympy",
+   "note": "A typed decimal is a Float; the superscript two is part of the name s², an unknown name, so it becomes a plain Symbol.",
+   "id": "units-001"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "9.8 m/s/s"
    ],
-   "expected": "49*meter/(5*second**2)",
-   "expected_latex": "\\frac{49 \\text{m}}{5 \\text{s}^{2}}",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "9.8*meter/second**2",
+   "expected_latex": "\\frac{9.8 \\text{m}}{\\text{s}^{2}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; repeated division is left-associative",
-   "sympy_gives": "9.8*meter/second**2",
-   "id": "units-005"
+   "source": "sympy",
+   "note": "Repeated division.",
+   "id": "units-002"
   },
   {
-   "op": "parse_quantity",
-   "args": [
-    "-9.8\\,\\mathrm{m\\,s^{-2}}"
-   ],
-   "expected": "-49*meter/(5*second**2)",
-   "expected_latex": "- \\frac{49 \\text{m}}{5 \\text{s}^{2}}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; negative magnitude; negative power instead of /",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 7 -9.8\\,\\mathrm{m\\,s^{-2}} ^",
-   "id": "units-006"
-  },
-  {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "5 N"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "5*newton",
    "expected_latex": "5 \\text{N}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; N is newton",
-   "sympy_gives": "5*newton",
-   "id": "units-007"
+   "source": "sympy",
+   "note": "N is newton in the units namespace, which shadows SymPy's N().",
+   "id": "units-003"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "3 kg·m/s"
    ],
-   "expected": "3*kilogram*meter/second",
-   "expected_latex": "\\frac{3 \\text{kg} \\text{m}}{\\text{s}}",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "3*kg·m/second",
+   "expected_latex": "\\frac{3 kg·m}{\\text{s}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; middle dot U+00B7 multiplies units",
-   "sympy_gives": "3*kg·m/second",
-   "id": "units-008"
+   "source": "sympy",
+   "note": "U+00B7 MIDDLE DOT is a Python identifier character, so kg·m is one plain Symbol.",
+   "id": "units-004"
   },
   {
-   "op": "parse_quantity",
-   "args": [
-    "3\\,\\mathrm{kg\\cdot m/s}"
-   ],
-   "expected": "3*kilogram*meter/second",
-   "expected_latex": "\\frac{3 \\text{kg} \\text{m}}{\\text{s}}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; \\cdot inside \\mathrm",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 4 3\\,\\mathrm{kg\\cdot m/s} ^",
-   "id": "units-009"
-  },
-  {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "3 kg m/s"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "3*kilogram*meter/second",
    "expected_latex": "\\frac{3 \\text{kg} \\text{m}}{\\text{s}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; a space multiplies units",
-   "sympy_gives": "3*kilogram*meter/second",
-   "id": "units-010"
+   "source": "sympy",
+   "note": "A space between names is implicit multiplication.",
+   "id": "units-005"
   },
   {
-   "op": "parse_quantity",
-   "args": [
-    "2.5\\times10^{3}\\,\\mathrm{J}"
-   ],
-   "expected": "2500*joule",
-   "expected_latex": "2500 \\text{J}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; scientific magnitude",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 18 2.5\\times10^{3}\\,\\mathrm{J} ^",
-   "id": "units-011"
-  },
-  {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "60 km/h"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "60*kilometer/hour",
    "expected_latex": "\\frac{60 \\text{km}}{\\text{hour}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; h is hour",
-   "sympy_gives": "60*kilometer/hour",
-   "id": "units-012"
+   "source": "sympy",
+   "note": "h is hour in the units namespace.",
+   "id": "units-006"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "25 mph"
    ],
-   "expected": "25*mile/hour",
-   "expected_latex": "\\frac{25 \\text{mile}}{\\text{hour}}",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "25*mph",
+   "expected_latex": "25 mph",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; mph is mile/hour (SymPy has no mph)",
-   "sympy_gives": "25*mph",
-   "id": "units-013"
+   "source": "sympy",
+   "note": "The units namespace has no mph, so it becomes a plain Symbol.",
+   "id": "units-007"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "3 hr"
    ],
-   "expected": "3*hour",
-   "expected_latex": "3 \\text{hour}",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "3*hr",
+   "expected_latex": "3 hr",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; hr is hour (SymPy has no hr)",
-   "sympy_gives": "3*hr",
-   "id": "units-014"
+   "source": "sympy",
+   "note": "The units namespace has no hr, so it becomes a plain Symbol.",
+   "id": "units-008"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "5 min"
    ],
-   "expected": "5*minute",
-   "expected_latex": "5 \\text{minute}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; min is minute, never min() or minimum",
-   "sympy_gives": "error: TypeError: unsupported operand type(s) for *: 'Integer' and 'FunctionClass'",
-   "id": "units-015"
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "TypeError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "min is not in the units namespace; parse_expr maps Python's min to SymPy's Min, and an Integer times a function class raises TypeError.",
+   "id": "units-009"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "4 s"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "4*second",
    "expected_latex": "4 \\text{s}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; s is second, not a variable",
-   "sympy_gives": "4*second",
-   "id": "units-016"
+   "source": "sympy",
+   "note": "s is second in the units namespace.",
+   "id": "units-010"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "4 sec"
    ],
-   "expected": "4*second",
-   "expected_latex": "4 \\text{s}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; sec is second, not secant",
-   "sympy_gives": "error: TypeError: unsupported operand type(s) for *: 'Integer' and 'FunctionClass'",
-   "id": "units-017"
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "TypeError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "sec is not in the units namespace, so it is SymPy's sec function, and an Integer times a function class raises TypeError.",
+   "id": "units-011"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "3 ms"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "3*millisecond",
    "expected_latex": "3 \\text{ms}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; ms is millisecond, never meter*second",
-   "sympy_gives": "3*millisecond",
-   "id": "units-018"
+   "source": "sympy",
+   "note": "ms is millisecond in the units namespace, not meter*second.",
+   "id": "units-012"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "3 m·s"
    ],
-   "expected": "3*meter*second",
-   "expected_latex": "3 \\text{m} \\text{s}",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "3*m·s",
+   "expected_latex": "3 m·s",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; meter times second needs an explicit separator",
-   "sympy_gives": "3*m·s",
-   "id": "units-019"
+   "source": "sympy",
+   "note": "The middle dot makes m·s one plain Symbol.",
+   "id": "units-013"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "5m"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "5*meter",
    "expected_latex": "5 \\text{m}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; no space between number and unit",
-   "sympy_gives": "5*meter",
-   "id": "units-020"
+   "source": "sympy",
+   "note": "No space between the number and the unit.",
+   "id": "units-014"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "12 in"
    ],
-   "expected": "12*inch",
-   "expected_latex": "12 \\text{inch}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; in is inch, not the word",
-   "sympy_gives": "error: SyntaxError: invalid syntax (<string>, line 1)",
-   "id": "units-021"
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "SyntaxError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "in is a Python keyword, so the text is a Python SyntaxError.",
+   "id": "units-015"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "5 g"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "5*gram",
    "expected_latex": "5 \\text{g}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; g is gram, not gravitational acceleration",
-   "sympy_gives": "5*gram",
-   "id": "units-022"
+   "source": "sympy",
+   "note": "g is gram in the units namespace.",
+   "id": "units-016"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "450 nm"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "450*nanometer",
    "expected_latex": "450 \\text{nm}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; a prefixed unit SymPy names keeps its name",
-   "sympy_gives": "450*nanometer",
-   "id": "units-023"
+   "source": "sympy",
+   "note": "nm is nanometer in the units namespace.",
+   "id": "units-017"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "1.2 kN"
    ],
-   "expected": "1200*newton",
-   "expected_latex": "1200 \\text{N}",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "1.2*kN",
+   "expected_latex": "1.2 kN",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; SymPy has no kilonewton Quantity, so the prefix folds into the number",
-   "sympy_gives": "1.2*kN",
-   "id": "units-024"
+   "source": "sympy",
+   "note": "The units namespace has no kN, so it becomes a plain Symbol.",
+   "id": "units-018"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "101.3 kPa"
    ],
-   "expected": "1013*kilopascal/10",
-   "expected_latex": "\\frac{1013 \\text{kPa}}{10}",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "101.3*kilopascal",
+   "expected_latex": "101.3 \\text{kPa}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; SymPy has a kilopascal Quantity (u.kPa), so this prefixed unit keeps its name, unlike kN",
-   "sympy_gives": "101.3*kilopascal",
-   "id": "units-025"
+   "source": "sympy",
+   "note": "kPa is in the units namespace; the Quantity is named kilopascal.",
+   "id": "units-019"
   },
   {
-   "op": "parse_quantity",
-   "args": [
-    "10\\,\\Omega"
-   ],
-   "expected": "10*ohm",
-   "expected_latex": "10 \\Omega",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; \\Omega is ohm",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 5 10\\,\\Omega ^",
-   "id": "units-026"
-  },
-  {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "2 A"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "2*ampere",
    "expected_latex": "2 \\text{A}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; A is ampere, not a variable",
-   "sympy_gives": "2*ampere",
-   "id": "units-027"
+   "source": "sympy",
+   "note": "A is ampere in the units namespace.",
+   "id": "units-020"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "300 K"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "300*kelvin",
    "expected_latex": "300 \\text{K}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; K is kelvin, an absolute temperature with no degree sign",
-   "sympy_gives": "300*kelvin",
-   "id": "units-028"
+   "source": "sympy",
+   "note": "K is kelvin in the units namespace.",
+   "id": "units-021"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "1.5 L"
    ],
-   "expected": "3*liter/2",
-   "expected_latex": "\\frac{3 \\text{l}}{2}",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "1.5*liter",
+   "expected_latex": "1.5 \\text{l}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; capital L is liter",
-   "sympy_gives": "1.5*liter",
-   "id": "units-029"
+   "source": "sympy",
+   "note": "L is liter in the units namespace; the decimal is a Float.",
+   "id": "units-022"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "250 mL"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "250*milliliter",
    "expected_latex": "250 \\text{ml}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; mL is milliliter, never meter*liter",
-   "sympy_gives": "250*milliliter",
-   "id": "units-030"
+   "source": "sympy",
+   "note": "mL is milliliter in the units namespace, not meter*liter.",
+   "id": "units-023"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "6 ft"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "6*foot",
    "expected_latex": "6 \\text{ft}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; ft is foot",
-   "sympy_gives": "6*foot",
-   "id": "units-031"
+   "source": "sympy",
+   "note": "ft is foot in the units namespace.",
+   "id": "units-024"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "4186 J/(kg·°C)"
    ],
-   "expected": "4186*joule/(kelvin*kilogram)",
-   "expected_latex": "\\frac{4186 \\text{J}}{\\text{K} \\text{kg}}",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "4186*joule/kg·°C",
+   "expected_latex": "\\frac{4186 \\text{J}}{kg·°C}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; decided: °C inside a compound unit is a temperature step, equal to kelvin",
-   "sympy_gives": "4186*joule/kg·°C",
-   "id": "units-032"
+   "source": "sympy",
+   "note": "Python's tokenizer reads kg·°C as one name, so it becomes one plain Symbol.",
+   "id": "units-025"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "20 °C"
    ],
-   "expected": "20*celsius",
-   "expected_latex": "20 ^\\circ\\mathrm{C}",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "20*°C",
+   "expected_latex": "20 °C",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; decided: a standalone °C is an absolute Celsius temperature",
-   "sympy_gives": "20*°C",
-   "id": "units-033"
+   "source": "sympy",
+   "note": "°C is read as one name and becomes a plain Symbol; the units namespace has no Celsius unit.",
+   "id": "units-026"
   },
   {
-   "op": "parse_quantity",
-   "args": [
-    "20^{\\circ}\\mathrm{C}"
-   ],
-   "expected": "20*celsius",
-   "expected_latex": "20 ^\\circ\\mathrm{C}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; LaTeX degree-Celsius",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 5 20^{\\circ}\\mathrm{C} ^",
-   "id": "units-034"
-  },
-  {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "68 °F"
    ],
-   "expected": "68*fahrenheit",
-   "expected_latex": "68 ^\\circ\\mathrm{F}",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "68*°F",
+   "expected_latex": "68 °F",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; decided: a standalone °F is an absolute Fahrenheit temperature",
-   "sympy_gives": "68*°F",
-   "id": "units-035"
+   "source": "sympy",
+   "note": "°F is read as one name and becomes a plain Symbol.",
+   "id": "units-027"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "20 C"
    ],
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
    "expected": "20*coulomb",
    "expected_latex": "20 \\text{C}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; a bare C is coulomb, never Celsius",
-   "sympy_gives": "20*coulomb",
-   "id": "units-036"
+   "source": "sympy",
+   "note": "C is coulomb in the units namespace.",
+   "id": "units-028"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "30°"
    ],
-   "expected": "30*degree",
-   "expected_latex": "30 ^\\circ",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "30*°",
+   "expected_latex": "30 °",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; a bare degree sign is an angle",
-   "sympy_gives": "30*°",
-   "id": "units-037"
+   "source": "sympy",
+   "note": "A bare degree sign becomes the plain Symbol °, not the degree unit.",
+   "id": "units-029"
   },
   {
-   "op": "parse_quantity",
-   "args": [
-    "3 \\text{ m}"
-   ],
-   "expected": "3*meter",
-   "expected_latex": "3 \\text{m}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; \\text wrapper with a leading space",
-   "sympy_gives": "error: UnexpectedCharacters: No terminal matches '\\' in the current parser context, at line 1 col 3 3 \\text{ m} ^",
-   "id": "units-038"
-  },
-  {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "12"
    ],
-   "expected": "invalid:missing_unit",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; a bare number on a quantity item is a free retry",
-   "sympy_gives": "12",
-   "id": "units-039"
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "12",
+   "expected_latex": "12",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A bare number with no unit.",
+   "id": "units-030"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "m"
    ],
-   "expected": "invalid:missing_number",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; a unit with no number; m is still metre, never a variable",
-   "sympy_gives": "meter",
-   "id": "units-040"
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "meter",
+   "expected_latex": "\\text{m}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A lone m is meter.",
+   "id": "units-031"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "12 furlongs"
    ],
-   "expected": "refused:furlongs",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; unknown units are refused by name, never a Symbol",
-   "sympy_gives": "12*furlongs",
-   "id": "units-041"
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "12*furlongs",
+   "expected_latex": "12 furlongs",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "An unknown unit name becomes a plain Symbol.",
+   "id": "units-032"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "1.2 KN"
    ],
-   "expected": "refused:KN",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; units are case-sensitive whole words: never kelvin*newton",
-   "sympy_gives": "1.2*KN",
-   "id": "units-042"
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "1.2*KN",
+   "expected_latex": "1.2 KN",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "KN is one unknown name: implicit_multiplication does not split names into letters.",
+   "id": "units-033"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "4 S"
    ],
-   "expected": "refused:S",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; capital S (siemens) is not in the vocabulary, never seconds",
-   "sympy_gives": "4*siemens",
-   "id": "units-043"
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "4*siemens",
+   "expected_latex": "4 \\text{S}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "S is siemens in the units namespace, which shadows SymPy's S.",
+   "id": "units-034"
   },
   {
-   "op": "parse_quantity",
+   "op": "parse_expr",
    "args": [
     "3 kgm/s"
    ],
-   "expected": "refused:kgm",
+   "options": {
+    "local_dict": "sympy.physics.units",
+    "transformations": [
+     "lambda_notation",
+     "auto_symbol",
+     "repeated_decimals",
+     "auto_number",
+     "factorial_notation",
+     "implicit_multiplication",
+     "convert_xor"
+    ]
+   },
+   "expected": "3*kgm/second",
+   "expected_latex": "\\frac{3 kgm}{\\text{s}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "kgm is one unknown name, so it becomes a plain Symbol.",
+   "id": "units-035"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "12\\,\\mathrm{m/s}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "closed unit vocabulary; whole words only: kgm is not split into kg*m",
-   "sympy_gives": "3*kgm/second",
+   "source": "sympy",
+   "note": "The \\, spacing parses; the Lark grammar accepts \\mathrm only as the differential \\mathrm{d}, so \\mathrm{m/s} matches no terminal at the backslash.",
+   "id": "units-036"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "12\\,\\frac{\\mathrm{m}}{\\mathrm{s}}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The unit written as a fraction of \\mathrm names.",
+   "id": "units-037"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "9.8\\,\\mathrm{m/s^2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A decimal magnitude and a squared unit inside \\mathrm.",
+   "id": "units-038"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "-9.8\\,\\mathrm{m\\,s^{-2}}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A negative magnitude and a negative power inside \\mathrm.",
+   "id": "units-039"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "3\\,\\mathrm{kg\\cdot m/s}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "\\cdot between units inside \\mathrm.",
+   "id": "units-040"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "2.5\\times10^{3}\\,\\mathrm{J}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The \\times10^{3} magnitude parses; the parse fails at \\mathrm.",
+   "id": "units-041"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "10\\,\\Omega"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\Omega.",
+   "id": "units-042"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "20^{\\circ}\\mathrm{C}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\circ.",
+   "id": "units-043"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "3 \\text{ m}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar accepts \\text only as the differential \\text{d}, so \\text{ m} matches no terminal.",
    "id": "units-044"
   },
   {
@@ -636,7 +999,6 @@
    "expected_latex": "\\frac{216 \\text{km}}{5 \\text{hour}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "units-045"
   },
   {
@@ -649,7 +1011,6 @@
    "expected_latex": "\\frac{50 \\text{m}}{3 \\text{s}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "units-046"
   },
   {
@@ -662,7 +1023,6 @@
    "expected_latex": "\\frac{1397 \\text{m}}{125 \\text{s}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "units-047"
   },
   {
@@ -675,7 +1035,6 @@
    "expected_latex": "10800 \\text{s}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "units-048"
   },
   {
@@ -688,7 +1047,6 @@
    "expected_latex": "\\frac{3 \\text{hour}}{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "units-049"
   },
   {
@@ -701,8 +1059,7 @@
    "expected_latex": "\\frac{5 \\text{kg} \\text{m}}{\\text{s}^{2}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "a list target: express in these base units",
+   "note": "A list target: express in these units together.",
    "id": "units-050"
   },
   {
@@ -715,7 +1072,6 @@
    "expected_latex": "3 \\text{N} \\text{s}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "units-051"
   },
   {
@@ -728,8 +1084,7 @@
    "expected_latex": "\\text{J}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "coefficient 1 is not printed",
+   "note": "The coefficient is 1, so the result prints as the bare unit.",
    "id": "units-052"
   },
   {
@@ -742,7 +1097,6 @@
    "expected_latex": "\\frac{9 \\text{m}}{20000000}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "units-053"
   },
   {
@@ -755,7 +1109,6 @@
    "expected_latex": "\\frac{3600}{\\text{minute}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "units-054"
   },
   {
@@ -768,7 +1121,6 @@
    "expected_latex": "\\frac{\\pi \\text{rad}}{6}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "units-055"
   },
   {
@@ -777,14 +1129,38 @@
     "9.8*meter/second**2",
     "foot/second**2"
    ],
-   "expected": "12250*foot/(381*second**2)",
-   "expected_latex": "\\frac{12250 \\text{ft}}{381 \\text{s}^{2}}",
+   "expected": "32.1522309711286*foot/second**2",
+   "expected_latex": "\\frac{32.1522309711286 \\text{ft}}{\\text{s}^{2}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "typed decimals are exact, so the conversion stays exact (SymPy gives a Float)",
-   "sympy_gives": "32.1522309711286*foot/second**2",
+   "source": "sympy",
+   "note": "A typed decimal is a Float, so the converted coefficient is a Float.",
    "id": "units-056"
+  },
+  {
+   "op": "convert_to",
+   "args": [
+    "12.47*meter",
+    "centimeter"
+   ],
+   "expected": "1247.0*centimeter",
+   "expected_latex": "1247.0 \\text{cm}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A Float coefficient times 100.",
+   "id": "units-057"
+  },
+  {
+   "op": "convert_to",
+   "args": [
+    "0.5*liter",
+    "milliliter"
+   ],
+   "expected": "500.0*milliliter",
+   "expected_latex": "500.0 \\text{ml}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A Float coefficient times 1000.",
+   "id": "units-058"
   },
   {
    "op": "convert_to",
@@ -792,13 +1168,25 @@
     "5*meter",
     "second"
    ],
-   "expected": "invalid:dimension_mismatch",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "a target of another dimension is an error; SymPy silently returns the input",
-   "sympy_gives": "5*meter",
-   "id": "units-057"
+   "expected": "5*meter",
+   "expected_latex": "5 \\text{m}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A target of another dimension: convert_to returns the input unchanged.",
+   "id": "units-059"
+  },
+  {
+   "op": "convert_to",
+   "args": [
+    "5*newton",
+    "joule"
+   ],
+   "expected": "5*newton",
+   "expected_latex": "5 \\text{N}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Force to energy: the base dimensions overlap but no power of joule matches, so convert_to returns the input unchanged.",
+   "id": "units-060"
   },
   {
    "op": "convert_to",
@@ -806,76 +1194,15 @@
     "12",
     "meter"
    ],
-   "expected": "invalid:missing_unit",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "a bare number has no unit to convert; SymPy silently returns it",
-   "sympy_gives": "12",
-   "id": "units-058"
-  },
-  {
-   "op": "convert_to",
-   "args": [
-    "20*celsius",
-    "kelvin"
-   ],
-   "expected": "5863*kelvin/20",
-   "expected_latex": "\\frac{5863 \\text{K}}{20}",
+   "expected": "12",
+   "expected_latex": "12",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "affine temperature conversion (K = C + 273.15, F = 9/5*C + 32); room temperature",
-   "sympy_gives": "error: AttributeError: module 'sympy.physics.units' has no attribute 'celsius'",
-   "id": "units-059"
-  },
-  {
-   "op": "convert_to",
-   "args": [
-    "68*fahrenheit",
-    "celsius"
-   ],
-   "expected": "20*celsius",
-   "expected_latex": "20 ^\\circ\\mathrm{C}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "affine temperature conversion (K = C + 273.15, F = 9/5*C + 32); the offset matters, not just the 9/5 factor",
-   "sympy_gives": "error: AttributeError: module 'sympy.physics.units' has no attribute 'celsius'",
-   "id": "units-060"
-  },
-  {
-   "op": "convert_to",
-   "args": [
-    "300*kelvin",
-    "celsius"
-   ],
-   "expected": "537*celsius/20",
-   "expected_latex": "\\frac{537 ^\\circ\\mathrm{C}}{20}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "affine temperature conversion (K = C + 273.15, F = 9/5*C + 32); kelvin to Celsius",
-   "sympy_gives": "error: AttributeError: module 'sympy.physics.units' has no attribute 'celsius'",
+   "source": "sympy",
+   "note": "A bare number: convert_to returns it unchanged.",
    "id": "units-061"
   },
   {
-   "op": "convert_to",
-   "args": [
-    "-40*celsius",
-    "fahrenheit"
-   ],
-   "expected": "-40*fahrenheit",
-   "expected_latex": "- 40 ^\\circ\\mathrm{F}",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "affine temperature conversion (K = C + 273.15, F = 9/5*C + 32); the scales cross at -40",
-   "sympy_gives": "error: AttributeError: module 'sympy.physics.units' has no attribute 'celsius'",
-   "id": "units-062"
-  },
-  {
-   "op": "dimension",
+   "op": "get_dimensional_expr",
    "args": [
     "12*meter/second"
    ],
@@ -883,11 +1210,10 @@
    "expected_latex": "\\frac{length}{time}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "units-063"
+   "id": "units-062"
   },
   {
-   "op": "dimension",
+   "op": "get_dimensional_expr",
    "args": [
     "49/5*meter/second**2"
    ],
@@ -895,11 +1221,10 @@
    "expected_latex": "\\frac{length}{time^{2}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "units-064"
+   "id": "units-063"
   },
   {
-   "op": "dimension",
+   "op": "get_dimensional_expr",
    "args": [
     "5*newton"
    ],
@@ -907,11 +1232,10 @@
    "expected_latex": "force",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "units-065"
+   "id": "units-064"
   },
   {
-   "op": "dimension",
+   "op": "get_dimensional_expr",
    "args": [
     "3*kilogram*meter/second"
    ],
@@ -919,12 +1243,11 @@
    "expected_latex": "\\frac{length mass}{time}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "momentum has no dimension name in SymPy",
-   "id": "units-066"
+   "note": "Each unit contributes its own dimension, so this is not SymPy's momentum dimension.",
+   "id": "units-065"
   },
   {
-   "op": "dimension",
+   "op": "get_dimensional_expr",
    "args": [
     "2*liter"
    ],
@@ -932,12 +1255,11 @@
    "expected_latex": "length^{3}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "volume is length**3",
-   "id": "units-067"
+   "note": "liter's dimension is length**3.",
+   "id": "units-066"
   },
   {
-   "op": "dimension",
+   "op": "get_dimensional_expr",
    "args": [
     "30*degree"
    ],
@@ -945,12 +1267,11 @@
    "expected_latex": "1",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "angles are dimensionless in SI",
-   "id": "units-068"
+   "note": "Angles are dimensionless in SI.",
+   "id": "units-067"
   },
   {
-   "op": "dimension",
+   "op": "get_dimensional_expr",
    "args": [
     "12"
    ],
@@ -958,12 +1279,11 @@
    "expected_latex": "1",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "a bare number is dimensionless",
-   "id": "units-069"
+   "note": "A bare number is dimensionless.",
+   "id": "units-068"
   },
   {
-   "op": "dimension",
+   "op": "get_dimensional_expr",
    "args": [
     "newton*meter"
    ],
@@ -971,12 +1291,11 @@
    "expected_latex": "force length",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy keeps each unit's own dimension name: force*length, not energy",
-   "id": "units-070"
+   "note": "Each unit keeps its own dimension name: force*length, not energy.",
+   "id": "units-069"
   },
   {
-   "op": "dimension",
+   "op": "get_dimensional_expr",
    "args": [
     "kilometer/hour - meter/second"
    ],
@@ -984,504 +1303,118 @@
    "expected_latex": "\\frac{length}{time}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "a difference of like dimensions",
-   "id": "units-071"
+   "note": "A difference of like dimensions.",
+   "id": "units-070"
   },
   {
-   "op": "dimension",
-   "args": [
-    "newton*meter"
-   ],
-   "options": {
-    "base": true
-   },
-   "expected": "length**2*mass/time**2",
-   "expected_latex": "\\frac{length^{2} mass}{time^{2}}",
-   "compare": "exact",
-   "source": "sympy",
-   "profile": "both",
-   "note": "base dimensions: torque and energy agree",
-   "id": "units-072"
-  },
-  {
-   "op": "dimension",
-   "args": [
-    "joule"
-   ],
-   "options": {
-    "base": true
-   },
-   "expected": "length**2*mass/time**2",
-   "expected_latex": "\\frac{length^{2} mass}{time^{2}}",
-   "compare": "exact",
-   "source": "sympy",
-   "profile": "both",
-   "id": "units-073"
-  },
-  {
-   "op": "dimension",
-   "args": [
-    "3*newton*second"
-   ],
-   "options": {
-    "base": true
-   },
-   "expected": "length*mass/time",
-   "expected_latex": "\\frac{length mass}{time}",
-   "compare": "exact",
-   "source": "sympy",
-   "profile": "both",
-   "id": "units-074"
-  },
-  {
-   "op": "dimension",
-   "args": [
-    "10*ohm"
-   ],
-   "options": {
-    "base": true
-   },
-   "expected": "length**2*mass/(current**2*time**3)",
-   "expected_latex": "\\frac{length^{2} mass}{current^{2} time^{3}}",
-   "compare": "exact",
-   "source": "sympy",
-   "profile": "both",
-   "id": "units-075"
-  },
-  {
-   "op": "dimension",
+   "op": "get_dimensional_expr",
    "args": [
     "meter + second"
    ],
-   "expected": "invalid:dimension_mismatch",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "adding unlike dimensions is an error; SymPy's get_dimensional_expr returns the first term's dimension",
-   "sympy_gives": "length",
+   "expected": "length",
+   "expected_latex": "length",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A sum of unlike dimensions: get_dimensional_expr looks only at the first term.",
+   "id": "units-071"
+  },
+  {
+   "op": "get_dimensional_expr",
+   "args": [
+    "joule"
+   ],
+   "expected": "energy",
+   "expected_latex": "energy",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "units-072"
+  },
+  {
+   "op": "get_dimensional_expr",
+   "args": [
+    "3*newton*second"
+   ],
+   "expected": "force*time",
+   "expected_latex": "force time",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "units-073"
+  },
+  {
+   "op": "get_dimensional_expr",
+   "args": [
+    "10*ohm"
+   ],
+   "expected": "impedance",
+   "expected_latex": "impedance",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "units-074"
+  },
+  {
+   "op": "get_dimensional_dependencies",
+   "args": [
+    "force*length"
+   ],
+   "expected": "{Dimension(length): 2, Dimension(mass): 1, Dimension(time): -2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "In SI base dimensions, force*length and energy agree.",
+   "id": "units-075"
+  },
+  {
+   "op": "get_dimensional_dependencies",
+   "args": [
+    "energy"
+   ],
+   "expected": "{Dimension(length): 2, Dimension(mass): 1, Dimension(time): -2}",
+   "compare": "exact",
+   "source": "sympy",
    "id": "units-076"
   },
   {
-   "op": "dimension",
+   "op": "get_dimensional_dependencies",
    "args": [
-    "20*celsius"
+    "force*time"
    ],
-   "expected": "temperature",
-   "expected_latex": "temperature",
+   "expected": "{Dimension(length): 1, Dimension(mass): 1, Dimension(time): -1}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "rsympy's celsius is a temperature; SymPy has no Celsius unit",
-   "sympy_gives": "error: AttributeError: module 'sympy.physics.units' has no attribute 'celsius'",
+   "source": "sympy",
    "id": "units-077"
   },
   {
-   "op": "quantity_equivalent",
+   "op": "get_dimensional_dependencies",
    "args": [
-    "12*meter/second",
-    "216/5*kilometer/hour"
+    "impedance"
    ],
-   "expected": "True",
+   "expected": "{Dimension(current): -2, Dimension(length): 2, Dimension(mass): 1, Dimension(time): -3}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; the same speed in km/h",
-   "sympy_gives": "216*kilometer/(5*hour)",
+   "source": "sympy",
+   "note": "impedance in base dimensions, with current.",
    "id": "units-078"
   },
   {
-   "op": "quantity_equivalent",
+   "op": "check_dimensions",
    "args": [
-    "12*kilometer/hour",
-    "12*meter/second"
+    "meter + second"
    ],
-   "expected": "False",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; the right number in the wrong unit of the same dimension is False, not an error",
-   "sympy_gives": "10*meter/(3*second)",
+   "expected": "ValueError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "Addends of unlike dimensions.",
    "id": "units-079"
   },
   {
-   "op": "quantity_equivalent",
+   "op": "check_dimensions",
    "args": [
-    "60*kilometer/hour",
-    "16.7*meter/second"
+    "kilometer/hour - meter/second"
    ],
-   "expected": "False",
+   "expected": "-meter/second + kilometer/hour",
+   "expected_latex": "- \\frac{\\text{m}}{\\text{s}} + \\frac{\\text{km}}{\\text{hour}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; a rounded answer is not exactly equal",
-   "sympy_gives": "50*meter/(3*second)",
+   "source": "sympy",
+   "note": "Addends of like dimensions: the expression comes back.",
    "id": "units-080"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "60*kilometer/hour",
-    "16.7*meter/second"
-   ],
-   "options": {
-    "rel_tol": "1/100"
-   },
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; within 1% after conversion",
-   "sympy_gives": "50*meter/(3*second)",
-   "id": "units-081"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "60*kilometer/hour",
-    "17*meter/second"
-   ],
-   "options": {
-    "rel_tol": "1/100"
-   },
-   "expected": "False",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; 2% off, outside 1%",
-   "sympy_gives": "50*meter/(3*second)",
-   "id": "units-082"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "101*meter",
-    "100*meter"
-   ],
-   "options": {
-    "rel_tol": "1/100"
-   },
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; the relative bound is inclusive",
-   "sympy_gives": "101*meter",
-   "id": "units-083"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "101.01*meter",
-    "100*meter"
-   ],
-   "options": {
-    "rel_tol": "1/100"
-   },
-   "expected": "False",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; just outside the relative bound",
-   "sympy_gives": "101.01*meter",
-   "id": "units-084"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "-9.8*meter/second**2",
-    "9.8*meter/second**2"
-   ],
-   "options": {
-    "rel_tol": "1/100"
-   },
-   "expected": "False",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; the sign matters",
-   "sympy_gives": "-9.8*meter/second**2",
-   "id": "units-085"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "9.7*meter/second**2",
-    "9.8*meter/second**2"
-   ],
-   "options": {
-    "abs_tol": "0.1*meter/second**2"
-   },
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; exact boundary of an absolute tolerance (Floats say 0.100000000000001 > 0.1)",
-   "sympy_gives": "9.7*meter/second**2",
-   "id": "units-086"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "12.47*meter",
-    "1250*centimeter"
-   ],
-   "options": {
-    "abs_tol": "5*centimeter"
-   },
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; an absolute tolerance in a third unit (3 cm <= 5 cm)",
-   "sympy_gives": "1247.0*centimeter",
-   "id": "units-087"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "5*newton*meter",
-    "5*joule"
-   ],
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; decided: same base dimensions, so torque units equal energy units",
-   "sympy_gives": "5*joule",
-   "id": "units-088"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "3*kilogram*meter/second",
-    "3*newton*second"
-   ],
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; momentum in two spellings",
-   "sympy_gives": "3*newton*second",
-   "id": "units-089"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "0.5*liter",
-    "500*milliliter"
-   ],
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; volume units; exact decimal",
-   "sympy_gives": "500.0*milliliter",
-   "id": "units-090"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "20*celsius",
-    "293.15*kelvin"
-   ],
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; temperatures compare as absolute kelvin",
-   "sympy_gives": "error: AttributeError: module 'sympy.physics.units' has no attribute 'celsius'",
-   "id": "units-091"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "68*fahrenheit",
-    "20*celsius"
-   ],
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; Fahrenheit vs Celsius",
-   "sympy_gives": "error: AttributeError: module 'sympy.physics.units' has no attribute 'celsius'",
-   "id": "units-092"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "20*celsius",
-    "20*kelvin"
-   ],
-   "expected": "False",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; Celsius is not kelvin for absolute temperatures",
-   "sympy_gives": "error: AttributeError: module 'sympy.physics.units' has no attribute 'celsius'",
-   "id": "units-093"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "12*meter",
-    "12*second"
-   ],
-   "expected": "invalid:dimension_mismatch",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; wrong dimension is an error, not just False",
-   "sympy_gives": "12*meter",
-   "id": "units-094"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "5*newton",
-    "5*joule"
-   ],
-   "expected": "invalid:dimension_mismatch",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; force vs energy",
-   "sympy_gives": "5*newton",
-   "id": "units-095"
-  },
-  {
-   "op": "quantity_equivalent",
-   "args": [
-    "12",
-    "12*meter"
-   ],
-   "expected": "invalid:missing_unit",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "quantity grader, exact after converting the answer to the key's unit; a bare number is a missing unit (free retry), not a wrong dimension",
-   "sympy_gives": "12",
-   "id": "units-096"
-  },
-  {
-   "op": "within_resolution",
-   "args": [
-    "12.3",
-    "12.34",
-    "0.1"
-   ],
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "instrument precision |value - key| <= resolution/2, exact; 0.04 <= 0.05",
-   "sympy_gives": "True",
-   "id": "units-097"
-  },
-  {
-   "op": "within_resolution",
-   "args": [
-    "12.3",
-    "12.36",
-    "0.1"
-   ],
-   "expected": "False",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "instrument precision |value - key| <= resolution/2, exact; 0.06 > 0.05",
-   "sympy_gives": "False",
-   "id": "units-098"
-  },
-  {
-   "op": "within_resolution",
-   "args": [
-    "1.3",
-    "1.25",
-    "0.1"
-   ],
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "instrument precision |value - key| <= resolution/2, exact; exact boundary 0.05 <= 0.05; Floats say False",
-   "sympy_gives": "False",
-   "id": "units-099"
-  },
-  {
-   "op": "within_resolution",
-   "args": [
-    "3.14",
-    "pi",
-    "0.01"
-   ],
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "instrument precision |value - key| <= resolution/2, exact; an exact irrational key",
-   "sympy_gives": "True",
-   "id": "units-100"
-  },
-  {
-   "op": "within_resolution",
-   "args": [
-    "12.4*centimeter",
-    "124.4*millimeter",
-    "1*millimeter"
-   ],
-   "expected": "True",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "instrument precision |value - key| <= resolution/2, exact; units convert before the check",
-   "sympy_gives": "Abs(12.4*centimeter - 124.4*millimeter) <= millimeter/2",
-   "id": "units-101"
-  },
-  {
-   "op": "within_resolution",
-   "args": [
-    "2.5*second",
-    "2.53*second",
-    "0.01*second"
-   ],
-   "expected": "False",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "instrument precision |value - key| <= resolution/2, exact; 0.03 s > 0.005 s",
-   "sympy_gives": "False",
-   "id": "units-102"
-  },
-  {
-   "op": "within_resolution",
-   "args": [
-    "12*meter",
-    "12*second",
-    "1*meter"
-   ],
-   "expected": "invalid:dimension_mismatch",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "instrument precision |value - key| <= resolution/2, exact; unlike dimensions",
-   "sympy_gives": "Abs(12*meter - 12*second) <= meter/2",
-   "id": "units-103"
-  },
-  {
-   "op": "within_resolution",
-   "args": [
-    "12.3",
-    "12.34*centimeter",
-    "0.1*centimeter"
-   ],
-   "expected": "invalid:missing_unit",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "instrument precision |value - key| <= resolution/2, exact; the key has a unit and the value does not: a missing unit, not a wrong dimension",
-   "sympy_gives": "Abs(12.34*centimeter - 12.3) <= 0.05*centimeter",
-   "id": "units-104"
   }
  ]
 }

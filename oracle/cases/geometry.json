@@ -12,7 +12,6 @@
    "expected_latex": "5",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-000"
   },
   {
@@ -25,8 +24,7 @@
    "expected_latex": "2 \\sqrt{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "sqrt(8) is printed as 2*sqrt(2).",
+   "note": "sqrt(8) evaluates to 2*sqrt(2) (Pow construction takes out square factors).",
    "id": "geometry-001"
   },
   {
@@ -39,7 +37,6 @@
    "expected_latex": "\\frac{5}{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "sqrt(25/4) = 5/2: rational coordinates stay exact.",
    "id": "geometry-002"
   },
@@ -53,7 +50,6 @@
    "expected_latex": "2",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Distance from a point to the line 3*x + 4*y = 10.",
    "id": "geometry-003"
   },
@@ -67,7 +63,6 @@
    "expected_latex": "\\sqrt{13}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "The nearest point of the segment is its endpoint (4, 0), not the foot of the perpendicular.",
    "id": "geometry-004"
   },
@@ -81,7 +76,6 @@
    "expected_latex": "\\operatorname{Point2D}\\left(\\frac{3}{2}, 2\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-005"
   },
   {
@@ -94,7 +88,6 @@
    "expected_latex": "\\operatorname{Point2D}\\left(1, 0\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-006"
   },
   {
@@ -106,7 +99,6 @@
    "expected_latex": "\\operatorname{Point2D}\\left(3, -1\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-007"
   },
   {
@@ -118,7 +110,6 @@
    "expected_latex": "3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-008"
   },
   {
@@ -130,7 +121,6 @@
    "expected_latex": "- \\frac{1}{3}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-009"
   },
   {
@@ -142,7 +132,6 @@
    "expected_latex": "0",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-010"
   },
   {
@@ -154,8 +143,7 @@
    "expected_latex": "\\infty",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Vertical line: SymPy's slope is oo; the app shows it as undefined.",
+   "note": "Vertical line: SymPy's slope is oo.",
    "id": "geometry-011"
   },
   {
@@ -167,7 +155,6 @@
    "expected_latex": "- \\frac{2}{3}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "A line given by its equation.",
    "id": "geometry-012"
   },
@@ -180,7 +167,6 @@
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-013"
   },
   {
@@ -192,7 +178,6 @@
    "expected": "False",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-014"
   },
   {
@@ -204,7 +189,6 @@
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-015"
   },
   {
@@ -216,7 +200,6 @@
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-016"
   },
   {
@@ -228,7 +211,6 @@
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-017"
   },
   {
@@ -240,8 +222,7 @@
    "expected": "False",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Near miss: reciprocal slope without the sign change is not perpendicular.",
+   "note": "Near miss: reciprocal slope without the sign change.",
    "id": "geometry-018"
   },
   {
@@ -253,8 +234,7 @@
    "expected": "False",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Near miss: opposite slope without the reciprocal is not perpendicular.",
+   "note": "Near miss: opposite slope without the reciprocal.",
    "id": "geometry-019"
   },
   {
@@ -267,7 +247,6 @@
    "expected_latex": "\\frac{\\pi}{4}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-020"
   },
   {
@@ -280,8 +259,7 @@
    "expected_latex": "\\frac{3 \\pi}{4}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Angle between direction vectors, so 3*pi/4 here; smallest_angle_between gives pi/4.",
+   "note": "Angle between the direction vectors, so it can be obtuse; smallest_angle_between gives the acute one.",
    "id": "geometry-021"
   },
   {
@@ -294,8 +272,7 @@
    "expected_latex": "\\operatorname{acos}{\\left(\\frac{2 \\sqrt{5}}{5} \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Not a special angle: exact acos.",
+   "note": "Not a special angle: an exact acos.",
    "id": "geometry-022"
   },
   {
@@ -308,7 +285,6 @@
    "expected_latex": "\\frac{\\pi}{4}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-023"
   },
   {
@@ -321,7 +297,6 @@
    "expected_latex": "\\frac{\\pi}{4}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-024"
   },
   {
@@ -331,9 +306,8 @@
     "Line(Point(0, 3), Point(3, 0))"
    ],
    "expected": "[Point2D(2/3, 7/3)]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "y = 2*x + 1 meets y = 3 - x at a rational point.",
    "id": "geometry-025"
   },
@@ -344,10 +318,9 @@
     "Line(Point(0, 2), Point(1, 3))"
    ],
    "expected": "[]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Parallel lines: empty.",
+   "note": "Parallel lines.",
    "id": "geometry-026"
   },
   {
@@ -357,9 +330,8 @@
     "Line(Point(2, 2), Point(3, 3))"
    ],
    "expected": "[Line2D(Point2D(2, 2), Point2D(3, 3))]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Coincident lines: SymPy returns the argument line itself as the one element.",
    "id": "geometry-027"
   },
@@ -369,11 +341,10 @@
     "Line(Point(0, 0), Point(1, 1))",
     "Circle(Point(0, 0), 2)"
    ],
-   "expected": "[Point2D(-sqrt(2), -sqrt(2)), Point2D(sqrt(2), sqrt(2))]",
-   "compare": "set",
+   "expected": "[Point2D(sqrt(2), sqrt(2)), Point2D(-sqrt(2), -sqrt(2))]",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Secant through the centre: irrational points.",
+   "note": "Secant through the centre: irrational points, in the order SymPy finds them.",
    "id": "geometry-028"
   },
   {
@@ -383,9 +354,8 @@
     "Circle(Point(0, 0), 5)"
    ],
    "expected": "[Point2D(-4, -3), Point2D(3, 4)]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "y = x + 1 meets x**2 + y**2 = 25 at lattice points.",
    "id": "geometry-029"
   },
@@ -396,9 +366,8 @@
     "Circle(Point(0, 0), 5)"
    ],
    "expected": "[Point2D(0, 5)]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Tangent line: one point.",
    "id": "geometry-030"
   },
@@ -409,10 +378,9 @@
     "Circle(Point(0, 0), 5)"
    ],
    "expected": "[]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The line misses the circle: empty.",
+   "note": "The line misses the circle.",
    "id": "geometry-031"
   },
   {
@@ -422,9 +390,8 @@
     "Circle(Point(6, 0), 5)"
    ],
    "expected": "[Point2D(3, -4), Point2D(3, 4)]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-032"
   },
   {
@@ -434,9 +401,8 @@
     "Circle(Point(5, 0), 3)"
    ],
    "expected": "[Point2D(2, 0)]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Externally tangent circles: one point.",
    "id": "geometry-033"
   },
@@ -447,11 +413,23 @@
     "Circle(Point(0, 0), 2)"
    ],
    "expected": "[]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Concentric circles: empty.",
+   "note": "Concentric circles.",
    "id": "geometry-034"
+  },
+  {
+   "op": "intersection",
+   "args": [
+    "Circle(Point(0, 0), 2)",
+    "Circle(Point(0, 0), 2)"
+   ],
+   "expected": "Circle(Point2D(0, 0), 2)",
+   "expected_latex": "\\operatorname{Circle}\\left(\\operatorname{Point2D}\\left(0, 0\\right), 2\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Identical circles: SymPy returns the Circle itself, not a list.",
+   "id": "geometry-035"
   },
   {
    "op": "intersection",
@@ -460,10 +438,9 @@
     "Segment(Point(0, 4), Point(4, 0))"
    ],
    "expected": "[Point2D(2, 2)]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-035"
+   "id": "geometry-036"
   },
   {
    "op": "intersection",
@@ -472,11 +449,10 @@
     "Segment(Point(0, 4), Point(4, 0))"
    ],
    "expected": "[]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The lines cross at (2, 2) but the segments do not reach it: empty.",
-   "id": "geometry-036"
+   "note": "The lines cross at (2, 2) but the segments do not reach it.",
+   "id": "geometry-037"
   },
   {
    "op": "intersection",
@@ -485,11 +461,10 @@
     "Segment(Point(2, 2), Point(4, 0))"
    ],
    "expected": "[Point2D(2, 2)]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Segments are closed: a shared endpoint is an intersection point.",
-   "id": "geometry-037"
+   "note": "Segments are closed: a shared endpoint.",
+   "id": "geometry-038"
   },
   {
    "op": "intersection",
@@ -498,11 +473,10 @@
     "Segment(Point(1, 0), Point(5, 0))"
    ],
    "expected": "[Segment2D(Point2D(1, 0), Point2D(3, 0))]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Collinear overlap: the common segment.",
-   "id": "geometry-038"
+   "id": "geometry-039"
   },
   {
    "op": "intersection",
@@ -511,25 +485,9 @@
     "Line(Point(-3, 0), Point(0, -3))"
    ],
    "expected": "[]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The line meets the ray's line behind the ray's start: empty.",
-   "id": "geometry-039"
-  },
-  {
-   "op": "intersection",
-   "args": [
-    "Circle(Point(0, 0), 2)",
-    "Circle(Point(0, 0), 2)"
-   ],
-   "expected": "[Circle(Point2D(0, 0), 2)]",
-   "expected_latex": "\\left[ \\operatorname{Circle}\\left(\\operatorname{Point2D}\\left(0, 0\\right), 2\\right)\\right]",
-   "compare": "set",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Identical circles: SymPy returns a bare Circle instead of a list; every other intersection is a list, so wrap it.",
-   "sympy_gives": "Circle(Point2D(0, 0), 2)",
+   "note": "The line meets the ray's line behind the ray's start.",
    "id": "geometry-040"
   },
   {
@@ -541,8 +499,30 @@
    "expected_latex": "6",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-041"
+  },
+  {
+   "op": "area",
+   "args": [
+    "Triangle(Point(0, 0), Point(0, 3), Point(4, 0))"
+   ],
+   "expected": "-6",
+   "expected_latex": "-6",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Clockwise vertices: SymPy's Polygon.area is signed.",
+   "id": "geometry-042"
+  },
+  {
+   "op": "area",
+   "args": [
+    "Triangle(Point(0, 0), Point(1, 1), Point(2, 2))"
+   ],
+   "expected": "AttributeError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "Collinear vertices: SymPy's Triangle evaluates to a Segment2D, which has no area attribute.",
+   "id": "geometry-043"
   },
   {
    "op": "area",
@@ -553,9 +533,20 @@
    "expected_latex": "\\frac{27}{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Trapezoid.",
-   "id": "geometry-042"
+   "id": "geometry-044"
+  },
+  {
+   "op": "area",
+   "args": [
+    "Polygon(Point(0, 0), Point(2, 2), Point(2, 0), Point(0, 2))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Vertices out of order make a self-intersecting bow tie whose signed areas cancel.",
+   "id": "geometry-045"
   },
   {
    "op": "area",
@@ -566,9 +557,8 @@
    "expected_latex": "6 \\sqrt{3}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Regular hexagon with circumradius 2.",
-   "id": "geometry-043"
+   "id": "geometry-046"
   },
   {
    "op": "area",
@@ -579,9 +569,8 @@
    "expected_latex": "9 \\pi",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "In terms of pi.",
-   "id": "geometry-044"
+   "id": "geometry-047"
   },
   {
    "op": "area",
@@ -592,48 +581,7 @@
    "expected_latex": "16 \\pi",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Circle from its general equation: centre (2, -3), radius 4.",
-   "id": "geometry-045"
-  },
-  {
-   "op": "area",
-   "args": [
-    "Triangle(Point(0, 0), Point(0, 3), Point(4, 0))"
-   ],
-   "expected": "6",
-   "expected_latex": "6",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy's Polygon.area is signed (negative for clockwise vertices); the area of a figure is the absolute value.",
-   "sympy_gives": "-6",
-   "id": "geometry-046"
-  },
-  {
-   "op": "area",
-   "args": [
-    "Triangle(Point(0, 0), Point(1, 1), Point(2, 2))"
-   ],
-   "expected": "invalid:degenerate_triangle",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Collinear vertices: SymPy's Triangle silently becomes a Segment2D (which has no area); refuse by name.",
-   "sympy_gives": "error: AttributeError: 'Segment2D' object has no attribute 'area'",
-   "id": "geometry-047"
-  },
-  {
-   "op": "area",
-   "args": [
-    "Polygon(Point(0, 0), Point(2, 2), Point(2, 0), Point(0, 2))"
-   ],
-   "expected": "invalid:self_intersecting_polygon",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "Vertices out of order make a bow tie whose signed areas cancel; SymPy silently answers 0.",
-   "sympy_gives": "0",
    "id": "geometry-048"
   },
   {
@@ -641,12 +589,11 @@
    "args": [
     "Circle(Point(0, 0), -2)"
    ],
-   "expected": "invalid:negative_radius",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy accepts a negative radius and reports a negative area; a figure key with radius -2 is a typo.",
-   "sympy_gives": "-4*pi",
+   "expected": "-4*pi",
+   "expected_latex": "- 4 \\pi",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "SymPy keeps the radius -2; Ellipse.area is pi*hradius*vradius and a Circle's vradius is Abs(radius).",
    "id": "geometry-049"
   },
   {
@@ -658,7 +605,6 @@
    "expected_latex": "2 \\sqrt{5} + 4 \\sqrt{2} + 6",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-050"
   },
   {
@@ -670,7 +616,6 @@
    "expected_latex": "2 \\sqrt{10} + 8",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Parallelogram.",
    "id": "geometry-051"
   },
@@ -683,64 +628,7 @@
    "expected_latex": "5 \\pi",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "geometry-052"
-  },
-  {
-   "op": "arc_length",
-   "args": [
-    "Circle(Point(0, 0), 6)",
-    "pi/3"
-   ],
-   "expected": "2*pi",
-   "expected_latex": "2 \\pi",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy has no arc length op: r*theta, exact in terms of pi (a typed 120 degrees arrives as 120*pi/180).",
-   "id": "geometry-053"
-  },
-  {
-   "op": "sector_area",
-   "args": [
-    "Circle(Point(0, 0), 6)",
-    "pi/3"
-   ],
-   "expected": "6*pi",
-   "expected_latex": "6 \\pi",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy has no sector area op: r**2*theta/2, exact in terms of pi.",
-   "id": "geometry-054"
-  },
-  {
-   "op": "arc_length",
-   "args": [
-    "Circle(Point(0, 0), 9)",
-    "120*pi/180"
-   ],
-   "expected": "6*pi",
-   "expected_latex": "6 \\pi",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy has no arc length op: r*theta, exact in terms of pi (a typed 120 degrees arrives as 120*pi/180).",
-   "id": "geometry-055"
-  },
-  {
-   "op": "sector_area",
-   "args": [
-    "Circle(Point(0, 0), 9)",
-    "120*pi/180"
-   ],
-   "expected": "27*pi",
-   "expected_latex": "27 \\pi",
-   "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy has no sector area op: r**2*theta/2, exact in terms of pi.",
-   "id": "geometry-056"
   },
   {
    "op": "side_lengths",
@@ -750,9 +638,8 @@
    "expected": "[7, 7*sqrt(2), 7]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "45-45-90 with legs 7: hypotenuse 7*sqrt(2).",
-   "id": "geometry-057"
+   "note": "45-45-90 with legs 7.",
+   "id": "geometry-053"
   },
   {
    "op": "side_lengths",
@@ -762,9 +649,8 @@
    "expected": "[10, 5*sqrt(2), 5*sqrt(2)]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "45-45-90 with hypotenuse 10: legs 5*sqrt(2).",
-   "id": "geometry-058"
+   "note": "45-45-90 with hypotenuse 10.",
+   "id": "geometry-054"
   },
   {
    "op": "side_lengths",
@@ -774,9 +660,8 @@
    "expected": "[12, 6*sqrt(3), 6]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "30-60-90 with hypotenuse 12: legs 6 and 6*sqrt(3) (sqrt(108) simplified).",
-   "id": "geometry-059"
+   "note": "30-60-90 with hypotenuse 12: sqrt(108) evaluates to 6*sqrt(3).",
+   "id": "geometry-055"
   },
   {
    "op": "angles",
@@ -786,9 +671,8 @@
    "expected": "{Point2D(0, 0): pi/2, Point2D(0, 3): acos(3/5), Point2D(4, 0): acos(4/5)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Only the right angle is special; the others are exact acos values.",
-   "id": "geometry-060"
+   "id": "geometry-056"
   },
   {
    "op": "angles",
@@ -798,9 +682,8 @@
    "expected": "{Point2D(0, 0): pi/3, Point2D(3, 3*sqrt(3)): pi/2, Point2D(12, 0): pi/6}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "30-60-90.",
-   "id": "geometry-061"
+   "id": "geometry-057"
   },
   {
    "op": "angles",
@@ -810,8 +693,7 @@
    "expected": "{Point2D(0, 0): pi/3, Point2D(1, sqrt(3)): pi/3, Point2D(2, 0): pi/3}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-062"
+   "id": "geometry-058"
   },
   {
    "op": "angles",
@@ -821,9 +703,8 @@
    "expected": "{Point2D(-2, 3): acos(7*sqrt(65)/65), Point2D(0, 0): acos(-2*sqrt(13)/13), Point2D(4, 0): acos(2*sqrt(5)/5)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Obtuse angle at the origin: acos of a negative number.",
-   "id": "geometry-063"
+   "id": "geometry-059"
   },
   {
    "op": "circumcenter",
@@ -834,9 +715,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(2, \\frac{3}{2}\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Right triangle: the midpoint of the hypotenuse.",
-   "id": "geometry-064"
+   "id": "geometry-060"
   },
   {
    "op": "circumcenter",
@@ -847,9 +727,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(1, \\frac{\\sqrt{3}}{3}\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Equilateral: every centre is (1, sqrt(3)/3).",
-   "id": "geometry-065"
+   "id": "geometry-061"
   },
   {
    "op": "incenter",
@@ -860,8 +739,7 @@
    "expected_latex": "\\operatorname{Point2D}\\left(1, 1\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-066"
+   "id": "geometry-062"
   },
   {
    "op": "incenter",
@@ -872,8 +750,7 @@
    "expected_latex": "\\operatorname{Point2D}\\left(3, \\frac{3}{2}\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-067"
+   "id": "geometry-063"
   },
   {
    "op": "incenter",
@@ -882,11 +759,10 @@
    ],
    "expected": "Point2D(6*(1 + sqrt(5))/(sqrt(5) + 2*sqrt(2) + 3), 12/(sqrt(5) + 2*sqrt(2) + 3))",
    "expected_latex": "\\operatorname{Point2D}\\left(\\frac{6 \\left(1 + \\sqrt{5}\\right)}{\\sqrt{5} + 2 \\sqrt{2} + 3}, \\frac{12}{\\sqrt{5} + 2 \\sqrt{2} + 3}\\right)",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy leaves radicals in the denominators; compare each coordinate by value (about (2.4076, 1.4880)).",
-   "id": "geometry-068"
+   "note": "SymPy leaves radicals in the denominators (about (2.4076, 1.4880)).",
+   "id": "geometry-064"
   },
   {
    "op": "orthocenter",
@@ -897,9 +773,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(0, 0\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Right triangle: the right-angle vertex.",
-   "id": "geometry-069"
+   "id": "geometry-065"
   },
   {
    "op": "orthocenter",
@@ -910,8 +785,7 @@
    "expected_latex": "\\operatorname{Point2D}\\left(2, 2\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-070"
+   "id": "geometry-066"
   },
   {
    "op": "orthocenter",
@@ -922,9 +796,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(-2, -4\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Obtuse triangle: outside the triangle.",
-   "id": "geometry-071"
+   "id": "geometry-067"
   },
   {
    "op": "centroid",
@@ -935,8 +808,7 @@
    "expected_latex": "\\operatorname{Point2D}\\left(\\frac{8}{3}, \\frac{4}{3}\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-072"
+   "id": "geometry-068"
   },
   {
    "op": "circumradius",
@@ -947,8 +819,7 @@
    "expected_latex": "\\frac{25}{8}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-073"
+   "id": "geometry-069"
   },
   {
    "op": "inradius",
@@ -959,8 +830,7 @@
    "expected_latex": "1",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-074"
+   "id": "geometry-070"
   },
   {
    "op": "medians",
@@ -970,8 +840,7 @@
    "expected": "{Point2D(0, 0): Segment2D(Point2D(0, 0), Point2D(9/2, 2)), Point2D(3, 4): Segment2D(Point2D(3, 4), Point2D(3, 0)), Point2D(6, 0): Segment2D(Point2D(6, 0), Point2D(3/2, 2))}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-075"
+   "id": "geometry-071"
   },
   {
    "op": "altitudes",
@@ -981,9 +850,8 @@
    "expected": "{Point2D(0, 0): Segment2D(Point2D(0, 0), Point2D(36/25, 48/25)), Point2D(0, 3): Segment2D(Point2D(0, 3), Point2D(0, 0)), Point2D(4, 0): Segment2D(Point2D(4, 0), Point2D(0, 0))}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "In a right triangle two altitudes are the legs.",
-   "id": "geometry-076"
+   "id": "geometry-072"
   },
   {
    "op": "bisectors",
@@ -993,9 +861,8 @@
    "expected": "{Point2D(0, 0): Segment2D(Point2D(0, 0), Point2D(12/7, 12/7)), Point2D(0, 3): Segment2D(Point2D(0, 3), Point2D(3/2, 0)), Point2D(4, 0): Segment2D(Point2D(4, 0), Point2D(0, 4/3))}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Angle bisectors end on the opposite side.",
-   "id": "geometry-077"
+   "id": "geometry-073"
   },
   {
    "op": "is_similar",
@@ -1006,9 +873,8 @@
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Scaled by 2.",
-   "id": "geometry-078"
+   "id": "geometry-074"
   },
   {
    "op": "is_similar",
@@ -1019,9 +885,8 @@
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Rotated, scaled and listed in another vertex order.",
-   "id": "geometry-079"
+   "id": "geometry-075"
   },
   {
    "op": "is_similar",
@@ -1032,8 +897,7 @@
    "expected": "False",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-080"
+   "id": "geometry-076"
   },
   {
    "op": "is_right",
@@ -1043,9 +907,8 @@
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Right angle at (1, 1), not axis-aligned.",
-   "id": "geometry-081"
+   "id": "geometry-077"
   },
   {
    "op": "is_right",
@@ -1055,8 +918,7 @@
    "expected": "False",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-082"
+   "id": "geometry-078"
   },
   {
    "op": "tangent_lines",
@@ -1064,12 +926,11 @@
     "Circle(Point(0, 0), 5)",
     "Point(5, 5)"
    ],
-   "expected": "[Eq(x, 5), Eq(y, 5)]",
-   "compare": "set",
+   "expected": "[Line2D(Point2D(5, 5), Point2D(6, 5)), Line2D(Point2D(5, 5), Point2D(5, 6))]",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The tangents are x = 5 and y = 5.",
-   "id": "geometry-083"
+   "note": "The tangents x = 5 and y = 5; each Line2D's second point is SymPy's choice.",
+   "id": "geometry-079"
   },
   {
    "op": "tangent_lines",
@@ -1077,12 +938,11 @@
     "Circle(Point(0, 0), 5)",
     "Point(0, 10)"
    ],
-   "expected": "[Eq(y, -sqrt(3)*x + 10), Eq(y, sqrt(3)*x + 10)]",
-   "compare": "set",
+   "expected": "[Line2D(Point2D(0, 10), Point2D(-5*sqrt(3)/2, 5/2)), Line2D(Point2D(0, 10), Point2D(5*sqrt(3)/2, 5/2))]",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Slopes +-sqrt(3).",
-   "id": "geometry-084"
+   "id": "geometry-080"
   },
   {
    "op": "tangent_lines",
@@ -1090,12 +950,11 @@
     "Circle(Point(0, 0), 5)",
     "Point(3, 4)"
    ],
-   "expected": "[Eq(y, 25/4 - 3*x/4)]",
-   "compare": "set",
+   "expected": "[Line2D(Point2D(3, 4), Point2D(103, -71))]",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "A point on the circle: the one tangent there.",
-   "id": "geometry-085"
+   "id": "geometry-081"
   },
   {
    "op": "tangent_lines",
@@ -1104,11 +963,10 @@
     "Point(1, 1)"
    ],
    "expected": "[]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "A point inside: no tangent lines.",
-   "id": "geometry-086"
+   "note": "A point inside the circle.",
+   "id": "geometry-082"
   },
   {
    "op": "reflect",
@@ -1120,9 +978,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(5, 2\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Across y = x: swap the coordinates.",
-   "id": "geometry-087"
+   "id": "geometry-083"
   },
   {
    "op": "reflect",
@@ -1134,9 +991,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(-5, -2\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Across y = -x.",
-   "id": "geometry-088"
+   "id": "geometry-084"
   },
   {
    "op": "reflect",
@@ -1148,9 +1004,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(2, -1\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Across y = 2.",
-   "id": "geometry-089"
+   "id": "geometry-085"
   },
   {
    "op": "reflect",
@@ -1162,9 +1017,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(4, 5\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Across x = 3.",
-   "id": "geometry-090"
+   "id": "geometry-086"
   },
   {
    "op": "reflect",
@@ -1176,8 +1030,7 @@
    "expected_latex": "\\operatorname{Triangle}\\left(\\operatorname{Point2D}\\left(1, 1\\right), \\operatorname{Point2D}\\left(1, 4\\right), \\operatorname{Point2D}\\left(3, 1\\right)\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-091"
+   "id": "geometry-087"
   },
   {
    "op": "reflect",
@@ -1189,9 +1042,8 @@
    "expected_latex": "\\operatorname{Triangle}\\left(\\operatorname{Point2D}\\left(-3, 3\\right), \\operatorname{Point2D}\\left(-3, 5\\right), \\operatorname{Point2D}\\left(-1, 3\\right)\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Across y = x + 3, given by its equation.",
-   "id": "geometry-092"
+   "id": "geometry-088"
   },
   {
    "op": "reflect",
@@ -1199,14 +1051,12 @@
     "Circle(Point(2, 3), 1)",
     "Line(Point(0, 0), Point(1, 0))"
    ],
-   "expected": "Circle(Point2D(2, -3), 1)",
-   "expected_latex": "\\operatorname{Circle}\\left(\\operatorname{Point2D}\\left(2, -3\\right), 1\\right)",
+   "expected": "Circle(Point2D(2, -3), -1)",
+   "expected_latex": "\\operatorname{Circle}\\left(\\operatorname{Point2D}\\left(2, -3\\right), -1\\right)",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy 1.14 reflects a Circle to one with radius -1; a reflection keeps the radius.",
-   "sympy_gives": "Circle(Point2D(2, -3), -1)",
-   "id": "geometry-093"
+   "source": "sympy",
+   "note": "Circle.reflect negates the radius.",
+   "id": "geometry-089"
   },
   {
    "op": "rotate",
@@ -1218,9 +1068,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(-1, 3\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "90 degrees counterclockwise: (x, y) -> (-y, x).",
-   "id": "geometry-094"
+   "id": "geometry-090"
   },
   {
    "op": "rotate",
@@ -1232,9 +1081,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(1, -3\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Clockwise.",
-   "id": "geometry-095"
+   "id": "geometry-091"
   },
   {
    "op": "rotate",
@@ -1247,9 +1095,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(1, 3\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "About the point (1, 1).",
-   "id": "geometry-096"
+   "id": "geometry-092"
   },
   {
    "op": "rotate",
@@ -1261,9 +1108,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(1, \\sqrt{3}\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Exact radical image.",
-   "id": "geometry-097"
+   "id": "geometry-093"
   },
   {
    "op": "rotate",
@@ -1275,9 +1121,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(2, -5\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Half turn about the origin: (x, y) -> (-x, -y).",
-   "id": "geometry-098"
+   "id": "geometry-094"
   },
   {
    "op": "rotate",
@@ -1290,9 +1135,8 @@
    "expected_latex": "\\operatorname{Triangle}\\left(\\operatorname{Point2D}\\left(1, 1\\right), \\operatorname{Point2D}\\left(-2, 1\\right), \\operatorname{Point2D}\\left(1, -1\\right)\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Half turn about a vertex.",
-   "id": "geometry-099"
+   "id": "geometry-095"
   },
   {
    "op": "rotate",
@@ -1305,9 +1149,8 @@
    "expected_latex": "\\operatorname{Polygon}\\left(\\operatorname{Point2D}\\left(2, 0\\right), \\operatorname{Point2D}\\left(2, 2\\right), \\operatorname{Point2D}\\left(0, 2\\right), \\operatorname{Point2D}\\left(0, 0\\right)\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "A square turned about its centre lands on itself with shifted vertex labels.",
-   "id": "geometry-100"
+   "id": "geometry-096"
   },
   {
    "op": "translate",
@@ -1320,8 +1163,7 @@
    "expected_latex": "\\operatorname{Point2D}\\left(5, -4\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-101"
+   "id": "geometry-097"
   },
   {
    "op": "translate",
@@ -1334,8 +1176,7 @@
    "expected_latex": "\\operatorname{Triangle}\\left(\\operatorname{Point2D}\\left(0, 3\\right), \\operatorname{Point2D}\\left(3, 3\\right), \\operatorname{Point2D}\\left(0, 5\\right)\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-102"
+   "id": "geometry-098"
   },
   {
    "op": "scale",
@@ -1348,9 +1189,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(6, 2\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Dilation by 2 about the origin.",
-   "id": "geometry-103"
+   "id": "geometry-099"
   },
   {
    "op": "scale",
@@ -1364,9 +1204,8 @@
    "expected_latex": "\\operatorname{Point2D}\\left(5, 1\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Dilation by 2 about (1, 1): SymPy's pt= argument.",
-   "id": "geometry-104"
+   "note": "Dilation by 2 about (1, 1).",
+   "id": "geometry-100"
   },
   {
    "op": "scale",
@@ -1380,8 +1219,7 @@
    "expected_latex": "\\operatorname{Triangle}\\left(\\operatorname{Point2D}\\left(1, 1\\right), \\operatorname{Point2D}\\left(\\frac{5}{2}, 1\\right), \\operatorname{Point2D}\\left(1, 2\\right)\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-105"
+   "id": "geometry-101"
   },
   {
    "op": "scale",
@@ -1394,9 +1232,8 @@
    "expected_latex": "\\operatorname{Triangle}\\left(\\operatorname{Point2D}\\left(-1, -1\\right), \\operatorname{Point2D}\\left(-4, -1\\right), \\operatorname{Point2D}\\left(-1, -3\\right)\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Dilation by -1: the half turn about the origin.",
-   "id": "geometry-106"
+   "id": "geometry-102"
   },
   {
    "op": "scale",
@@ -1409,9 +1246,8 @@
    "expected_latex": "\\operatorname{Circle}\\left(\\operatorname{Point2D}\\left(3, 3\\right), 3\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Dilating a circle by 3 about the origin: centre and radius both scale.",
-   "id": "geometry-107"
+   "id": "geometry-103"
   },
   {
    "op": "scale",
@@ -1424,12 +1260,11 @@
    "expected_latex": "\\operatorname{Ellipse}\\left(\\operatorname{Point2D}\\left(0, 0\\right), 2, 1\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Unequal factors stretch a circle into an Ellipse.",
-   "id": "geometry-108"
+   "id": "geometry-104"
   },
   {
-   "op": "polygon_equal_up_to_order",
+   "op": "equals",
    "args": [
     "Polygon(Point(0, 0), Point(2, 0), Point(2, 2), Point(0, 2))",
     "Polygon(Point(2, 2), Point(0, 2), Point(0, 0), Point(2, 0))"
@@ -1437,12 +1272,11 @@
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Same square, different starting vertex.",
-   "id": "geometry-109"
+   "id": "geometry-105"
   },
   {
-   "op": "polygon_equal_up_to_order",
+   "op": "equals",
    "args": [
     "Polygon(Point(0, 0), Point(2, 0), Point(2, 2), Point(0, 2))",
     "Polygon(Point(0, 0), Point(0, 2), Point(2, 2), Point(2, 0))"
@@ -1450,12 +1284,11 @@
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Same square traversed clockwise.",
-   "id": "geometry-110"
+   "id": "geometry-106"
   },
   {
-   "op": "polygon_equal_up_to_order",
+   "op": "equals",
    "args": [
     "Polygon(Point(0, 0), Point(2, 0), Point(2, 2), Point(0, 2))",
     "Polygon(Point(0, 0), Point(2, 2), Point(2, 0), Point(0, 2))"
@@ -1463,12 +1296,11 @@
    "expected": "False",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Same vertex set in another cyclic order is a different (self-intersecting) polygon.",
-   "id": "geometry-111"
+   "note": "Same vertex set in another cyclic order: a self-intersecting polygon.",
+   "id": "geometry-107"
   },
   {
-   "op": "polygon_equal_up_to_order",
+   "op": "equals",
    "args": [
     "Polygon(Point(0, 0), Point(2, 0), Point(2, 2), Point(0, 2))",
     "Polygon(Point(0, 0), Point(1, 0), Point(2, 0), Point(2, 2), Point(0, 2))"
@@ -1476,12 +1308,11 @@
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy drops the collinear vertex (1, 0), so this is the same square.",
-   "id": "geometry-112"
+   "note": "SymPy drops the collinear vertex (1, 0).",
+   "id": "geometry-108"
   },
   {
-   "op": "polygon_equal_up_to_order",
+   "op": "equals",
    "args": [
     "Triangle(Point(0, 0), Point(4, 0), Point(0, 3))",
     "Polygon(Point(0, 3), Point(4, 0), Point(0, 0))"
@@ -1489,9 +1320,8 @@
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "A three-vertex Polygon is a Triangle; reversed order still matches.",
-   "id": "geometry-113"
+   "note": "A three-vertex Polygon is a Triangle, listed in reverse order.",
+   "id": "geometry-109"
   },
   {
    "op": "distance",
@@ -1499,22 +1329,19 @@
     "Point(a, 0)",
     "Point(0, b)"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     },
-     "b": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
+    },
+    "b": {
+     "positive": true
     }
    },
    "expected": "sqrt(a**2 + b**2)",
    "expected_latex": "\\sqrt{a^{2} + b^{2}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-114"
+   "id": "geometry-110"
   },
   {
    "op": "distance",
@@ -1526,9 +1353,8 @@
    "expected_latex": "\\sqrt{x^{2}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "x has no assumptions (it may be complex), so sqrt(x**2) stays; compare the positive a below.",
-   "id": "geometry-115"
+   "note": "x has no assumptions, so sqrt(x**2) stays; the next case has a positive.",
+   "id": "geometry-111"
   },
   {
    "op": "distance",
@@ -1536,20 +1362,16 @@
     "Point(a, 0)",
     "Point(0, 0)"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
     }
    },
    "expected": "a",
    "expected_latex": "a",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "a is positive, so the distance is a.",
-   "id": "geometry-116"
+   "id": "geometry-112"
   },
   {
    "op": "distance",
@@ -1557,23 +1379,20 @@
     "Point(a/2, b/2)",
     "Point(0, 0)"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     },
-     "b": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
+    },
+    "b": {
+     "positive": true
     }
    },
    "expected": "sqrt(a**2/4 + b**2/4)",
    "expected_latex": "\\sqrt{\\frac{a^{2}}{4} + \\frac{b^{2}}{4}}",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The midpoint of the hypotenuse is equidistant from all three vertices: sqrt(a**2 + b**2)/2 (SymPy prints sqrt(a**2/4 + b**2/4)).",
-   "id": "geometry-117"
+   "note": "The midpoint of the hypotenuse is equidistant from all three vertices; SymPy does not take the 1/4 out of the root.",
+   "id": "geometry-113"
   },
   {
    "op": "distance",
@@ -1581,23 +1400,20 @@
     "Point(a/2, b/2)",
     "Point(a, 0)"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     },
-     "b": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
+    },
+    "b": {
+     "positive": true
     }
    },
    "expected": "sqrt(a**2/4 + b**2/4)",
    "expected_latex": "\\sqrt{\\frac{a^{2}}{4} + \\frac{b^{2}}{4}}",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The midpoint of the hypotenuse is equidistant from all three vertices: sqrt(a**2 + b**2)/2 (SymPy prints sqrt(a**2/4 + b**2/4)).",
-   "id": "geometry-118"
+   "note": "The midpoint of the hypotenuse is equidistant from all three vertices; SymPy does not take the 1/4 out of the root.",
+   "id": "geometry-114"
   },
   {
    "op": "midpoint",
@@ -1605,26 +1421,23 @@
     "Point(0, 0)",
     "Point(a + b, c)"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     },
-     "b": {
-      "positive": true
-     },
-     "c": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
+    },
+    "b": {
+     "positive": true
+    },
+    "c": {
+     "positive": true
     }
    },
    "expected": "Point2D(a/2 + b/2, c/2)",
    "expected_latex": "\\operatorname{Point2D}\\left(\\frac{a}{2} + \\frac{b}{2}, \\frac{c}{2}\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Parallelogram diagonal from (0, 0).",
-   "id": "geometry-119"
+   "id": "geometry-115"
   },
   {
    "op": "midpoint",
@@ -1632,48 +1445,42 @@
     "Point(a, 0)",
     "Point(b, c)"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     },
-     "b": {
-      "positive": true
-     },
-     "c": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
+    },
+    "b": {
+     "positive": true
+    },
+    "c": {
+     "positive": true
     }
    },
    "expected": "Point2D(a/2 + b/2, c/2)",
    "expected_latex": "\\operatorname{Point2D}\\left(\\frac{a}{2} + \\frac{b}{2}, \\frac{c}{2}\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The other diagonal: same midpoint, so the diagonals bisect each other.",
-   "id": "geometry-120"
+   "note": "The other diagonal: the same midpoint.",
+   "id": "geometry-116"
   },
   {
    "op": "slope",
    "args": [
     "Line(Point(a, 0), Point(0, b))"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     },
-     "b": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
+    },
+    "b": {
+     "positive": true
     }
    },
    "expected": "-b/a",
    "expected_latex": "- \\frac{b}{a}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-121"
+   "id": "geometry-117"
   },
   {
    "op": "slope_product",
@@ -1681,23 +1488,20 @@
     "Line(Point(0, 0), Point(a, b))",
     "Line(Point(a, b), Point(a - b, a + b))"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     },
-     "b": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
+    },
+    "b": {
+     "positive": true
     }
    },
    "expected": "-1",
    "expected_latex": "-1",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Adjacent sides of the square on (0, 0), (a, b): slopes b/a and -a/b.",
-   "id": "geometry-122"
+   "id": "geometry-118"
   },
   {
    "op": "slope_product",
@@ -1705,20 +1509,17 @@
     "Line(Point(0, 0), Point(a, a))",
     "Line(Point(a, 0), Point(0, a))"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
     }
    },
    "expected": "-1",
    "expected_latex": "-1",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Diagonals of a square.",
-   "id": "geometry-123"
+   "id": "geometry-119"
   },
   {
    "op": "slope_product",
@@ -1726,23 +1527,20 @@
     "Line(Point(0, 0), Point(a, 0))",
     "Line(Point(0, 0), Point(0, b))"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     },
-     "b": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
+    },
+    "b": {
+     "positive": true
     }
    },
    "expected": "nan",
    "expected_latex": "\\text{NaN}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Horizontal times vertical is 0*oo = nan: slope products cannot show these are perpendicular; use is_perpendicular.",
-   "id": "geometry-124"
+   "note": "Horizontal times vertical: 0*oo is nan.",
+   "id": "geometry-120"
   },
   {
    "op": "is_parallel",
@@ -1750,25 +1548,22 @@
     "Line(Point(0, 0), Point(b, c))",
     "Line(Point(a, 0), Point(a + b, c))"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     },
-     "b": {
-      "positive": true
-     },
-     "c": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
+    },
+    "b": {
+     "positive": true
+    },
+    "c": {
+     "positive": true
     }
    },
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Opposite sides of a parallelogram.",
-   "id": "geometry-125"
+   "id": "geometry-121"
   },
   {
    "op": "is_perpendicular",
@@ -1776,65 +1571,56 @@
     "Line(Point(0, 0), Point(a, 0))",
     "Line(Point(0, 0), Point(0, b))"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     },
-     "b": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
+    },
+    "b": {
+     "positive": true
     }
    },
    "expected": "True",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-126"
+   "id": "geometry-122"
   },
   {
    "op": "circumcenter",
    "args": [
     "Triangle(Point(0, 0), Point(a, 0), Point(0, b))"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     },
-     "b": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
+    },
+    "b": {
+     "positive": true
     }
    },
    "expected": "Point2D(a/2, b/2)",
    "expected_latex": "\\operatorname{Point2D}\\left(\\frac{a}{2}, \\frac{b}{2}\\right)",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-127"
+   "id": "geometry-123"
   },
   {
    "op": "area",
    "args": [
     "Triangle(Point(0, 0), Point(a, 0), Point(0, b))"
    ],
-   "options": {
-    "assumptions": {
-     "a": {
-      "positive": true
-     },
-     "b": {
-      "positive": true
-     }
+   "assumptions": {
+    "a": {
+     "positive": true
+    },
+    "b": {
+     "positive": true
     }
    },
    "expected": "a*b/2",
    "expected_latex": "\\frac{a b}{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "geometry-128"
+   "id": "geometry-124"
   }
  ]
 }

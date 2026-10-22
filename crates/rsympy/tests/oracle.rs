@@ -5,9 +5,8 @@
 //! per topic. Run with `cargo test -p rsympy --test oracle -- --nocapture` to
 //! see the table.
 //!
-//! Every case binds one or both rsympy profiles (`profile` is "both",
-//! "parity" or "strict"; see `oracle/caselib.py`), and runs once under each
-//! profile it binds.
+//! rsympy copies SymPy 1:1, so every case's expected answer is what SymPy
+//! itself returned.
 //!
 //! The test fails when:
 //! - a case gives a wrong answer and is not listed in `oracle/divergences.json`,
@@ -15,53 +14,29 @@
 //!   that now passes (delete the entry), or
 //! - a topic passes fewer cases than recorded in `oracle/baseline.json`.
 //!
-//! `divergences.json` maps a case id to `{"category", "reason"}`, where the
-//! category is `bug` (rsympy is wrong, to be fixed), `intentional` (rsympy
-//! differs on purpose) or `sympy_bug` (SymPy's answer is wrong and rsympy
-//! does not copy it). An optional `"profile"` limits the entry to one profile.
+//! `divergences.json` maps a case id to `{"category", "reason"}`. The
+//! category is `bug` (rsympy is wrong; fix it), `unstable` (SymPy's own
+//! answer depends on hash order or call history, so there is no single
+//! answer to copy) or `unportable` (the behaviour can't exist outside
+//! Python, e.g. `parse_expr` evaluating arbitrary Python code).
 //!
-//! `baseline.json` maps profile -> topic -> passing count. When a topic
-//! improves, raise its number so it can't silently regress. Lowering a
-//! baseline or adding a divergence needs a human reviewer (docs/PLAN.md).
+//! `baseline.json` maps topic -> passing count. When a topic improves, raise
+//! its number so it can't silently regress. Lowering a baseline or adding a
+//! divergence needs a human reviewer (docs/PLAN.md).
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};
 
 use serde_json::Value;
 
-/// The two behaviours rsympy offers on one core (docs/PLAN.md).
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-enum Profile {
-    /// Reproduces SymPy's observable behaviour.
-    Parity,
-    /// For students: refuses rather than guesses, reads decimals exactly, etc.
-    Strict,
-}
-
-impl Profile {
-    const ALL: [Profile; 2] = [Profile::Parity, Profile::Strict];
-
-    fn name(self) -> &'static str {
-        match self {
-            Profile::Parity => "parity",
-            Profile::Strict => "strict",
-        }
-    }
-
-    /// Whether a case whose `profile` field is `field` binds this profile.
-    fn binds(self, field: &str) -> bool {
-        field == "both" || field == self.name()
-    }
-}
-
-const CATEGORIES: [&str; 3] = ["bug", "intentional", "sympy_bug"];
+const CATEGORIES: [&str; 3] = ["bug", "unstable", "unportable"];
 
 /// Outcome of running one case.
 enum Outcome {
     Pass,
     Fail(String),
-    /// The operation, or the case's compare mode, isn't implemented yet.
+    /// The operation isn't implemented yet.
     Unsupported,
 }
 
@@ -69,18 +44,18 @@ enum Outcome {
 type Answer = Result<String, String>;
 
 /// Runs `op` on `args` and returns rsympy's answer in SymPy's `str()` form,
-/// `Err(kind)` if rsympy refused the input (kinds look like
-/// `refused:\overline` or `invalid:missing_unit`; see `oracle/caselib.py`),
-/// or `None` if the operation isn't implemented yet.
+/// `Err(class)` if rsympy raised an error (named by the Python exception
+/// class SymPy raises, e.g. `ValueError`), or `None` if the operation isn't
+/// implemented yet.
 ///
 /// `case` gives access to `options` and `assumptions`. Every new rsympy
 /// feature gets wired in here.
-fn dispatch(profile: Profile, op: &str, args: &[&str], case: &Value) -> Option<Answer> {
-    let _ = (profile, op, args, case);
+fn dispatch(op: &str, args: &[&str], case: &Value) -> Option<Answer> {
+    let _ = (op, args, case);
     None
 }
 
-fn run_case(profile: Profile, case: &Value) -> Outcome {
+fn run_case(case: &Value) -> Outcome {
     let op = case["op"].as_str().expect("case.op");
     let args: Vec<&str> = case["args"]
         .as_array()
@@ -89,19 +64,19 @@ fn run_case(profile: Profile, case: &Value) -> Outcome {
         .map(|a| a.as_str().expect("case.args[i]"))
         .collect();
     let expected = case["expected"].as_str().expect("case.expected");
-    let Some(answer) = dispatch(profile, op, &args, case) else {
+    let Some(answer) = dispatch(op, &args, case) else {
         return Outcome::Unsupported;
     };
+    // rsympy copies SymPy 1:1: the printed answer must match exactly, or the
+    // same exception class must be raised.
     match (case["compare"].as_str().expect("case.compare"), answer) {
-        ("error", Err(kind)) if kind == expected => Outcome::Pass,
-        ("error", Err(kind)) => Outcome::Fail(format!("refused with {kind}")),
-        ("error", Ok(got)) => Outcome::Fail(format!("accepted, gave {got}")),
-        (_, Err(kind)) => Outcome::Fail(format!("refused with {kind}")),
+        ("error", Err(class)) if class == expected => Outcome::Pass,
+        ("error", Err(class)) => Outcome::Fail(format!("raised {class}")),
+        ("error", Ok(got)) => Outcome::Fail(format!("returned {got}, SymPy raises {expected}")),
+        ("exact", Err(class)) => Outcome::Fail(format!("raised {class}")),
         ("exact", Ok(got)) if got == expected => Outcome::Pass,
         ("exact", Ok(got)) => Outcome::Fail(got),
-        // `equivalent`, `set` and `antiderivative` need rsympy itself to do
-        // the comparison; they light up once the core exists.
-        _ => Outcome::Unsupported,
+        (other, _) => panic!("unknown compare mode {other:?}"),
     }
 }
 
@@ -115,7 +90,7 @@ fn read_json(path: &Path) -> Value {
 }
 
 /// Checks every divergence entry's shape; returns the problems found.
-fn check_divergences(divergences: &Value, ids: &BTreeMap<String, String>) -> Vec<String> {
+fn check_divergences(divergences: &Value, ids: &BTreeSet<String>) -> Vec<String> {
     let mut problems = Vec::new();
     let Some(entries) = divergences.as_object() else {
         return vec!["divergences.json must be an object".into()];
@@ -130,24 +105,11 @@ fn check_divergences(divergences: &Value, ids: &BTreeMap<String, String>) -> Vec
         if entry["reason"].as_str().is_none_or(|r| r.trim().is_empty()) {
             problems.push(format!("divergence {id}: needs a reason"));
         }
-        match (ids.get(id), entry.get("profile").map(Value::as_str)) {
-            (None, _) => problems.push(format!("divergence {id}: no such case")),
-            (Some(_), None) => {}
-            (Some(bound), Some(Some(p)))
-                if Profile::ALL.iter().any(|x| x.name() == p && x.binds(bound)) => {}
-            (Some(_), Some(_)) => problems.push(format!(
-                "divergence {id}: profile must be one the case binds"
-            )),
+        if !ids.contains(id) {
+            problems.push(format!("divergence {id}: no such case"));
         }
     }
     problems
-}
-
-/// Whether `divergences` excuses a failure of case `id` under `profile`.
-fn excused(divergences: &Value, id: &str, profile: Profile) -> bool {
-    divergences
-        .get(id)
-        .is_some_and(|e| e["profile"].as_str().is_none_or(|p| p == profile.name()))
 }
 
 #[test]
@@ -168,80 +130,54 @@ fn sympy_conformance() {
     );
     let docs: Vec<Value> = files.iter().map(|f| read_json(f)).collect();
 
-    // case id -> the profile field it binds
-    let ids: BTreeMap<String, String> = docs
+    let ids: BTreeSet<String> = docs
         .iter()
         .flat_map(|d| d["cases"].as_array().expect("cases"))
-        .map(|c| {
-            let id = c["id"].as_str().expect("case.id").to_owned();
-            let profile = c["profile"].as_str().expect("case.profile").to_owned();
-            (id, profile)
-        })
+        .map(|c| c["id"].as_str().expect("case.id").to_owned())
         .collect();
     let mut problems = check_divergences(&divergences, &ids);
 
-    // (profile, topic) -> (passed, total)
-    let mut scores: BTreeMap<(Profile, String), (usize, usize)> = BTreeMap::new();
+    // topic -> (passed, total)
+    let mut scores: BTreeMap<String, (usize, usize)> = BTreeMap::new();
     for doc in &docs {
         let topic = doc["topic"].as_str().expect("topic");
-        for profile in Profile::ALL {
-            let (mut passed, mut total) = (0, 0);
-            for case in doc["cases"].as_array().expect("cases") {
-                if !profile.binds(case["profile"].as_str().expect("case.profile")) {
-                    continue;
-                }
-                total += 1;
-                let id = case["id"].as_str().expect("case.id");
-                let excused = excused(&divergences, id, profile);
-                match run_case(profile, case) {
-                    Outcome::Pass if excused => problems.push(format!(
-                        "{id} ({}) passes now; delete its divergences.json entry",
-                        profile.name()
-                    )),
-                    Outcome::Pass => passed += 1,
-                    Outcome::Unsupported => {}
-                    Outcome::Fail(_) if excused => {}
-                    Outcome::Fail(got) => problems.push(format!(
-                        "{id} ({}): {}({}) gave {got:?}, expected {:?}",
-                        profile.name(),
-                        case["op"].as_str().unwrap_or_default(),
-                        case["args"],
-                        case["expected"].as_str().unwrap_or_default(),
-                    )),
-                }
+        let cases = doc["cases"].as_array().expect("cases");
+        let mut passed = 0;
+        for case in cases {
+            let id = case["id"].as_str().expect("case.id");
+            let excused = divergences.get(id).is_some();
+            match run_case(case) {
+                Outcome::Pass if excused => problems.push(format!(
+                    "{id} passes now; delete its divergences.json entry"
+                )),
+                Outcome::Pass => passed += 1,
+                Outcome::Unsupported => {}
+                Outcome::Fail(_) if excused => {}
+                Outcome::Fail(got) => problems.push(format!(
+                    "{id}: {}({}) gave {got:?}, expected {:?}",
+                    case["op"].as_str().unwrap_or_default(),
+                    case["args"],
+                    case["expected"].as_str().unwrap_or_default(),
+                )),
             }
-            scores.insert((profile, topic.to_owned()), (passed, total));
         }
+        scores.insert(topic.to_owned(), (passed, cases.len()));
     }
 
-    println!(
-        "\n{:<16} {:<7} {:>6} {:>6}",
-        "topic", "profile", "pass", "total"
-    );
-    let mut all: BTreeMap<Profile, (usize, usize)> = BTreeMap::new();
-    for ((profile, topic), &(pass, total)) in &scores {
-        if total == 0 {
-            continue;
-        }
-        println!("{topic:<16} {:<7} {pass:>6} {total:>6}", profile.name());
-        let sum = all.entry(*profile).or_default();
-        sum.0 += pass;
-        sum.1 += total;
-        let floor = baseline[profile.name()][topic.as_str()]
-            .as_u64()
-            .unwrap_or(0) as usize;
+    println!("\n{:<16} {:>6} {:>6}", "topic", "pass", "total");
+    let (mut all_pass, mut all_total) = (0, 0);
+    for (topic, &(pass, total)) in &scores {
+        println!("{topic:<16} {pass:>6} {total:>6}");
+        all_pass += pass;
+        all_total += total;
+        let floor = baseline[topic.as_str()].as_u64().unwrap_or(0) as usize;
         if pass < floor {
-            problems.push(format!(
-                "{topic} ({}): {pass} passing, baseline is {floor}",
-                profile.name()
-            ));
+            problems.push(format!("{topic}: {pass} passing, baseline is {floor}"));
         } else if pass > floor {
-            println!("  note: beats baseline ({floor}); raise it in oracle/baseline.json");
+            println!("  note: {topic} beats baseline ({floor}); raise it in oracle/baseline.json");
         }
     }
-    for (profile, (pass, total)) in &all {
-        println!("{:<16} {:<7} {pass:>6} {total:>6}", "all", profile.name());
-    }
+    println!("{:<16} {all_pass:>6} {all_total:>6}", "all");
 
     assert!(
         problems.is_empty(),

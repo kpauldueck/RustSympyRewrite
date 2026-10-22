@@ -1,11 +1,12 @@
 # Plan: SymPy, rewritten in Rust
 
-**Goal.** Rewrite all of SymPy in Rust: as accurate, faster, smaller in memory, and more secure. Paul's homework app doesn't set the scope; it sets the **order**, so what the app uses is ported first.
+**Goal.** Rewrite all of SymPy in Rust so that it behaves exactly like SymPy 1.14, 1:1, while being faster, smaller in memory and memory-safe. Paul's homework app doesn't set the scope; it sets the **order**, so what the app uses is ported first.
 
 **Supporting documents:**
 - [research/rust-rewrites.md](research/rust-rewrites.md): lessons from other large rewrites.
-- [research/sympy-module-survey.md](research/sympy-module-survey.md): every SymPy module, with its algorithms, real dependencies, traps, difficulty and port strategy.
+- [research/sympy-module-survey.md](research/sympy-module-survey.md): every SymPy module, with its algorithms, real dependencies, traps and difficulty. It was written before the 1:1 decision, so where it recommends a student-friendly or "strict" variant, this plan overrides it.
 - `oracle/sympy_inventory.json`: sizes and test counts.
+- The app's SymPy-usage audit (`app_sympy_audit.md`, shared by Paul in the project chat and kept out of the repo). It sets the priority order, and the oracle's `source: app` cases cite it.
 
 ## Decisions
 
@@ -14,29 +15,45 @@
 2. **Permissive licences only** (MIT OR Apache-2.0).
    - Big integers use `dashu`. `malachite` is LGPL-3.0, so it's excluded, as are GMP and FLINT.
    - mpmath is BSD, so we port its algorithms.
-3. **Independent of upstream SymPy.** SymPy 1.14.0, pinned, is the answer key. We keep its BSD notice wherever we port code.
+3. **Independent of upstream SymPy.** SymPy 1.14.0, pinned, is the answer key; we don't track later releases. `rsympy-py` vendors SymPy 1.14.0's Python source for the transition rule and the Python-only fallbacks, so it never depends on whatever `sympy` happens to be installed. We keep SymPy's BSD notice wherever we port or vendor its code.
 4. **Full SymPy scope.** The app's audit sets priority only.
+5. **Copy SymPy 1:1.** rsympy reproduces SymPy's observable behaviour exactly, including:
+   - canonical forms and `.args` order;
+   - printed strings and LaTeX;
+   - Float digits;
+   - which exceptions are raised;
+   - SymPy's bugs.
+
+   There are no student-friendly departures and no second "strict" mode. What the homework app does on top of SymPy stays in the app, as it does today; see "The app's own logic".
 
 **Settled by this plan (reversible, but everything else assumes them):**
 
-5. **Two behaviour profiles on one core.**
-   - **`sympy` (parity).** Reproduces SymPy's observable behaviour: canonical forms, `.args` order, printed strings, Float digits. This is what SymPy's test suite checks and what Python users of `rsympy-py` get.
-   - **`strict` (students and services)** is the parity core plus a strict layer:
-     - It never silently misreads input: it refuses by name, with opt-in vocabularies.
-     - Typed decimals are exact.
-     - Units are dimension-checked.
-     - Every call has a budget.
-     - Equivalence is proved, not guessed (see "Strict layer").
-
-   The strict layer adds front ends, checks, refusals and its own algorithms. It **never changes** `canonicalize`, the orderings or node identity, so an expression means the same thing under both profiles and every parity test also protects strict.
-
-   Parity alone can't deliver these: SymPy reads `f(x)` as `f*x`, `x12` as `12*x` and `\overline{AB}` as `conjugate(A)*conjugate(B)`, and `parse_expr` runs arbitrary Python through `eval`.
-6. **Port faithfully, then improve.** About 85% of SymPy's code (by lines) is to be ported algorithm-for-algorithm, because tests across the whole library compare exact output shapes produced by specific heuristics. The exceptions are listed under "Strategy by module".
+6. **Port faithfully.** About 91% of SymPy's code (by lines) is ported algorithm-for-algorithm, because SymPy's tests compare exact output shapes produced by specific heuristics. About 6% is redesigned internally with identical behaviour. The remaining 3% is Python-bound code that `rsympy-py` serves with SymPy's own Python, the benchmark scripts, and parsing.fortran. See "Strategy by module".
 7. **A non-evaluating core.**
    - Raw constructors build exactly what they're given.
-   - SymPy's automatic evaluation is a separate `canonicalize` layer, controlled by an explicit context rather than SymPy's global `evaluate` flag.
+   - SymPy's automatic evaluation is a separate `canonicalize` layer, controlled by an explicit context that reproduces SymPy's `evaluate` flag, `UnevaluatedExpr` and `evaluate=False` behaviour exactly.
 
-   This is the mistake that kept SymEngine from replacing SymPy's core. The app's radical-form checks need raw trees too.
+   Baking evaluation into the core is the mistake that kept SymEngine from replacing SymPy's core.
+
+**Where "exactly" stops.** Four things can't be copied literally. Each failing case they cause is classified in the oracle rather than counted as a bug:
+- **SymPy isn't deterministic everywhere.**
+  - A few outputs depend on Python's hash order, SymPy's random streams or call history (for example `factor_cache`, or the Piecewise branches of `integrate`).
+  - rsympy does not emulate CPython's hash values or set and dict iteration order.
+  - The oracle records SymPy's answer under `PYTHONHASHSEED=0`, seeded random streams and cleared caches, and CI regenerates under a second hash seed.
+  - A case whose answer changes between seeds is classified `unstable`. Every other case must match exactly.
+- **Running Python code.**
+  - `sympify` and `parse_expr` run token transformations and then Python's `eval`; `lambdify` builds and runs Python functions.
+  - The Rust parser reproduces all of `sympy_parser`'s built-in transformations and the slice of Python's expression grammar and evaluation rules that `eval` applies to SymPy input: literals, tuples, lists, sets and dicts, operators, calls with keyword arguments, and which inputs raise which exception. `local_dict` and `global_dict` become name maps.
+  - It can't run user-written transformation functions, arbitrary Python objects, or the functions `lambdify` returns; it prints the same code `lambdify` would. `rsympy-py` falls back to SymPy's Python for those, and the rest is classified `unportable`.
+- **Python-bound code.** Some of SymPy exists to drive Python itself or Python libraries:
+  - the IPython/Jupyter integration (`interactive`) and the test runner (`testing`);
+  - stats.sampling (numpy, scipy, pymc);
+  - the matplotlib and pyglet plot backends, `experimental_lambdify`, physics.control's plots and physics.quantum's circuit plots;
+  - `autowrap` (Cython, f2py) and `llvmjitcode` (llvmlite);
+  - parsing.fortran (LFortran).
+
+  `rsympy-py` serves these with SymPy's own Python. The pure-Rust API raises `NotPortedYet` for them.
+- **Speed and memory** are meant to differ: that's the point of the rewrite.
 
 ## How big this is
 
@@ -44,16 +61,15 @@
 |---|---|
 | SymPy 1.14 non-test source | 497k lines across 70 planning units |
 | SymPy test suite | 256k lines, 12.1k `test_` functions, plus test-class methods (e.g. biomechanics has about 215) and about 32k lines of doctests |
-| mpmath, ported as `rsympy-mpf` | 47.7k lines |
-| Survey difficulty (excluding deferred units) | 10 XL, 25 L, 19 M, 10 S |
-| Conventional effort, SymPy units only | **251–671 person-weeks**, roughly 5–13 person-years for a skilled human team |
+| mpmath, ported as `rsympy-mpf` | 47.7k lines, of which SymPy uses a large part |
+| Survey difficulty | 10 XL, 26 L, 20 M, 14 S |
+| Conventional effort, SymPy units only | **257–692 person-weeks**, roughly 5–14 person-years for a skilled human team |
 
 The bands are S 0.2–1, M 1–4, L 4–13 and XL 13–26 person-weeks per unit. The XL units are core, polys, printing, simplify, integrals, solvers, solvers.ode, functions.special, physics.quantum and tensor.
 
 **Not in that range:**
 - mpmath, which is XL on its own;
 - `rsympy-py`;
-- the strict layer;
 - tooling;
 - integration.
 
@@ -74,12 +90,11 @@ Details per unit are in the survey.
 
 | Strategy | Units | Share of lines |
 |---|---|---:|
-| Port faithfully | core, assumptions, logic, sets, strategies, polys (+matrices, agca, numberfields), ntheory, functions.*, concrete, series, calculus, simplify, integrals, solvers, solvers.diophantine, matrices (+expressions), printing (+pretty), codegen, combinatorics, stats, geometry, tensor, vector, diffgeom, physics.* (except units), categories, liealgebras, algebras, crypto, discrete | 85% |
-| Redesign | multipledispatch → generated match tables; utilities → Rust helpers; polys.domains ground types → one `Int`/`Rational`/`ModInt`; parsing and parsing.latex → a secure closed-grammar parser with parity and strict front ends; physics.units → parity and strict modes; the functions protocol → one `Head` trait; stats.sampling | 7% |
-| Keep in Python, on the Rust core via `rsympy-py` | plotting, interactive, parsing.autolev, parsing.c, testing. solvers.ode also stays Python until Tier 7: it leans on integrate, which reaches parity in Tier 6 | 7% |
-| Defer or drop | unify, holonomic, parsing.fortran, deprecated matrix mixins (`matrices/common.py`, `matrices/matrices.py` and their tests), benchmarks (rewritten as criterion benches) | 1% |
-
-Paul to confirm the last two rows (open question 7).
+| Port faithfully | Everything not listed below. That includes units the survey suggested deferring or keeping in Python: holonomic, unify, plotting's sampling, series and text backend, parsing.autolev (emits the same Python text), parsing.c (through the safe `clang` crate), the deprecated matrix API, physics.units, sandbox. solvers.ode runs as Python on the Rust core until Tier 7, because it leans on integrate | 91.1% |
+| Redesign internals, same behaviour | multipledispatch → generated match tables; utilities → Rust helpers; external → Rust crates; polys.domains ground types → one `Int`/`Rational`/`ModInt`; parsing and parsing.latex → Rust parsers without `eval` that reproduce what SymPy's parsers return (see Tier 4); the functions protocol → one `Head` trait | 6.2% |
+| Only in `rsympy-py` | the Python-bound code listed under "Where 'exactly' stops": interactive, testing, stats.sampling, the matplotlib and pyglet backends, `experimental_lambdify`, control and circuit plots, `autowrap`, `llvmjitcode` | 2.4% |
+| Rewritten as criterion benches | the benchmarks directories | 0.2% |
+| Served by `rsympy-py` until LFortran can be called from Rust | parsing.fortran | 0.1% |
 
 ## Architecture
 
@@ -130,10 +145,10 @@ Once hooks exist, splitting into crates is cheap, and it keeps builds parallel a
   - an open expand-hint registry;
   - per-printer hooks (`_latex`, `_sympystr`, ...).
 
-  It must also allow **foreign heads**, whose methods call back into Python, for user subclasses during the transition.
+  It must also allow **foreign heads**, whose methods call back into Python. Users' own `Function` and `Basic` subclasses are part of SymPy's API and need them permanently; SymPy classes not yet ported need them during the transition.
 - **Binary-operator dispatch.** SymPy picks the class that handles `a*b` by `_op_priority`; this matters for matrices, quantities, vectors and `AccumBounds`. A `BinaryOp` trait with priorities is needed from day one.
 - **Old assumptions as a u64 bitset `FactKB`.**
-  - The 40 rules are compiled at build time, with atomic per-node caches.
+  - The 43 rules of `_assume_rules` are compiled at build time, with atomic per-node caches.
   - This is mostly for memory and determinism. Assumptions are about 20% of SymPy's runtime on app-like workloads, so even free assumptions cap the speed-up at about 1.25× (Amdahl's law). Speed has to come from everywhere at once.
 - **Extension hooks in canonicalisation.**
   - Constructor post-processors keyed on argument kind (`MatrixExpr`, `Vector`, `TensExpr`, quantum states).
@@ -147,66 +162,62 @@ Once hooks exist, splitting into crates is cheap, and it keeps builds parallel a
   - Side-table memos for the types that SymPy mutates lazily.
 - **An explicit context, `Ctx`.**
   - `evaluate`, `distribute` and `exp_is_pow` become context, not globals.
-  - **A budget.** Every loop that can blow up calls `ctx.tick()?`, so per-call budgets work without threads or signals. Retrofitting this later means touching every algorithm.
   - **The RNG,** with the `sympy.core.random` API (`seed`, `_randint`, `_randrange`, `random_complex_number`), so seeded tests replay SymPy's sequences.
+  - **An optional budget.** Every loop that can blow up calls `ctx.tick()?`. The budget is unlimited by default, so results are SymPy's. It lets a caller like the app stop a runaway call cleanly instead of killing a process, and retrofitting it later would mean touching every algorithm.
   - Everything is deterministic: no hash-order iteration.
 - **Floats behave like mpmath.**
   - A Float's identity includes its precision (`Float(0.5) != Float(0.5, 30)`), and the `Float(2.0) != 2` rule from 1.13 holds.
   - `rsympy-mpf` ports mpmath operation by operation at the same working precision, so it should produce the same digits. The differential tests check that rather than assume it.
-- **Python numeric semantics where SymPy exposes them:** floor `//` and `%`, `Mod`, and `round` half-even.
+- **Python numeric semantics where SymPy exposes them:** floor `//` and `%`, `Mod`, Python's `round` on Python numbers, and SymPy's own `Expr.round`, which rounds the decimal value (`Float(2.675).round(2)` is `2.68`, where Python's `round(2.675, 2)` is `2.67`).
 
 ## The oracle
 
 There are three layers, built in this order.
 
-1. **Golden cases (exist today).** 1,176 cases in 17 topics, generated by `oracle/gen_cases.py` and `oracle/topics/`, and scored by `crates/rsympy/tests/oracle.rs`. They run in plain `cargo test`, before `rsympy-py` exists.
-   - **`source`** records where an answer came from:
-     - `sympy`: a SymPy call.
-     - `app`: SymPy pieces running a rule of ours or the app's. It is only as right as that rule.
-     - `spec`: decided on purpose, with a note saying why.
-   - **`profile`** records who must pass the case:
-     - `both`;
-     - `strict`: spec cases, and ops only the strict layer has;
-     - `parity`: SymPy behaviour that strict deliberately changes.
+1. **Golden cases (exist today).** 1,248 cases in 17 topics. They come from `oracle/gen_cases.py` and `oracle/topics/` and are scored by `crates/rsympy/tests/oracle.rs`. They run in plain `cargo test`, before `rsympy-py` exists.
+   - Every expected answer is what the pinned SymPy returns, computed live by the generator. When SymPy raises, the expected answer is the exception's class name.
+   - **`source`** is either:
+     - `sympy`: one SymPy call, with its keyword arguments in `options`; or
+     - `app`: a fixed recipe of SymPy calls that the homework app runs, or plans to, such as its answer-equivalence check. Each recipe is written out in its topic module and implemented again in the Rust runner. These cases check that rsympy gives SymPy's answers along the app's call paths. They don't run the app's own code, so when the app changes a recipe, the topic module and the runner change with it.
    - **Generation is reproducible.**
-     - SymPy, mpmath and lark are pinned.
-     - `PYTHONHASHSEED=0` and Python ground types are required.
-     - Caches are cleared and the RNG is seeded before each topic.
+     - Python 3.13, SymPy, mpmath and lark are pinned.
+     - The generator refuses to run without Python ground types, and CI sets `PYTHONHASHSEED=0`.
+     - Before each topic, caches (including `factor_cache`) are cleared and all three random streams are seeded: Python's `random`, `sympy.core.random.rng` and the assumptions shuffler.
      - The generator rejects malformed or contradictory cases.
-     - CI regenerates the cases and diffs them against what is committed.
-   - **Known gap.** The 153 `equivalent`, `set` and `antiderivative` cases are compared by rsympy itself, so a wrong simplifier could grade itself right. The fix is a Tier 0 task: the generator records sample points and SymPy's values at them, and the runner checks against those.
+     - CI regenerates the cases, diffs them against what is committed, then regenerates under a second hash seed and diffs again.
+   - **Exact comparison only.**
+     - A case passes when rsympy's `str()` of the answer is character-for-character SymPy's, or when rsympy raises the same exception class.
+     - Cases also record SymPy's `latex()` of the answer (`expected_latex`). From Tier 4, when the LaTeX printer lands, the runner checks that too.
+     - There is no "equivalent" or "same set in any order" mode, so rsympy never grades its own answers.
 2. **SymPy's own test suite**, run through `rsympy-py`.
    - **Pinned environment:** `PYTHONHASHSEED=0`, Python ground types (no gmpy2/flint), mpmath 1.3.0, pytest and hypothesis.
-   - **Extras environment:** adds numpy, scipy, antlr4 4.11, matplotlib, IPython, libclang and llvmlite. Without them the ANTLR LaTeX, autolev, numpy-printer, plotting, interactive, sampling and codegen tests skip silently.
+   - **Extras environment:** adds numpy, scipy, pymc, antlr4 4.11, matplotlib, IPython, libclang, llvmlite, Cython, lxml, z3, matchpy, numexpr, numba, jax, tensorflow, torch and lfortran, as far as they install together. Without them the ANTLR LaTeX, autolev, array-library printer and lambdify, plotting, interactive, sampling, autowrap, mathml, SMT and codegen tests skip silently. Packages that can't be installed alongside the rest are listed, and their tests are recorded as skipped by environment, not as passing.
    - **Doctests** (about 32k lines) are scored separately, per docstring.
    - **Markers:**
      - `@XFAIL` tests are scored separately. An XFAIL that starts passing is a difference to explain, not a win.
      - `@slow` tests run nightly, not on every pull request.
      - Skip reasons are recorded.
-   - **Test-dependency manifest.** Each SymPy test is run under `sys.setprofile`, recording which SymPy modules it actually executes. Tier exits count only tests whose traced dependencies all sit in that tier or earlier, so no tier waits on a later one.
+   - **Test-dependency manifest.** Each SymPy test is run under `sys.setprofile`, recording every SymPy function it executes (file and qualified name), not just modules; code that runs at import time doesn't count. A checked-in map assigns each SymPy function to the tier that ports it, because many units are split across tiers: `simplify()` calls `hyperexpand` on every input, `Matrix.det` calls `dotprodsimp`, `apart` calls legacy `solve`, and logic's SAT code comes later than `boolalg`. Tier exits count only tests whose traced functions all sit in that tier or earlier, so no tier waits on a later one.
    - **Scoring** is per test function and test method, per module, on a dashboard.
    - **Project-level suites.** `core/tests/test_args.py` (1,007 functions that instantiate every class in SymPy) and `utilities/tests/test_wester.py` are owned at project level, not counted toward core.
-   - **Oracle-unstable outputs.** Some outputs depend on history or hash order:
-     - `factor_cache` changes radical extraction;
-     - the integrate Piecewise branches depend on hash order;
-     - `_ask` shuffles facts.
+3. **Differential fuzzing.** Random expressions are compared against SymPy on `srepr`, `.args` order, `str` and `latex`. Ordering parity can only be found this way.
 
-     These are classified as oracle-unstable rather than counted as failures.
-3. **Differential fuzzing.**
-   - Random expressions are compared against SymPy on `srepr`, `.args` order, `str` and `latex`. Ordering parity can only be found this way.
-   - The strict equivalence engine is checked against interval evaluation.
-
-**Gates (enforced in CI):**
-- No pull request lowers any module's pass count.
-- Golden cases regenerate identically.
-- Every failure is fixed or listed in `oracle/divergences.json` with a `category` and a `reason`. CI rejects malformed entries, unknown case ids, and entries for cases that now pass. The categories are:
+**Gates.**
+- **Enforced by CI today:**
+  - Golden cases regenerate identically, under two hash seeds.
+  - Every failing golden case is fixed or listed in `oracle/divergences.json` with a `category` and a `reason`. CI rejects malformed entries, unknown case ids, and entries for cases that now pass.
+  - No golden topic's pass count drops below `oracle/baseline.json`.
+- **Added when the dashboard exists:** no pull request lowers any SymPy test module's pass count. SymPy-suite classifications live next to the golden ones, keyed by pytest node id, under the same categories.
+- **Divergence categories:**
   - **`bug`:** rsympy is wrong. Fix it.
-  - **`intentional`:** rsympy differs on purpose. Prefer a spec case, with the SymPy case marked `profile: parity`.
-  - **`sympy_bug`:** SymPy is wrong. Parity copies SymPy's bugs by default. The entry records where it can't (a crash, a hang, a hash-order output) or where strict fixes the bug.
-- Only a human may add a divergence or lower a baseline. Both files get CODEOWNERS review.
+  - **`unstable`:** SymPy's own answer depends on hash order, random streams or history.
+  - **`unportable`:** the behaviour needs a Python interpreter, or CPython itself.
+
+  There is no category for "rsympy is better than SymPy".
+- **Enforced by review:** only a human may add a divergence or lower a baseline. Both files have CODEOWNERS entries, which bind once branch protection requires code-owner review.
 
 **Benchmarks.**
-- **Cases:** SymPy's `bench_symbench` R1–R11, about 130 cases from `bench_meijerint`, the polys benchmarks, and the app's own cases.
+- **Cases:** SymPy's `bench_symbench` (R1–R8, R10, R11; there is no R9), the 152 cases in `bench_meijerint`, the polys benchmarks, and the app's own cases.
 - **Measures:** p50/p99 latency and peak memory, against SymPy 1.14.
 - **Comparisons:**
   - Pure SymPy is the target to beat.
@@ -221,49 +232,46 @@ This starts in Tier 0 and grows every tier. It presents SymPy's Python API over 
 - **Internal-API policy.** Many SymPy tests touch internals (`_assumptions`, `_eval_*`, private helpers).
   - `rsympy-py` provides shims for the internals tests use.
   - Tests are selected, never altered in meaning.
-  - A test that needs an internal we won't reproduce is classified, not edited.
-- **`parse_expr`.** SymPy's `parse_expr` runs Python `eval`, and the Rust parser never will. For parity, `rsympy-py` keeps SymPy's Python `parse_expr` as the fallback for custom transformations and `local_dict`/`global_dict` tricks.
+  - Under 1:1 these internals are behaviour too. A missing shim is a `bug`; only a test that needs CPython itself (frames, bytecode, `__dict__` layout, reference counts) is classified `unportable`.
+- **Python-only behaviour.** `rsympy-py` falls back to its vendored SymPy Python for:
+  - `parse_expr` with user-written transformations or arbitrary Python objects in its namespaces;
+  - running the functions `lambdify` builds;
+  - the Python-bound code listed under "Where 'exactly' stops".
 - **Exceptions and deprecations.** Tests assert exception types (`raises(TypeError)`) and `SymPyDeprecationWarning`s.
   - `PORTING.md` maps each to a Rust error kind.
   - `rsympy-py` raises the matching Python class.
 
 ### rsympy-mpf
-mpmath is ported in milestones, each landing with the tier that first needs it.
+mpmath is ported in milestones, each landing with the tier that first needs it. The scope is what SymPy calls, not all of mpmath.
 
 | Milestone | Tier | Contents |
 |---|---|---|
 | M1 | 1 | libmpf: `mpf` arithmetic and rounding, `to_str`, `prec_to_dps` |
-| M2 | 2 | elementary functions, `mpc`, `hypsum`; `mpmath.iv` intervals for the strict equivalence engine (gates App Milestone A) |
+| M2 | 2 | elementary functions, `mpc`, `hypsum` |
 | M3 | 3 | `polyroots`, `findroot` |
 | M4 | 4 | `pslq`, `identify` (for `nsimplify`) |
 | M5 | 5 | `MDNewton` (for `nsolve`), `eig`, `lu_solve` |
 | M6 | 6 | `quad`, special-function kernels |
 
-### Strict layer
-This lands in Tier 4 and grows through Tier 5.
-- **Front ends:**
-  - a closed-grammar parser with opt-in vocabularies;
-  - exact decimals;
-  - quantity input with dimension checks.
-- **Equivalence:**
-  - Normal forms prove two answers equal.
-  - Interval evaluation proves them not equal.
-  - Anything else is "unknown", and the item's policy decides. There is no floating-point "probably equal".
-- **Form checks:** factored, expanded, simplified fraction, slope-intercept, simplified radical.
-- **Algorithms SymPy lacks or gets wrong for students:**
-  - periodic equations solved exactly on a bounded interval (e.g. every solution in [0, 2π));
-  - domain and singularity analysis;
-  - corrections where SymPy's limits are wrong;
-  - a trig-identity prover;
-  - geometry checks.
+### The app's own logic
+The homework app wraps SymPy in its own rules, for example:
+- its answer-equivalence check;
+- its form checks;
+- its unit and number input handling;
+- its LaTeX workarounds.
+
+Those rules stay in the app. When the app moves to Rust, they move with it, now calling rsympy instead of SymPy. The golden cases with `source: app` replay those recipes, and the matrix calls on the app's roadmap, against SymPy's answers.
+
+The student-facing rules drafted before the 1:1 decision (base-10 `\log`, exact decimals, refusing `\overline`, unit-input rules) are in git history at commit 727fa5e if the app wants them for its own code.
 
 ## Roadmap
 
 Tiers follow the dependency structure; inside each tier, what the app needs goes first. Units marked ⇄ can run in parallel tracks once their prerequisites land, which is where many agents help.
 
+A golden topic or SymPy test module **passes** when every case either passes or carries an `unstable` or `unportable` divergence. A `bug` entry means it doesn't pass.
+
 ### Tier 0: Harness
-- The golden-case oracle and CI, with profiles, reproducible generation and divergence validation (done, PR #1).
-- Sample-point data for the 153 self-graded cases.
+- The golden-case oracle and CI, with reproducible generation and divergence validation (done, PR #1).
 - The `rsympy-py` skeleton, the SymPy test-runner dashboard, the doctest layer and the marker policy.
 - The test-dependency manifest.
 - The pinned and extras oracle environments.
@@ -303,14 +311,13 @@ Alongside that:
 - **Unevaluated containers:** `Integral`, `Limit`, `Sum`, `Product` (objects only; the engines come later), and tensor.indexed (`Indexed`, `IndexedBase`).
 - **Absorbing node kinds:** `Order` and `AccumBounds`.
 - **Printers:** `StrPrinter` and `ReprPrinter`.
-- **Parsing:** the secure `sympify` parser (parity front end) and the app's number input (`parse_number`, significant figures).
+- **Parsing:** `sympify`/`parse_expr` with every transformation in `sympy_parser` (the standard ones plus implicit multiplication and application, `convert_xor`, `rationalize` and the rest), as described under "Where 'exactly' stops".
 - **Infrastructure:** multipledispatch tables, strategies (the rule combinators that fu, matrices.expressions and others use), class markers, and the core-misc namespace (`sympy/__init__`, `abc`, ...).
 - **Sets phase 1:** `Interval`, `FiniteSet`, `Union`, `Intersection`, `Complement`, `Range`.
 
 **Exit:**
-- Core, logic, sets-phase-1 and functions.elementary tests are at 95% or more, counting tests whose traced dependencies are in Tiers 0–2.
-- The `numbers` and `numeric_input` golden topics pass.
-- The `latex_parse` and `printing` topics are under way.
+- Core, `logic.boolalg`, sets-phase-1 and functions.elementary tests are at 95% or more, counting tests whose traced functions are in Tiers 0–2.
+- The `printing` golden topic passes, and so do `numbers` apart from its polynomial `gcd`/`lcm` cases (Tier 3) and the `sympify` cases in `numeric_input` and `forms`.
 
 Then the **go/no-go checkpoint** (see "How big this is").
 
@@ -330,51 +337,55 @@ Order:
 12. Gröbner.
 
 In parallel:
-- `Matrix` over ZZ/QQ, which stores a `DomainMatrix`.
+- `Matrix` over ZZ/QQ, which stores a `DomainMatrix`, together with the helpers those paths call (`dotprodsimp`).
+- The linear-system slice of legacy `solve` (`solve` → `_solve_system` → `solve_linear_system`), which `apart`'s undetermined-coefficients path calls.
 - The combinatorics permutation kernel, which the matrix tests need.
 - `rsympy-mpf` M3.
 
 **Exit:**
 - Polys and exact-path matrices tests are at 95% or more, traced to Tiers 0–3.
+- The `algebra` and `forms` golden topics pass, as do `numbers` in full and the `matrices` cases over ZZ/QQ.
 - gcd and factor are at least 10× faster than pure SymPy on the polys benchmarks.
 - The rustsmith GCD trap does not recur.
 
 After Tier 3, **⇄ a geometry rational track** can start: `Point`, `Line`, `Segment` and `Polygon` over rationals.
 
-### Tier 4: Simplify, printing and parsing (serve-path parity)
+### Tier 4: Simplify, printing and parsing (the app's serve path)
 - **simplify basics:** `ratsimp`, `radsimp`, `logcombine`, `sqrtdenest`, and `nsimplify` (on `rsympy-mpf` M4).
-- `fu`/`trigsimp`, then the `simplify()` pipeline.
-- **The LaTeX printer,** with an override API because the app subclasses it.
-- **LaTeX parsing.**
-  - SymPy ships two LaTeX parsers that disagree: ANTLR (the default) and Lark. Parity reproduces both grammars, with node shells for what they return, including the bra-ket slice of physics.quantum.
-  - Strict has its own closed grammar.
+- `fu`/`trigsimp`, then the `simplify()` pipeline. That includes `hyperexpand`'s entry point and the `hyper`/`meijerg` node kinds, because `simplify()` calls `hyperexpand` on every input; its formula tables come in Tiers 5 and 6.
+- **Node shells the printers and parsers need,** including `ImageSet` and `ConditionSet`. Their evaluation comes in Tier 5.
+- **The LaTeX printer,** including the subclassing API the app uses.
+- **The LaTeX parsers.** SymPy has two, Lark (the app's) and ANTLR (the default). Reproducing their grammars isn't enough, because the result depends on the parser engine:
+  - for Lark, the Earley parse with explicit ambiguity, SymPy's `_ambig` resolution and Lark 1.3.1's derivation order;
+  - for ANTLR 4.11, its prediction and error recovery.
+
+  Both must raise the same exceptions (`UnexpectedCharacters`, `LaTeXParsingError`, ...) on the same inputs. Each needs node shells for what it returns, including the bra-ket slice of physics.quantum.
 - The pretty printer.
-- **⇄ physics.units,** in parity and strict modes.
+- **⇄ physics.units.**
 - **⇄ tensor.array.**
-- **The strict layer's front ends,** its equivalence engine and its form checks.
 
 **App milestones:**
-- **A:** the app's serve path runs on rsympy through `rsympy-py`. That covers the expression, factors, inequality, graph_plot and free-response graders, plus a quantity grader.
+- **A:** the app's serve path runs on rsympy through `rsympy-py`, with the app's own logic unchanged.
 - **A2:** the app's matrix key checks over exact domains.
 
 **Exit:**
-- These golden topics pass: `equivalence` (except the function and inequality cases, which need Tier 5 solving), `forms`, `latex_print`, `units` and `matrix_keys`.
-- Equivalence p99 is under 10 ms and below the app's measured SymPy latency.
+- These golden topics pass: `simplify`, `equivalence`, `latex_parse`, `latex_print`, `numeric_input` and `units`. The `matrix_keys` cases over ZZ/QQ pass too.
+- The app's answer check is faster at p99 than the app's measured SymPy latency.
 
-### Tier 5: Calculus and solving (compile-path parity)
+### Tier 5: Calculus and solving (the app's compile path)
 - The series protocol across core and functions, then Gruntz limits.
 - **One cycle milestone,** ported together because these call each other: calculus.util, solveset, inequalities, sets phase 2 (`ImageSet`, `ConditionSet`) and diophantine.
-- Legacy `solve`, `rsolve`, `nsolve` (on `rsympy-mpf` M5), and concrete summation.
+- Legacy `solve`, `rsolve`, `nsolve` (on `rsympy-mpf` M5), and concrete summation, including `eval_sum_hyper` and the `hyper` formula tables of `hyperexpand` it uses. Meijer G stays with meijerint in Tier 6.
 - `Matrix` symbolic (EXRAW) paths and eigen.
 - **⇄ logic's SAT solver and the new assumptions (`ask`).**
 - **⇄ geometry:** ellipses, circles and planes, which need solvers.
-- **⇄ the finite stats slice:** `FiniteRV`, `P`, `E`, `given`.
-- **The strict layer's algorithms:** bounded-interval periodic solving, domain and singularity analysis, and limit corrections.
+- **⇄ the finite stats slice:** `FiniteRV` and the finite distributions (`Die`, `Coin`, `Bernoulli`, `Binomial`, `Hypergeometric`), `P`, `E`, `given`, `density`.
 
 **App Milestone B:** figure lint and key checks run on rsympy.
 
 **Exit:** these golden topics pass:
-- the `equivalence` function and inequality cases;
+- `equations`, and `calculus` apart from its integration cases;
+- the rest of `matrix_keys`;
 - `toolkit`;
 - `geometry`;
 - `probability`.
@@ -388,28 +399,33 @@ The `Integral` object already exists from Tier 2; this tier adds the engines.
 - Formal series.
 - functions.special symbolic rules, in step with `rsympy-mpf` M6.
 
-**Exit:** integrals and series are at 90% or more. Known SymPy blowups get budgets.
+**Exit:** integrals and series are at 90% or more, and the `calculus` golden topic passes in full.
 
 ### Tier 7: Domains and the long tail
 Mostly parallel tracks (⇄), each gated by its upstream units:
 - combinatorics beyond the permutation kernel; BSGS and `tensor_can` are needed by tensor.
 - stats (discrete, then continuous).
 - solvers.ode, ported hint by hint. Until now it ran as Python on the Rust core.
-- matrices.expressions.
+- holonomic.
+- unify.
+- matrices.expressions and the deprecated matrix API.
 - tensor.
 - physics.vector, mechanics and biomechanics.
-- sympy.vector, diffgeom, control, continuum_mechanics, optics.
+- sympy.vector, diffgeom, control, continuum_mechanics, optics, hep.
 - physics.quantum (its LaTeX-parser slice came in Tier 4).
 - secondquant, last, because its ordering keys on printed strings.
+- physics' top-level modules: wigner, hydrogen, paulialgebra, sho, qho_1d, pring and physics.matrices (wigner earlier if the Tier 4 bra-ket slice needs Clebsch-Gordan).
 - codegen and code printers, with byte-identical output so Python-side `lambdify` keeps working.
-- crypto, discrete, liealgebras, categories, algebras.
+- The rest of utilities (iterables, enumerative, lambdify's printers) and the rest of printing (mathml, preview, dot, tree, tableform).
+- plotting (sampling, series, text backend), parsing.autolev, parsing.c, parsing.mathematica, parsing.maxima, `ast_parser` and `sym_expr`.
+- crypto, discrete, liealgebras, categories, algebras, sandbox.
 - The advanced parts of ntheory, numberfields and agca.
 
-**Exit:** full-suite conformance of 98% or more, with every remaining failure classified.
+**Exit:** full-suite conformance of 98% or more. Every remaining failure is classified, and none is classified `bug`.
 
 ## Working rules (humans and agents)
 - **Port faithfully; don't clean up during a port.** Keep each mistranslation findable, as fish did.
-- **Port SymPy's real algorithms,** including its heuristics. Output shapes are the spec.
+- **Port SymPy's real algorithms,** including its heuristics and its bugs. Output shapes are the spec.
 - **Agents never edit golden JSON or SymPy's tests.**
   - Generators write golden cases.
   - Tests are selected, never altered in meaning.
@@ -425,30 +441,3 @@ Mostly parallel tracks (⇄), each gated by its upstream units:
 - **Build time:** clean and incremental.
 - **Cost:** actual cost against the estimate, per unit.
 - **Safety:** `unsafe` count outside FFI (target 0).
-
-## Open questions for Paul
-Some of these are already pinned by `spec` golden cases, so flipping one means flipping its cases:
-- Q1: `latex_parse-105` and `latex_parse-106`;
-- Q4: `equivalence-077` to `080` and `equivalence-092`;
-- Q5a and Q5b: `units-036`, `039`, `058`, `096` and `104`.
-
-Q2, Q3, Q5c and Q6 aren't pinned yet.
-
-1. **Strict profile: `\log x` means base 10**, as AP Precalculus does. The app reads it as natural log today. The parity profile keeps SymPy's natural log.
-2. **Strict profile: function notation.** Is `f(x)` a function application, given that `x(x+1)` is multiplication? Possible rules:
-   - `f`/`g`/`h` before parentheses are functions;
-   - a `functions` vocabulary;
-   - refusal.
-3. **Strict profile: cube roots of negatives.** Should `\sqrt[3]{-8}` be `-2` (the real root) rather than SymPy's principal root?
-4. **Strict profile: equations equivalent up to a constant factor.** The cases currently say yes; the app accepts sign changes only today.
-5. **Strict profile: units.**
-   - a. A bare number against a unit key is `invalid:missing_unit`.
-   - b. `20 C` reads as coulombs.
-   - c. Is an unparenthesised `J/kg·°C` refused as ambiguous? (`J/(kg·°C)` is accepted: `units-032`.)
-6. **Strict profile: chained inequalities** (`-1 < x < 3`): parse to `And(...)`, or refuse?
-7. **What stays in Python or is dropped.**
-   - plotting, interactive, parsing.autolev, parsing.c and the testing package stay Python, running on the Rust core.
-   - solvers.ode stays Python until Tier 7.
-   - unify, holonomic, parsing.fortran, the deprecated matrix mixins and SymPy's benchmarks directory are deferred or dropped.
-
-   Is anything there something you need in Rust?

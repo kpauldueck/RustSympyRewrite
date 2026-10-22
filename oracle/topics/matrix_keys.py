@@ -1,52 +1,76 @@
-"""Matrix keys (Unit 4): what the app computes at compile time from a matrix key.
+"""Matrix keys (Unit 4): what SymPy returns for the matrix calls on the app's roadmap.
+
+The homework app does not use SymPy for matrices today: per
+app_sympy_audit.md, SymPy "is NOT used by the numeric/matrix/... graders
+(those use ast/Decimal/Fraction)". The audit lists the Unit 4 matrix keys
+under "Calls the roadmap wants", to be built at compile time: Matrix(key),
+det, inv, A*B, .T; is_invertible / det != 0 to refuse singular seeds;
+(M**n)*v and eigenvects for Markov state prediction and steady state;
+applyfunc(nsimplify) for exact display. This topic records what the pinned
+SymPy returns for those planned calls, including where its answer is
+surprising: det leaves sin(t)**2 + cos(t)**2 unsimplified, and inv leaves its
+(1, 1) entry as -sin(t)**2/cos(t) + 1/cos(t) rather than cos(t); a decimal key
+stays Float; and non-square or singular inputs raise (NonSquareMatrixError,
+NonInvertibleMatrixError, ShapeError).
 
 Args are matrices in SymPy syntax, Matrix([[row], [row], ...]); a column
-vector is Matrix([[a], [b]]). Matrices with Float entries are passed as typed
-strings, since str() of a Float matrix pads every entry to 15 digits.
+vector is Matrix([[a], [b]]). Matrices with Float entries are passed as the
+typed strings, read with sympify, since str() of a Float matrix pads every
+entry to 15 digits. Answers are SymPy's str() of the result, on one line.
 
-Ops:
-  det                 [M].
-  inv                 [M]. A singular matrix is refused as
-                      "invalid:singular_matrix" (spec; SymPy raises
-                      NonInvertibleMatrixError). Non-square matrices (det,
-                      inv, matpow) are "invalid:non_square_matrix".
+Single SymPy calls (source "sympy"; M, A, B are the matrix args):
+  det                 [M]: M.det().
+  inv                 [M]: M.inv().
   transpose           [M]: M.T.
-  matmul              [A, B]: A*B. Incompatible shapes are refused as
-                      "invalid:shape_mismatch" (spec; SymPy raises ShapeError).
-  matpow              [M, n]: M**n, n an integer (negative means a power of
-                      the inverse) or a symbol.
-  matvec_pow          [M, n, v]: M**n*v, the Markov state after n steps with
-                      a column-stochastic M (each column sums to 1) and a
-                      column state vector v.
-  is_invertible       [M]: True when M is square and det(M) is provably
-                      nonzero (M.det().is_zero is False). SymPy 1.14 has no
-                      Matrix.is_invertible; the app refuses singular seeds
-                      with det != 0. A non-square matrix is False (spec).
-  eigenvects          [M]: M.eigenvects(), printed on one line as
-                      [(eigenvalue, algebraic multiplicity, [basis vectors]),
-                      ...]. compare "set" ignores the order of the triples;
-                      each basis vector is SymPy's: a nullspace vector of
-                      M - lambda*I from its rref with the free variable set to
-                      1, so the scaling is fixed.
-  steady_state        [M]: the eigenvector of the column-stochastic M for
-                      eigenvalue 1, scaled so its entries sum to 1 (computed
-                      as (M - I).nullspace()[0] divided by its entry sum).
-                      Spec errors: "invalid:steady_state_not_unique" when
-                      that eigenspace is not one-dimensional, and
-                      "invalid:not_stochastic" when a column does not sum
-                      to 1 or an entry is negative.
-  nsimplify_entries   [M]: M.applyfunc(nsimplify), Float entries to exact
-                      ones for display.
-  rref                [M]: the reduced row echelon form M.rref()[0], as in
-                      the matrices topic.
-  solve_linear_system [A, b, (x, y, ...)]: linsolve((A, b), x, y, ...), the
-                      system A*X = b. Free unknowns stay as themselves.
+  matmul              [A, B]: A*B.
+  matpow              [M, n]: M**n, n an integer or a symbol.
+  eigenvects          [M]: M.eigenvects(), a list of (eigenvalue, algebraic
+                      multiplicity, [basis vectors]) in SymPy's order, printed
+                      on one line as "[(val, mult, [Matrix(...), ...]), ...]"
+                      with sstr() for the eigenvalue and str() for each
+                      vector.
+  nsimplify_entries   [M]: M.applyfunc(nsimplify), M read with sympify.
+  rref                [M]: M.rref()[0], the reduced row echelon form.
+  solve_linear_system [M, (x, y, ...)]: solve_linear_system(M, x, y, ...),
+                      M the augmented matrix [A | b] of the system A*X = b.
+                      SymPy returns a dict {unknown: value} with no key for a
+                      free unknown, or None when the system is inconsistent;
+                      the dict is printed with sstr(), which sorts the keys.
+
+Roadmap recipes (source "app"), each a fixed sequence of SymPy calls. Source
+"app" marks a recipe of several calls that the app is meant to run, rather
+than one SymPy call; none of these runs in the app today. The audit names the
+operations (is_invertible / det != 0, (M**n)*v, eigenvects for the steady
+state) but not their exact steps. The steps below are this topic's way of
+writing those planned calls, not app code. For steady_state in particular,
+these are this topic's choices and not confirmed app behaviour: the structural
+==, taking vecs[0], scaling by v/sum(v), and not checking for a transition
+matrix. The steady_state cases on eye(2), a row-stochastic matrix and a matrix
+with a negative entry depend on those choices.
+  matvec_pow         [M, n, v]: (M**n)*v, the Markov state after n steps
+                      from the column state vector v.
+  is_invertible       [M]: M.det() != 0, with SymPy's structural "!=" on the
+                      determinant (SymPy 1.14 has no Matrix.is_invertible).
+                      M.det() raises for a non-square M, and so does the
+                      recipe. The answer is printed "True" or "False".
+  steady_state        [M]: the eigenvector for eigenvalue 1, scaled so its
+                      entries sum to 1:
+                        for val, mult, vecs in M.eigenvects():
+                            if val == 1:   (structural ==)
+                                v = vecs[0]
+                                return v / sum(v)
+                      where sum(v) is 0 + v[0] + v[1] + ... in SymPy
+                      arithmetic. Every case's M has eigenvalue 1. The
+                      recipe takes the first basis vector of that eigenspace
+                      and does not check that M is a transition matrix.
 """
 
 import sympy as sp
-from sympy import Matrix, Rational, Symbol, cos, eye, linsolve, nsimplify, sin, sqrt, symbols, sympify
+from sympy import (
+    Matrix, Rational, Symbol, cos, eye, nsimplify, sin, solve_linear_system, sqrt, symbols, sympify,
+)
 
-from caselib import case, spec_case
+from caselib import case, outcome
 
 TOPIC = "matrix_keys"
 
@@ -73,38 +97,31 @@ MARKOV3B = Matrix([[R(7, 10), R(1, 5), R(1, 10)], [R(1, 5), R(3, 5), R(1, 5)], [
 MARKOV3C = Matrix([[R(1, 2), R(1, 3), 0], [R(1, 2), R(1, 3), R(1, 2)], [0, R(1, 3), R(1, 2)]])
 START = Matrix([1, 0])
 
-SINGULAR = "invalid:singular_matrix"
-NON_SQUARE = "invalid:non_square_matrix"
-
 
 def _det_inv():
     out = []
-    for m, cmp, note in [
-        (SING2, "exact", None),
-        (FRAC2, "exact", None),
-        (RAD2, "exact", None),
-        (SYM2, "exact", None),
-        (INT3, "exact", None),
-        (SING3, "exact", None),
-        (ROT_T, "equivalent", "SymPy leaves sin(t)**2 + cos(t)**2 unsimplified; it equals 1."),
+    for m, note in [
+        (SING2, None),
+        (FRAC2, None),
+        (RAD2, None),
+        (SYM2, None),
+        (INT3, None),
+        (SING3, None),
+        (ROT_T, "det does not simplify sin(t)**2 + cos(t)**2 to 1."),
+        (WIDE, "A 2x3 matrix: det of a non-square matrix."),
     ]:
-        out.append(case("det", [m], m.det(), compare=cmp, note=note))
-    out.append(spec_case("det", [WIDE], NON_SQUARE, "Only a square matrix has a determinant; refuse by name.",
-                         compare="error", sympy_gives=lambda: WIDE.det()))
-    for m, cmp, note in [
-        (INT2, "exact", "det 1: an integer inverse."),
-        (FRAC2, "exact", None),
-        (ROT60, "exact", "A rotation's inverse is its transpose."),
-        (Matrix([[k, 2], [3, k]]), "exact", "Symbolic entries: every entry over det = k**2 - 6."),
-        (INT3, "exact", None),
-        (ROT_T, "equivalent", "SymPy does not simplify the (1, 1) entry 1/cos(t) - sin(t)**2/cos(t); it equals cos(t)."),
+        out.append(outcome("det", [m], lambda m=m: m.det(), note=note))
+    for m, note in [
+        (INT2, "det 1: an integer inverse."),
+        (FRAC2, None),
+        (ROT60, "A rotation's inverse is its transpose."),
+        (Matrix([[k, 2], [3, k]]), "Symbolic entries: every entry over det = k**2 - 6."),
+        (INT3, None),
+        (ROT_T, "inv does not simplify the (1, 1) entry -sin(t)**2/cos(t) + 1/cos(t), which equals cos(t)."),
+        (SING2, "det = 0: a singular matrix."),
+        (WIDE, "A 2x3 matrix: inv of a non-square matrix."),
     ]:
-        out.append(case("inv", [m], m.inv(), compare=cmp, note=note))
-    out.append(spec_case("inv", [SING2], SINGULAR,
-                         "det = 0, so there is no inverse; refuse by name (the app uses this to reject singular seeds).",
-                         compare="error", sympy_gives=lambda: SING2.inv()))
-    out.append(spec_case("inv", [WIDE], NON_SQUARE, "A non-square matrix has no inverse; refuse by name.",
-                         compare="error", sympy_gives=lambda: WIDE.inv()))
+        out.append(outcome("inv", [m], lambda m=m: m.inv(), note=note))
     return out
 
 
@@ -121,57 +138,51 @@ def _products():
         (Matrix([[1, 2, 3]]), Matrix([4, 5, 6]), "Row times column: a 1x1 matrix, not a scalar."),
         (SYM2, Matrix([x, y]), None),
         (ROT60, ROT60, "Two 60 degree rotations make a 120 degree rotation."),
-        (INT2, INT2.inv(), "A matrix times its inverse is the identity."),
+        (INT2, INT2.inv(), "A matrix times its inverse."),
+        (WIDE, WIDE, "(2x3)*(2x3): the inner sizes differ."),
     ]:
-        out.append(case("matmul", [p, q], p * q, note=note))
-    out.append(spec_case("matmul", [WIDE, WIDE], "invalid:shape_mismatch",
-                         "(2x3)*(2x3): the inner sizes differ, so the product is undefined; refuse by name.",
-                         compare="error", sympy_gives=lambda: WIDE * WIDE))
-    for m, p, cmp, note in [
-        (MARKOV, 10, "exact", "Exact fractions with powers of 2 in the denominators."),
-        (MARKOV, 0, "exact", "M**0 is the identity."),
-        (Matrix([[1, 2], [3, 4]]), -2, "exact", "A negative power is a power of the inverse."),
-        (Matrix([[1, 1], [1, 0]]), 10, "exact", "Fibonacci numbers."),
-        (Matrix([[1, 1], [0, 1]]), n, "equivalent", "Symbolic power of a shear."),
-        (MARKOV, n, "equivalent", "Closed form from the eigenvalues 1 and 1/2."),
+        out.append(outcome("matmul", [p, q], lambda p=p, q=q: p * q, note=note))
+    for m, p, note in [
+        (MARKOV, 10, "Exact fractions with powers of 2 in the denominators."),
+        (MARKOV, 0, "M**0 is the identity."),
+        (Matrix([[1, 2], [3, 4]]), -2, "A negative power is a power of the inverse."),
+        (Matrix([[1, 1], [1, 0]]), 10, "Fibonacci numbers."),
+        (Matrix([[1, 1], [0, 1]]), n, "Symbolic power of a shear."),
+        (MARKOV, n, "Symbolic power: a closed form from the eigenvalues 1 and 1/2."),
+        (SING2, -1, "A negative power needs the inverse, and det = 0."),
+        (WIDE, 2, "A 2x3 matrix: powers of a non-square matrix."),
     ]:
-        out.append(case("matpow", [m, p], m**p, compare=cmp, note=note))
-    out.append(spec_case("matpow", [SING2, -1], SINGULAR, "A negative power needs the inverse, and det = 0.",
-                         compare="error", sympy_gives=lambda: SING2**-1))
-    out.append(spec_case("matpow", [WIDE, 2], NON_SQUARE, "Only a square matrix has powers; refuse by name.",
-                         compare="error", sympy_gives=lambda: WIDE**2))
+        out.append(outcome("matpow", [m, p], lambda m=m, p=p: m**p, note=note))
     return out
 
 
 def _markov():
     out = []
-    for m, p, v, cmp, note in [
-        (MARKOV, 1, START, "exact", "One step from state 1."),
-        (MARKOV, 3, START, "exact", None),
-        (MARKOV, 10, START, "exact", None),
-        (MARKOV, 4, Matrix([300, 200]), "exact", "The population is already at the steady state, so it stays."),
-        (MARKOV3B, 3, Matrix([100, 0, 0]), "exact", None),
-        (MARKOV, n, START, "equivalent", "Closed form: approaches the steady state (3/5, 2/5)."),
+    for m, p, v, note in [
+        (MARKOV, 1, START, "One step from state 1."),
+        (MARKOV, 3, START, None),
+        (MARKOV, 10, START, None),
+        (MARKOV, 4, Matrix([300, 200]), "The population starts at the steady state."),
+        (MARKOV3B, 3, Matrix([100, 0, 0]), None),
+        (MARKOV, n, START, "Symbolic number of steps: a closed form in 2**n."),
     ]:
-        out.append(case("matvec_pow", [m, p, v], m**p * v, compare=cmp, note=note))
+        out.append(case("matvec_pow", [m, p, v], (m**p) * v, note=note, source="app"))
+    src = "Matrix([[0.8, 0.3], [0.2, 0.7]])"
     out.append(case(
-        "matvec_pow", ["Matrix([[0.8, 0.3], [0.2, 0.7]])", 3, "Matrix([[1], [0]])"],
-        sympify("Matrix([[0.8, 0.3], [0.2, 0.7]])") ** 3 * Matrix([1, 0]), compare="equivalent",
-        note="A key typed with decimals stays Float in SymPy syntax (0.65, 0.35); nsimplify_entries gives the exact display.",
+        "matvec_pow", [src, 3, "Matrix([[1], [0]])"], (sympify(src) ** 3) * Matrix([1, 0]),
+        note="Decimals typed in SymPy syntax are Floats, so the state is printed with 15-digit Floats.",
+        source="app",
     ))
     pos_a = Symbol("a", positive=True)
     for m, note in [
         (INT2, None),
         (SING2, None),
         (SING3, None),
-        (Matrix([[sqrt(2), 2], [1, sqrt(2)]]), "det = sqrt(2)*sqrt(2) - 2 = 0 exactly: singular."),
-        (Matrix([[pos_a, 1], [0, pos_a]]), "det = a**2 is nonzero because a is positive."),
+        (Matrix([[sqrt(2), 2], [1, sqrt(2)]]), "det = sqrt(2)*sqrt(2) - 2, which SymPy evaluates to 0."),
+        (Matrix([[pos_a, 1], [0, pos_a]]), "det = a**2 with a positive; != compares structurally."),
+        (WIDE, "A 2x3 matrix: M.det() raises inside the recipe."),
     ]:
-        dz = m.det().is_zero
-        assert dz is not None
-        out.append(case("is_invertible", [m], dz is False, note=note))
-    out.append(spec_case("is_invertible", [WIDE], False, "A non-square matrix is never invertible.",
-                         sympy_gives=lambda: WIDE.det()))
+        out.append(outcome("is_invertible", [m], lambda m=m: m.det() != 0, note=note, source="app"))
     return out
 
 
@@ -183,9 +194,13 @@ def _eig_text(m):
     return "[" + ", ".join(parts) + "]"
 
 
-def _steady(m):
-    v = (m - eye(m.rows)).nullspace()[0]
-    return v / sum(v)
+def app_steady_state(m):
+    """The roadmap steady_state recipe as this topic writes it (see the module docstring)."""
+    for val, _mult, vecs in m.eigenvects():
+        if val == 1:
+            v = vecs[0]
+            return v / sum(v)
+    raise AssertionError("steady_state cases need eigenvalue 1")
 
 
 def _eigen():
@@ -198,36 +213,21 @@ def _eigen():
         (Matrix([[2, 1], [0, 2]]), "Defective: eigenvalue 2 has multiplicity 2 but one eigenvector."),
         (MARKOV3, "Eigenvalue 1/4 has a two-dimensional eigenspace."),
     ]:
-        out.append(case("eigenvects", [m], _eig_text(m), compare="set", note=note))
-    how = "Computed as (M - I).nullspace()[0] divided by its entry sum."
+        out.append(case("eigenvects", [m], _eig_text(m), note=note))
     for m, note in [
         (MARKOV, None),
         (Matrix([[R(9, 10), R(1, 2)], [R(1, 10), R(1, 2)]]), None),
-        (ABSORB, "Everything ends in the absorbing state."),
-        (PERIODIC, "Unique steady state although M**n*v oscillates and never converges."),
+        (ABSORB, "Absorbing state 1."),
+        (PERIODIC, "M**n*v oscillates and never converges, but eigenvalue 1 has a one-dimensional eigenspace."),
         (MARKOV3C, None),
+        (eye(2), "Every vector is fixed: the eigenspace for 1 is two-dimensional, and the recipe takes its "
+                 "first basis vector."),
+        (Matrix([[R(1, 2), R(1, 2)], [R(1, 4), R(3, 4)]]),
+         "Row-stochastic (the rows sum to 1, not the columns): the recipe uses the column convention regardless."),
+        (Matrix([[R(6, 5), R(1, 2)], [R(-1, 5), R(1, 2)]]),
+         "Each column sums to 1 but the entry -1/5 is not a probability; the recipe does not check."),
     ]:
-        out.append(case("steady_state", [m], _steady(m), note=f"{how} {note}" if note else how))
-    out.append(spec_case(
-        "steady_state", [eye(2)], "invalid:steady_state_not_unique",
-        "Every vector is fixed by the identity (the eigenspace for 1 is two-dimensional), so there is no single steady state.",
-        compare="error",
-        sympy_gives=lambda: "[" + ", ".join(str(v) for v in (eye(2) - eye(2)).nullspace()) + "]",
-    ))
-    row = Matrix([[R(1, 2), R(1, 2)], [R(1, 4), R(3, 4)]])
-    out.append(spec_case(
-        "steady_state", [row], "invalid:not_stochastic",
-        "The rows sum to 1, not the columns (a row-stochastic key used with M**n*v); the nullspace recipe silently "
-        "gives (1/2, 1/2) where the row convention's answer is (1/3, 2/3), so refuse by name.",
-        compare="error", sympy_gives=lambda: _steady(row),
-    ))
-    neg = Matrix([[R(6, 5), R(1, 2)], [R(-1, 5), R(1, 2)]])
-    out.append(spec_case(
-        "steady_state", [neg], "invalid:not_stochastic",
-        "Each column sums to 1 but the entry -1/5 is not a probability; the nullspace recipe silently gives "
-        "(5/3, -2/3), which is not a distribution, so refuse by name.",
-        compare="error", sympy_gives=lambda: _steady(neg),
-    ))
+        out.append(case("steady_state", [m], app_steady_state(m), note=note, source="app"))
     return out
 
 
@@ -253,15 +253,20 @@ def _exact_display():
         out.append(case("rref", [m], m.rref()[0], note=note))
     for A, rhs, syms, note in [
         (Matrix([[1, 1], [2, -1]]), Matrix([5, 1]), (x, y), None),
-        (Matrix([[2, 3], [4, 6]]), Matrix([5, 10]), (x, y), "Dependent: infinitely many solutions in terms of y."),
-        (Matrix([[2, 3], [4, 6]]), Matrix([5, 11]), (x, y), "Inconsistent: no solution."),
+        (Matrix([[2, 3], [4, 6]]), Matrix([5, 10]), (x, y),
+         "Dependent: infinitely many solutions; the free unknown y gets no key in the dict."),
+        (Matrix([[2, 3], [4, 6]]), Matrix([5, 11]), (x, y), "Inconsistent: SymPy returns None."),
         (Matrix([[2, 1, -1], [-3, -1, 2], [-2, 1, 2]]), Matrix([8, -11, -3]), (x, y, z), None),
-        (Matrix([[1, 2, 3], [2, 4, 6], [1, 0, 1]]), Matrix([6, 12, 2]), (x, y, z), "One free unknown, z."),
+        (Matrix([[1, 2, 3], [2, 4, 6], [1, 0, 1]]), Matrix([6, 12, 2]), (x, y, z),
+         "One free unknown, z: no key for z in the dict."),
         (Matrix([[3, -2], [5, 4]]), Matrix([R(1, 2), 7]), (x, y), None),
         (Matrix([[1, 1], [1, -1], [2, 1]]), Matrix([3, 1, 5]), (x, y), "Three equations, two unknowns, consistent."),
     ]:
-        out.append(case("solve_linear_system", [A, rhs, sp.Tuple(*syms)], linsolve((A, rhs), *syms),
-                        compare="set", note=note))
+        M = A.row_join(rhs)
+        out.append(outcome(
+            "solve_linear_system", [M, sp.Tuple(*syms)], lambda M=M, syms=syms: solve_linear_system(M, *syms),
+            note=note,
+        ))
     return out
 
 

@@ -1,5 +1,6 @@
 //! Exact numbers for rsympy.
 //!
-//! Phase 1 (see `docs/PLAN.md`) fills this in: `Integer` with an inline
-//! `i64` fast path and a big-integer fallback, `Rational`, gcd/lcm,
-//! integer factoring, and arbitrary-precision decimal evaluation.
+//! Tier 1 (see `docs/PLAN.md`) fills this in: `Int` with an inline `i64`
+//! fast path and a `dashu` fallback, using Python's floor-division and modulo
+//! semantics, `Rational`, `ModInt`, and a CPython-compatible MT19937.
+//! Floats live in `rsympy-mpf`.

@@ -11,7 +11,6 @@
    "expected": "[1, 0, -3, 2]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-000"
   },
   {
@@ -23,7 +22,6 @@
    "expected": "[1, 3, 3, 1]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-001"
   },
   {
@@ -35,7 +33,6 @@
    "expected": "[1/2, 0, 3]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-002"
   },
   {
@@ -47,7 +44,6 @@
    "expected": "[a, b, c]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-003"
   },
   {
@@ -59,7 +55,6 @@
    "expected": "[0]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-004"
   },
   {
@@ -68,12 +63,10 @@
     "x + 1/x",
     "x"
    ],
-   "expected": "invalid:not_polynomial",
+   "expected": "PolynomialError",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A negative power of x is not a polynomial term; refuse by name instead of returning coefficients.",
-   "sympy_gives": "error: PolynomialError: 1/x contains an element of the set of generators.",
+   "source": "sympy",
+   "note": "A negative power of x is not a polynomial term in x.",
    "id": "toolkit-005"
   },
   {
@@ -86,7 +79,6 @@
    "expected_latex": "3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-006"
   },
   {
@@ -99,7 +91,6 @@
    "expected_latex": "2",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "SymPy treats the symbolic leading coefficient a as nonzero.",
    "id": "toolkit-007"
   },
@@ -113,8 +104,7 @@
    "expected_latex": "-\\infty",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The zero polynomial has degree -oo.",
+   "note": "The zero polynomial.",
    "id": "toolkit-008"
   },
   {
@@ -127,7 +117,6 @@
    "expected_latex": "3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-009"
   },
   {
@@ -136,12 +125,10 @@
     "(x**2 + 1)/(x - 1)",
     "x"
    ],
-   "expected": "invalid:not_polynomial",
+   "expected": "PolynomialError",
    "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "A rational function has no polynomial degree; refuse by name.",
-   "sympy_gives": "error: PolynomialError: 1/(x - 1) contains an element of the set of generators.",
+   "source": "sympy",
+   "note": "A rational function, not a polynomial in x.",
    "id": "toolkit-010"
   },
   {
@@ -153,8 +140,7 @@
    "expected": "[-2, 1, 1]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "A double root is listed twice.",
+   "note": "A double root.",
    "id": "toolkit-011"
   },
   {
@@ -166,7 +152,6 @@
    "expected": "[-2, 1/2, 3]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-012"
   },
   {
@@ -178,7 +163,6 @@
    "expected": "[1/2 - sqrt(5)/2, 1/2 + sqrt(5)/2]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-013"
   },
   {
@@ -190,7 +174,6 @@
    "expected": "[]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-014"
   },
   {
@@ -202,8 +185,7 @@
    "expected": "[CRootOf(x**5 - x - 1, 0)]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Irreducible quintic: its one real root has no radical form, so SymPy gives CRootOf.",
+   "note": "Irreducible quintic: its one real root has no radical form.",
    "id": "toolkit-015"
   },
   {
@@ -215,8 +197,7 @@
    "expected": "[CRootOf(x**3 - 3*x + 1, 0), CRootOf(x**3 - 3*x + 1, 1), CRootOf(x**3 - 3*x + 1, 2)]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Three real roots (casus irreducibilis): SymPy gives CRootOf, not radicals or cosines.",
+   "note": "Three real roots (casus irreducibilis): no real radical form.",
    "id": "toolkit-016"
   },
   {
@@ -228,8 +209,7 @@
    "expected": "[-sqrt(2), CRootOf(x**5 - x - 1, 0), sqrt(2)]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Radical and CRootOf roots sorted together.",
+   "note": "Radical and CRootOf roots in one list.",
    "id": "toolkit-017"
   },
   {
@@ -241,47 +221,48 @@
    "expected": "[]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "A nonzero constant has no roots (real_roots(5) without Poly raises PolynomialError).",
+   "note": "A nonzero constant (real_roots(5) without Poly raises PolynomialError).",
    "id": "toolkit-018"
   },
   {
    "op": "nroots",
    "args": [
-    "x**5 - x - 1",
-    "15"
+    "x**5 - x - 1"
    ],
+   "options": {
+    "n": 15
+   },
    "expected": "[1.16730397826142, -0.764884433600585 - 0.352471546031726*I, -0.764884433600585 + 0.352471546031726*I, 0.181232444469875 - 1.08395410131771*I, 0.181232444469875 + 1.08395410131771*I]",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Floats to n significant digits; real roots ascending, then the complex pairs.",
+   "note": "One real root and two complex pairs.",
    "id": "toolkit-019"
   },
   {
    "op": "nroots",
    "args": [
-    "x**3 - 3*x + 1",
-    "10"
+    "x**3 - 3*x + 1"
    ],
+   "options": {
+    "n": 10
+   },
    "expected": "[-1.879385242, 0.3472963553, 1.532088886]",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Floats to n significant digits; real roots ascending, then the complex pairs.",
+   "note": "Three real roots.",
    "id": "toolkit-020"
   },
   {
    "op": "nroots",
    "args": [
-    "x**2 - x - 1",
-    "6"
+    "x**2 - x - 1"
    ],
+   "options": {
+    "n": 6
+   },
    "expected": "[-0.618034, 1.61803]",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Floats to n significant digits; real roots ascending, then the complex pairs.",
    "id": "toolkit-021"
   },
   {
@@ -293,9 +274,8 @@
    ],
    "expected": "{-1, 1}",
    "expected_latex": "\\left\\{-1, 1\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-022"
   },
   {
@@ -307,10 +287,9 @@
    ],
    "expected": "{1}",
    "expected_latex": "\\left\\{1\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The removable hole at 1 counts as a singularity.",
+   "note": "SymPy does not cancel x - 1, so the removable hole at 1 is a singularity.",
    "id": "toolkit-023"
   },
   {
@@ -322,9 +301,8 @@
    ],
    "expected": "{0}",
    "expected_latex": "\\left\\{0\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-024"
   },
   {
@@ -336,9 +314,8 @@
    ],
    "expected": "{0, 1}",
    "expected_latex": "\\left\\{0, 1\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-025"
   },
   {
@@ -350,10 +327,9 @@
    ],
    "expected": "Union(ImageSet(Lambda(_n, 2*_n*pi + pi/2), Integers), ImageSet(Lambda(_n, 2*_n*pi + 3*pi/2), Integers))",
    "expected_latex": "\\left\\{2 n \\pi + \\frac{\\pi}{2}\\; \\middle|\\; n \\in \\mathbb{Z}\\right\\} \\cup \\left\\{2 n \\pi + \\frac{3 \\pi}{2}\\; \\middle|\\; n \\in \\mathbb{Z}\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy writes {pi/2 + n*pi} as two ImageSets of period 2*pi.",
+   "note": "The poles pi/2 + n*pi, an infinite set; SymPy writes it as two ImageSets of period 2*pi.",
    "id": "toolkit-026"
   },
   {
@@ -365,9 +341,8 @@
    ],
    "expected": "{pi/2, 3*pi/2}",
    "expected_latex": "\\left\\{\\frac{\\pi}{2}, \\frac{3 \\pi}{2}\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-027"
   },
   {
@@ -379,10 +354,9 @@
    ],
    "expected": "{0, -pi, pi}",
    "expected_latex": "\\left\\{0, - \\pi, \\pi\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Both closed endpoints are singular.",
+   "note": "Both closed endpoints are poles.",
    "id": "toolkit-028"
   },
   {
@@ -394,9 +368,8 @@
    ],
    "expected": "EmptySet",
    "expected_latex": "\\emptyset",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-029"
   },
   {
@@ -407,10 +380,9 @@
    ],
    "expected": "{-I, I}",
    "expected_latex": "\\left\\{- i, i\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "No domain and no real=True on x: SymPy searches the Complexes, so figure lint must pass Reals.",
+   "note": "No domain and no real=True on x: SymPy searches the complex plane.",
    "id": "toolkit-030"
   },
   {
@@ -422,9 +394,8 @@
    ],
    "expected": "Interval(2, oo)",
    "expected_latex": "\\left[2, \\infty\\right)",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-031"
   },
   {
@@ -436,9 +407,8 @@
    ],
    "expected": "Union(Interval.open(-oo, -2), Interval.open(-2, 2), Interval.open(2, oo))",
    "expected_latex": "\\left(-\\infty, -2\\right) \\cup \\left(-2, 2\\right) \\cup \\left(2, \\infty\\right)",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-032"
   },
   {
@@ -450,9 +420,8 @@
    ],
    "expected": "Union(Interval.open(-oo, 1), Interval.open(1, oo))",
    "expected_latex": "\\left(-\\infty, 1\\right) \\cup \\left(1, \\infty\\right)",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-033"
   },
   {
@@ -464,9 +433,8 @@
    ],
    "expected": "Union(Interval.Ropen(0, 4), Interval.open(4, oo))",
    "expected_latex": "\\left[0, 4\\right) \\cup \\left(4, \\infty\\right)",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-034"
   },
   {
@@ -478,9 +446,8 @@
    ],
    "expected": "Interval.Lopen(1, 5)",
    "expected_latex": "\\left(1, 5\\right]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-035"
   },
   {
@@ -492,9 +459,8 @@
    ],
    "expected": "Union(Interval.Ropen(0, pi/2), Interval.open(pi/2, 3*pi/2), Interval.open(3*pi/2, 2*pi))",
    "expected_latex": "\\left[0, \\frac{\\pi}{2}\\right) \\cup \\left(\\frac{\\pi}{2}, \\frac{3 \\pi}{2}\\right) \\cup \\left(\\frac{3 \\pi}{2}, 2 \\pi\\right)",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-036"
   },
   {
@@ -506,10 +472,9 @@
    ],
    "expected": "Reals",
    "expected_latex": "\\mathbb{R}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy answers all reals, the textbook cube root, although its x**(1/3) is the principal root for x < 0.",
+   "note": "SymPy keeps x < 0 although its x**(1/3) is the principal root, which is not real there (the subs case at x = -8 gives 2*(-1)**(1/3)).",
    "id": "toolkit-037"
   },
   {
@@ -519,13 +484,11 @@
     "x",
     "Interval.Ropen(0, 2*pi)"
    ],
-   "expected": "Union(Interval.Ropen(0, pi/2), Interval.open(pi/2, 3*pi/2), Interval.open(3*pi/2, 2*pi))",
-   "expected_latex": "\\left[0, \\frac{\\pi}{2}\\right) \\cup \\left(\\frac{\\pi}{2}, \\frac{3 \\pi}{2}\\right) \\cup \\left(\\frac{3 \\pi}{2}, 2 \\pi\\right)",
-   "compare": "set",
-   "source": "spec",
-   "profile": "strict",
-   "note": "tan(x) is undefined where cos(x) = 0, so the product is too (a removable hole, as for (x**2 - 1)/(x - 1)); SymPy 1.14 answers the whole interval.",
-   "sympy_gives": "Interval.Ropen(0, 2*pi)",
+   "expected": "Interval.Ropen(0, 2*pi)",
+   "expected_latex": "\\left[0, 2 \\pi\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "SymPy does not exclude pi/2 and 3*pi/2, where tan(x) is undefined, although it excludes them for tan(x) alone and excludes the hole of (x**2 - 1)/(x - 1).",
    "id": "toolkit-038"
   },
   {
@@ -535,13 +498,11 @@
     "x",
     "Interval.Ropen(0, 2*pi)"
    ],
-   "expected": "{pi/2, 3*pi/2}",
-   "expected_latex": "\\left\\{\\frac{\\pi}{2}, \\frac{3 \\pi}{2}\\right\\}",
-   "compare": "set",
-   "source": "spec",
-   "profile": "strict",
-   "note": "The holes of tan(x)*cos(x) at pi/2 and 3*pi/2 count as singularities, as the hole of (x**2 - 1)/(x - 1) at 1 does; SymPy 1.14 answers EmptySet.",
-   "sympy_gives": "EmptySet",
+   "expected": "EmptySet",
+   "expected_latex": "\\emptyset",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "SymPy does not report pi/2 and 3*pi/2, where tan(x) is undefined, although it reports them for tan(x) alone and reports the hole of (x**2 - 1)/(x - 1).",
    "id": "toolkit-039"
   },
   {
@@ -551,13 +512,11 @@
     "x",
     "Interval(-2*pi, 2*pi)"
    ],
-   "expected": "Union(Interval.open(0, pi), Interval.open(-2*pi, -pi))",
-   "expected_latex": "\\left(- 2 \\pi, - \\pi\\right) \\cup \\left(0, \\pi\\right)",
-   "compare": "set",
-   "source": "spec",
-   "profile": "strict",
-   "note": "sin(x) > 0 on (-2*pi, -pi) and (0, pi); SymPy 1.14 keeps only the first period (0, pi).",
-   "sympy_gives": "Interval.open(0, pi)",
+   "expected": "Interval.open(0, pi)",
+   "expected_latex": "\\left(0, \\pi\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Two periods of sin: sin(x) > 0 on (-2*pi, -pi) and on (0, pi), but SymPy keeps only (0, pi).",
    "id": "toolkit-040"
   },
   {
@@ -569,9 +528,8 @@
    ],
    "expected": "{pi/6, 5*pi/6}",
    "expected_latex": "\\left\\{\\frac{\\pi}{6}, \\frac{5 \\pi}{6}\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-041"
   },
   {
@@ -583,9 +541,8 @@
    ],
    "expected": "{pi/4, 5*pi/4}",
    "expected_latex": "\\left\\{\\frac{\\pi}{4}, \\frac{5 \\pi}{4}\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "tan has period pi: two solutions in [0, 2*pi).",
    "id": "toolkit-042"
   },
@@ -598,10 +555,9 @@
    ],
    "expected": "{pi/4, 3*pi/4, 5*pi/4, 7*pi/4}",
    "expected_latex": "\\left\\{\\frac{\\pi}{4}, \\frac{3 \\pi}{4}, \\frac{5 \\pi}{4}, \\frac{7 \\pi}{4}\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "A quadratic in cos that SymPy solves correctly.",
+   "note": "A quadratic in cos(x) with four solutions in [0, 2*pi).",
    "id": "toolkit-043"
   },
   {
@@ -613,9 +569,8 @@
    ],
    "expected": "{pi/6, pi/2, 5*pi/6, 3*pi/2}",
    "expected_latex": "\\left\\{\\frac{\\pi}{6}, \\frac{\\pi}{2}, \\frac{5 \\pi}{6}, \\frac{3 \\pi}{2}\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Double angle: cos(x)*(2*sin(x) - 1) = 0, four solutions.",
    "id": "toolkit-044"
   },
@@ -628,9 +583,8 @@
    ],
    "expected": "{2*pi/3}",
    "expected_latex": "\\left\\{\\frac{2 \\pi}{3}\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "x/2 = 5*pi/3 gives x = 10*pi/3, outside the domain.",
    "id": "toolkit-045"
   },
@@ -643,10 +597,9 @@
    ],
    "expected": "{pi - asin(1/3), asin(1/3)}",
    "expected_latex": "\\left\\{\\pi - \\operatorname{asin}{\\left(\\frac{1}{3} \\right)}, \\operatorname{asin}{\\left(\\frac{1}{3} \\right)}\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Non-special angle: exact asin values.",
+   "note": "Non-special angle: asin values.",
    "id": "toolkit-046"
   },
   {
@@ -658,10 +611,51 @@
    ],
    "expected": "EmptySet",
    "expected_latex": "\\emptyset",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-047"
+  },
+  {
+   "op": "solveset",
+   "args": [
+    "2*sin(x)**2 - sin(x) - 1",
+    "x",
+    "Interval.Ropen(0, 2*pi)"
+   ],
+   "expected": "{pi/2}",
+   "expected_latex": "\\left\\{\\frac{\\pi}{2}\\right\\}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Quadratic in a trig function on a finite domain: (2*sin(x) + 1)*(sin(x) - 1), so sin(x) = 1 or -1/2. SymPy loses the sin(x) = -1/2 roots 7*pi/6 and 11*pi/6.",
+   "id": "toolkit-048"
+  },
+  {
+   "op": "solveset",
+   "args": [
+    "2*cos(x)**2 + cos(x) - 1",
+    "x",
+    "Interval.Ropen(0, 2*pi)"
+   ],
+   "expected": "{pi/3, 5*pi/3}",
+   "expected_latex": "\\left\\{\\frac{\\pi}{3}, \\frac{5 \\pi}{3}\\right\\}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Quadratic in a trig function on a finite domain: (2*cos(x) - 1)*(cos(x) + 1), so cos(x) = 1/2 or -1. SymPy loses the cos(x) = -1 root pi.",
+   "id": "toolkit-049"
+  },
+  {
+   "op": "solveset",
+   "args": [
+    "2*sin(x)**2 + sin(x) - 1",
+    "x",
+    "Interval.Ropen(0, 2*pi)"
+   ],
+   "expected": "{pi/6, 5*pi/6}",
+   "expected_latex": "\\left\\{\\frac{\\pi}{6}, \\frac{5 \\pi}{6}\\right\\}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Quadratic in a trig function on a finite domain: (2*sin(x) - 1)*(sin(x) + 1), so sin(x) = 1/2 or -1. SymPy loses the sin(x) = -1 root 3*pi/2.",
+   "id": "toolkit-050"
   },
   {
    "op": "solveset",
@@ -672,11 +666,10 @@
    ],
    "expected": "{0, pi, 2*pi}",
    "expected_latex": "\\left\\{0, \\pi, 2 \\pi\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Closed domain: 2*pi is a solution too.",
-   "id": "toolkit-048"
+   "note": "Closed domain: 2*pi is a zero too.",
+   "id": "toolkit-051"
   },
   {
    "op": "solveset",
@@ -687,10 +680,9 @@
    ],
    "expected": "Interval.open(pi/6, 5*pi/6)",
    "expected_latex": "\\left(\\frac{\\pi}{6}, \\frac{5 \\pi}{6}\\right)",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "toolkit-049"
+   "id": "toolkit-052"
   },
   {
    "op": "solveset",
@@ -701,10 +693,9 @@
    ],
    "expected": "Interval(pi/2, 3*pi/2)",
    "expected_latex": "\\left[\\frac{\\pi}{2}, \\frac{3 \\pi}{2}\\right]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "toolkit-050"
+   "id": "toolkit-053"
   },
   {
    "op": "solveset",
@@ -715,10 +706,9 @@
    ],
    "expected": "Union(Interval(0, pi/3), Interval.Ropen(5*pi/3, 2*pi))",
    "expected_latex": "\\left[0, \\frac{\\pi}{3}\\right] \\cup \\left[\\frac{5 \\pi}{3}, 2 \\pi\\right)",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "toolkit-051"
+   "id": "toolkit-054"
   },
   {
    "op": "solveset",
@@ -729,10 +719,9 @@
    ],
    "expected": "Interval(pi/4, 5*pi/4)",
    "expected_latex": "\\left[\\frac{\\pi}{4}, \\frac{5 \\pi}{4}\\right]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "toolkit-052"
+   "id": "toolkit-055"
   },
   {
    "op": "solveset",
@@ -743,57 +732,8 @@
    ],
    "expected": "Interval.Ropen(0, 2*pi)",
    "expected_latex": "\\left[0, 2 \\pi\\right)",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "id": "toolkit-053"
-  },
-  {
-   "op": "solveset",
-   "args": [
-    "2*sin(x)**2 - sin(x) - 1",
-    "x",
-    "Interval.Ropen(0, 2*pi)"
-   ],
-   "expected": "{pi/2, 7*pi/6, 11*pi/6}",
-   "expected_latex": "\\left\\{\\frac{\\pi}{2}, \\frac{7 \\pi}{6}, \\frac{11 \\pi}{6}\\right\\}",
-   "compare": "set",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy 1.14 drops a root of this quadratic in a trig function on a finite domain (sin(x) = -1/2 is lost); solveset over Reals intersected with [0, 2*pi) is right.",
-   "sympy_gives": "{pi/2}",
-   "id": "toolkit-054"
-  },
-  {
-   "op": "solveset",
-   "args": [
-    "2*cos(x)**2 + cos(x) - 1",
-    "x",
-    "Interval.Ropen(0, 2*pi)"
-   ],
-   "expected": "{pi/3, pi, 5*pi/3}",
-   "expected_latex": "\\left\\{\\frac{\\pi}{3}, \\pi, \\frac{5 \\pi}{3}\\right\\}",
-   "compare": "set",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy 1.14 drops a root of this quadratic in a trig function on a finite domain (cos(x) = -1 is lost).",
-   "sympy_gives": "{pi/3, 5*pi/3}",
-   "id": "toolkit-055"
-  },
-  {
-   "op": "solveset",
-   "args": [
-    "2*sin(x)**2 + sin(x) - 1",
-    "x",
-    "Interval.Ropen(0, 2*pi)"
-   ],
-   "expected": "{pi/6, 5*pi/6, 3*pi/2}",
-   "expected_latex": "\\left\\{\\frac{\\pi}{6}, \\frac{5 \\pi}{6}, \\frac{3 \\pi}{2}\\right\\}",
-   "compare": "set",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy 1.14 drops a root of this quadratic in a trig function on a finite domain (sin(x) = -1 is lost).",
-   "sympy_gives": "{pi/6, 5*pi/6}",
    "id": "toolkit-056"
   },
   {
@@ -803,13 +743,11 @@
     "x",
     "Interval.Ropen(0, 2*pi)"
    ],
-   "expected": "Union(Interval.open(pi/4, pi/2), Interval.open(5*pi/4, 3*pi/2))",
-   "expected_latex": "\\left(\\frac{\\pi}{4}, \\frac{\\pi}{2}\\right) \\cup \\left(\\frac{5 \\pi}{4}, \\frac{3 \\pi}{2}\\right)",
-   "compare": "set",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy 1.14 solves this inequality on one period of the function only and misses the rest of [0, 2*pi) (tan has period pi).",
-   "sympy_gives": "Interval.open(pi/4, pi/2)",
+   "expected": "Interval.open(pi/4, pi/2)",
+   "expected_latex": "\\left(\\frac{\\pi}{4}, \\frac{\\pi}{2}\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "tan has period pi, so this holds on (pi/4, pi/2) and (5*pi/4, 3*pi/2); SymPy keeps only (pi/4, pi/2).",
    "id": "toolkit-057"
   },
   {
@@ -819,13 +757,11 @@
     "x",
     "Interval.Ropen(0, 2*pi)"
    ],
-   "expected": "Union(Interval.open(0, pi/2), Interval.open(pi, 3*pi/2))",
-   "expected_latex": "\\left(0, \\frac{\\pi}{2}\\right) \\cup \\left(\\pi, \\frac{3 \\pi}{2}\\right)",
-   "compare": "set",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy 1.14 solves this inequality on one period of the function only and misses the rest of [0, 2*pi) (sin(2*x) has period pi).",
-   "sympy_gives": "Interval.open(0, pi/2)",
+   "expected": "Interval.open(0, pi/2)",
+   "expected_latex": "\\left(0, \\frac{\\pi}{2}\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "sin(2*x) has period pi, so this holds on (0, pi/2) and (pi, 3*pi/2); SymPy keeps only (0, pi/2).",
    "id": "toolkit-058"
   },
   {
@@ -835,13 +771,11 @@
     "x",
     "Interval.Ropen(0, 2*pi)"
    ],
-   "expected": "Union({0}, Interval.Lopen(pi/2, pi), Interval.open(3*pi/2, 2*pi))",
-   "expected_latex": "\\left\\{0\\right\\} \\cup \\left(\\frac{\\pi}{2}, \\pi\\right] \\cup \\left(\\frac{3 \\pi}{2}, 2 \\pi\\right)",
-   "compare": "set",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy 1.14 solves this inequality on one period of the function only and misses the rest of [0, 2*pi), including the zero of tan at pi.",
-   "sympy_gives": "Union({0}, Interval.open(pi/2, pi))",
+   "expected": "Union({0}, Interval.open(pi/2, pi))",
+   "expected_latex": "\\left\\{0\\right\\} \\cup \\left(\\frac{\\pi}{2}, \\pi\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "tan has period pi and zeros at 0 and pi, so this holds on {0}, (pi/2, pi] and (3*pi/2, 2*pi); SymPy keeps only {0} and (pi/2, pi), dropping pi itself.",
    "id": "toolkit-059"
   },
   {
@@ -851,13 +785,11 @@
     "x",
     "Interval.Ropen(0, 2*pi)"
    ],
-   "expected": "Interval.open(7*pi/6, 11*pi/6)",
-   "expected_latex": "\\left(\\frac{7 \\pi}{6}, \\frac{11 \\pi}{6}\\right)",
-   "compare": "set",
-   "source": "spec",
-   "profile": "strict",
-   "note": "(2*sin(x) + 1)*(sin(x) - 1) > 0 exactly where sin(x) < -1/2; SymPy 1.14 answers Interval.open(pi/2, 2*pi), which is wrong.",
-   "sympy_gives": "Interval.open(pi/2, 2*pi)",
+   "expected": "Interval.open(pi/2, 2*pi)",
+   "expected_latex": "\\left(\\frac{\\pi}{2}, 2 \\pi\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "(2*sin(x) + 1)*(sin(x) - 1) > 0 exactly where sin(x) < -1/2, on (7*pi/6, 11*pi/6); SymPy answers (pi/2, 2*pi), which includes x = pi, where the expression is -1.",
    "id": "toolkit-060"
   },
   {
@@ -868,9 +800,8 @@
    ],
    "expected": "Interval(0, 2)",
    "expected_latex": "\\left[0, 2\\right]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-061"
   },
   {
@@ -881,9 +812,8 @@
    ],
    "expected": "Union(Interval.open(0, 1), Interval.open(1, 2))",
    "expected_latex": "\\left(0, 1\\right) \\cup \\left(1, 2\\right)",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-062"
   },
   {
@@ -894,9 +824,8 @@
    ],
    "expected": "Interval.Ropen(1, 2)",
    "expected_latex": "\\left[1, 2\\right)",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-063"
   },
   {
@@ -907,9 +836,8 @@
    ],
    "expected": "Interval(-oo, oo)",
    "expected_latex": "\\left(-\\infty, \\infty\\right)",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-064"
   },
   {
@@ -920,9 +848,8 @@
    ],
    "expected": "Interval.Lopen(3, 5)",
    "expected_latex": "\\left(3, 5\\right]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-065"
   },
   {
@@ -933,9 +860,8 @@
    ],
    "expected": "{1}",
    "expected_latex": "\\left\\{1\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-066"
   },
   {
@@ -946,9 +872,8 @@
    ],
    "expected": "{pi/6, 5*pi/6}",
    "expected_latex": "\\left\\{\\frac{\\pi}{6}, \\frac{5 \\pi}{6}\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-067"
   },
   {
@@ -959,9 +884,8 @@
    ],
    "expected": "Union(Interval.Ropen(-3, -2), Interval.Lopen(2, 3))",
    "expected_latex": "\\left[-3, -2\\right) \\cup \\left(2, 3\\right]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-068"
   },
   {
@@ -972,9 +896,8 @@
    ],
    "expected": "Union(Interval.open(-oo, 0), Interval.open(1, oo))",
    "expected_latex": "\\left(-\\infty, 0\\right) \\cup \\left(1, \\infty\\right)",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-069"
   },
   {
@@ -985,9 +908,8 @@
    ],
    "expected": "Union(Interval.Ropen(0, pi/2), Interval.open(pi/2, 3*pi/2), Interval.Lopen(3*pi/2, 2*pi))",
    "expected_latex": "\\left[0, \\frac{\\pi}{2}\\right) \\cup \\left(\\frac{\\pi}{2}, \\frac{3 \\pi}{2}\\right) \\cup \\left(\\frac{3 \\pi}{2}, 2 \\pi\\right]",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-070"
   },
   {
@@ -998,9 +920,8 @@
    ],
    "expected": "{2}",
    "expected_latex": "\\left\\{2\\right\\}",
-   "compare": "set",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-071"
   },
   {
@@ -1013,9 +934,8 @@
    ],
    "expected": "3*n**2/2 + n/2",
    "expected_latex": "\\frac{3 n^{2}}{2} + \\frac{n}{2}",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Arithmetic partial sum.",
    "id": "toolkit-072"
   },
@@ -1029,9 +949,8 @@
    ],
    "expected": "d*(n**2/2 + n/2) + n*(a1 - d)",
    "expected_latex": "d \\left(\\frac{n^{2}}{2} + \\frac{n}{2}\\right) + n \\left(a_{1} - d\\right)",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Arithmetic partial sum with symbolic first term and difference.",
    "id": "toolkit-073"
   },
@@ -1045,10 +964,9 @@
    ],
    "expected": "3*2**(n + 1)/2 - 3",
    "expected_latex": "\\frac{3 \\cdot 2^{n + 1}}{2} - 3",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Geometric partial sum; SymPy leaves 3*2**(n + 1)/2 - 3, not 3*2**n - 3.",
+   "note": "Geometric partial sum (3*2**n - 3 in textbook form).",
    "id": "toolkit-074"
   },
   {
@@ -1061,9 +979,8 @@
    ],
    "expected": "400*(-1/2)**(n + 1)/3 + 200/3",
    "expected_latex": "\\frac{400 \\left(- \\frac{1}{2}\\right)^{n + 1}}{3} + \\frac{200}{3}",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Geometric partial sum with a negative ratio.",
    "id": "toolkit-075"
   },
@@ -1077,10 +994,9 @@
    ],
    "expected": "a*Piecewise((n/r, Eq(r, 1)), ((r - r**(n + 1))/(r*(1 - r)), True))",
    "expected_latex": "a \\left(\\begin{cases} \\frac{n}{r} & \\text{for}\\: r = 1 \\\\\\frac{r - r^{n + 1}}{r \\left(1 - r\\right)} & \\text{otherwise} \\end{cases}\\right)",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Symbolic ratio: SymPy returns a Piecewise with an r = 1 branch.",
+   "note": "Symbolic ratio: r = 1 is a special case.",
    "id": "toolkit-076"
   },
   {
@@ -1095,7 +1011,6 @@
    "expected_latex": "\\frac{15}{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Convergent infinite geometric series.",
    "id": "toolkit-077"
   },
@@ -1111,7 +1026,6 @@
    "expected_latex": "\\infty",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Divergent geometric series.",
    "id": "toolkit-078"
   },
@@ -1124,9 +1038,8 @@
    ],
    "expected": "3*n - 1",
    "expected_latex": "3 n - 1",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Arithmetic: a(1) = 2, d = 3.",
    "id": "toolkit-079"
   },
@@ -1139,9 +1052,8 @@
    ],
    "expected": "a1 + d*n - d",
    "expected_latex": "a_{1} + d n - d",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Arithmetic with symbolic d and a(1).",
    "id": "toolkit-080"
   },
@@ -1154,9 +1066,8 @@
    ],
    "expected": "5*2**n",
    "expected_latex": "5 \\cdot 2^{n}",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Geometric: a(0) = 5, r = 2.",
    "id": "toolkit-081"
   },
@@ -1169,9 +1080,8 @@
    ],
    "expected": "-2*(-3)**n/3",
    "expected_latex": "- \\frac{2 \\left(-3\\right)^{n}}{3}",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Geometric with a negative ratio counted from a(1).",
    "id": "toolkit-082"
   },
@@ -1184,10 +1094,9 @@
    ],
    "expected": "a1*r**n/r",
    "expected_latex": "\\frac{a_{1} r^{n}}{r}",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Geometric with symbolic r; SymPy gives a1*r**n/r.",
+   "note": "Geometric with symbolic r.",
    "id": "toolkit-083"
   },
   {
@@ -1199,9 +1108,8 @@
    ],
    "expected": "4*n + 1",
    "expected_latex": "4 n + 1",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Forward-shift form.",
    "id": "toolkit-084"
   },
@@ -1214,11 +1122,23 @@
    ],
    "expected": "500 - 500*(4/5)**n",
    "expected_latex": "500 - 500 \\left(\\frac{4}{5}\\right)^{n}",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Affine recurrence (repeated drug dose).",
    "id": "toolkit-085"
+  },
+  {
+   "op": "rsolve",
+   "args": [
+    "Eq(a(n), 2*a(n - 1))",
+    "a(n)",
+    "{a(0): 1, a(1): 3}"
+   ],
+   "expected": "None",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Inconsistent initial conditions: a(1) = 2*a(0) = 2, not 3.",
+   "id": "toolkit-086"
   },
   {
    "op": "rsolve",
@@ -1228,25 +1148,9 @@
    ],
    "expected": "C0 + 3*n",
    "expected_latex": "C_{0} + 3 n",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "No initial condition: SymPy names the arbitrary constant C0.",
-   "id": "toolkit-086"
-  },
-  {
-   "op": "rsolve",
-   "args": [
-    "Eq(a(n), 2*a(n - 1))",
-    "a(n)",
-    "{a(0): 1, a(1): 3}"
-   ],
-   "expected": "invalid:inconsistent_initial_conditions",
-   "compare": "error",
-   "source": "spec",
-   "profile": "strict",
-   "note": "a(1) = 3 contradicts a(1) = 2*a(0) = 2; refuse by name (SymPy returns None).",
-   "sympy_gives": "None",
    "id": "toolkit-087"
   },
   {
@@ -1261,7 +1165,6 @@
    "expected_latex": "-3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Equal degrees: ratio of leading coefficients, 6/(-2).",
    "id": "toolkit-088"
   },
@@ -1277,7 +1180,6 @@
    "expected_latex": "0",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Higher denominator degree: horizontal asymptote y = 0.",
    "id": "toolkit-089"
   },
@@ -1293,7 +1195,6 @@
    "expected_latex": "-\\infty",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Numerator degree one higher: unbounded, sign from the leading terms.",
    "id": "toolkit-090"
   },
@@ -1309,7 +1210,6 @@
    "expected_latex": "1",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "What is left after subtracting the slant asymptote's slope term.",
    "id": "toolkit-091"
   },
@@ -1325,7 +1225,6 @@
    "expected_latex": "\\infty",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-092"
   },
   {
@@ -1340,8 +1239,7 @@
    "expected_latex": "\\infty",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Decay function at -oo (with a coefficient SymPy is right).",
+   "note": "Decay function with a coefficient at -oo.",
    "id": "toolkit-093"
   },
   {
@@ -1356,7 +1254,6 @@
    "expected_latex": "-4",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Shifted exponential: horizontal asymptote y = -4.",
    "id": "toolkit-094"
   },
@@ -1372,7 +1269,6 @@
    "expected_latex": "100",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Logistic: carrying capacity.",
    "id": "toolkit-095"
   },
@@ -1388,7 +1284,6 @@
    "expected_latex": "0",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Logistic: left asymptote.",
    "id": "toolkit-096"
   },
@@ -1404,7 +1299,6 @@
    "expected_latex": "-1",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "sqrt(x**2) = -x for x < 0.",
    "id": "toolkit-097"
   },
@@ -1420,7 +1314,6 @@
    "expected_latex": "- \\frac{1}{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-098"
   },
   {
@@ -1435,8 +1328,7 @@
    "expected_latex": "\\left\\langle -1, 1\\right\\rangle",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Oscillates: SymPy returns the accumulation bounds, not a number.",
+   "note": "Oscillates, with no limit.",
    "id": "toolkit-099"
   },
   {
@@ -1447,13 +1339,11 @@
     "-oo",
     "+"
    ],
-   "expected": "0",
-   "expected_latex": "0",
+   "expected": "oo",
+   "expected_latex": "\\infty",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy 1.14 gets a bare b**x wrong at -oo (it answers oo); with a coefficient or a shift, or written as exp(x*log(b)), it is right.",
-   "sympy_gives": "oo",
+   "source": "sympy",
+   "note": "SymPy answers oo for a bare b**x at -oo although 2**x -> 0 there; with a coefficient and a shift (3*2**x - 4, above) it gets -4.",
    "id": "toolkit-100"
   },
   {
@@ -1464,13 +1354,11 @@
     "-oo",
     "+"
    ],
-   "expected": "oo",
-   "expected_latex": "\\infty",
+   "expected": "0",
+   "expected_latex": "0",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "SymPy 1.14 gets a bare b**x wrong at -oo (it answers 0); with a coefficient or a shift, or written as exp(x*log(b)), it is right.",
-   "sympy_gives": "0",
+   "source": "sympy",
+   "note": "SymPy answers 0 for a bare b**x with b < 1 at -oo although (1/2)**x grows without bound there; with a coefficient (400*(3/4)**x, above) it gets oo.",
    "id": "toolkit-101"
   },
   {
@@ -1485,8 +1373,7 @@
    "expected_latex": "0",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Exponential decay at oo; for a bare b**x SymPy is right at oo, wrong only at -oo.",
+   "note": "The same bare b**x at oo: exponential decay.",
    "id": "toolkit-102"
   },
   {
@@ -1500,7 +1387,6 @@
    "expected_latex": "-2",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "graph_plot lattice point.",
    "id": "toolkit-103"
   },
@@ -1515,7 +1401,6 @@
    "expected_latex": "1",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "graph_plot lattice point.",
    "id": "toolkit-104"
   },
@@ -1530,7 +1415,6 @@
    "expected_latex": "4",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "graph_plot lattice point.",
    "id": "toolkit-105"
   },
@@ -1545,8 +1429,7 @@
    "expected_latex": "\\sqrt{2} + 3",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Exact radical lattice value.",
+   "note": "A radical lattice value.",
    "id": "toolkit-106"
   },
   {
@@ -1560,7 +1443,6 @@
    "expected_latex": "2 \\sqrt{3}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-107"
   },
   {
@@ -1574,7 +1456,6 @@
    "expected_latex": "225",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-108"
   },
   {
@@ -1588,8 +1469,7 @@
    "expected_latex": "\\tilde{\\infty}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "A pole evaluates to complex infinity.",
+   "note": "A pole.",
    "id": "toolkit-109"
   },
   {
@@ -1603,8 +1483,7 @@
    "expected_latex": "\\text{NaN}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "A removable hole evaluates to nan (0/0), not 2.",
+   "note": "A removable hole: 0/0.",
    "id": "toolkit-110"
   },
   {
@@ -1616,10 +1495,9 @@
    ],
    "expected": "log(8)/log(2)",
    "expected_latex": "\\frac{\\log{\\left(8 \\right)}}{\\log{\\left(2 \\right)}}",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy leaves log(8)/log(2) unevaluated; it equals 3.",
+   "note": "log(x, 2) is log(x)/log(2); log(8)/log(2) equals 3.",
    "id": "toolkit-111"
   },
   {
@@ -1633,8 +1511,7 @@
    "expected_latex": "2 \\sqrt[3]{-1}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "The principal cube root, not -2 (real_root(x, 3) gives -2).",
+   "note": "The principal cube root of -8 (real_root(-8, 3) is -2).",
    "id": "toolkit-112"
   },
   {
@@ -1645,7 +1522,6 @@
    "expected": "[r]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "pi is a constant, not a symbol.",
    "id": "toolkit-113"
   },
@@ -1657,7 +1533,6 @@
    "expected": "[e, x]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "E is Euler's number; a lower-case e in SymPy syntax is a symbol.",
    "id": "toolkit-114"
   },
@@ -1669,7 +1544,6 @@
    "expected": "[y]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "The integration variable is bound.",
    "id": "toolkit-115"
   },
@@ -1681,7 +1555,6 @@
    "expected": "[A, B, a, b]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Codepoint order: capitals first.",
    "id": "toolkit-116"
   },
@@ -1693,7 +1566,6 @@
    "expected": "[x1, x10, x2]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Plain string order, not natural order.",
    "id": "toolkit-117"
   },
@@ -1705,7 +1577,6 @@
    "expected": "[]",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-118"
   },
   {
@@ -1718,7 +1589,6 @@
    "expected_latex": "3.141592654",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-119"
   },
   {
@@ -1731,8 +1601,7 @@
    "expected_latex": "0.6435",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "A trailing zero is a significant digit and is kept.",
+   "note": "The fifth significant digit is a trailing zero.",
    "id": "toolkit-120"
   },
   {
@@ -1745,7 +1614,6 @@
    "expected_latex": "5.0",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "An integer to 3 significant digits.",
    "id": "toolkit-121"
   },
@@ -1759,8 +1627,7 @@
    "expected_latex": "1.23 \\cdot 10^{4}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy switches to scientific notation when the digits run out.",
+   "note": "More integer digits than significant digits.",
    "id": "toolkit-122"
   },
   {
@@ -1773,7 +1640,6 @@
    "expected_latex": "1.16730397826",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Numeric value of the quintic's real root.",
    "id": "toolkit-123"
   },
@@ -1787,7 +1653,6 @@
    "expected_latex": "\\frac{3 \\pi \\cos{\\left(\\frac{\\pi x}{2} \\right)}}{2}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-124"
   },
   {
@@ -1800,7 +1665,6 @@
    "expected_latex": "\\frac{450 e^{- \\frac{x}{2}}}{\\left(1 + 9 e^{- \\frac{x}{2}}\\right)^{2}}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-125"
   },
   {
@@ -1813,7 +1677,6 @@
    "expected_latex": "400 \\left(\\frac{3}{4}\\right)^{x} \\log{\\left(\\frac{3}{4} \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-126"
   },
   {
@@ -1827,7 +1690,6 @@
    "expected_latex": "\\left(x + 2\\right) e^{x}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-127"
   },
   {
@@ -1839,7 +1701,6 @@
    "expected_latex": "2 \\sin{\\left(x \\right)} \\cos{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-128"
   },
   {
@@ -1851,7 +1712,6 @@
    "expected_latex": "\\frac{\\tan{\\left(x \\right)} + \\tan{\\left(y \\right)}}{- \\tan{\\left(x \\right)} \\tan{\\left(y \\right)} + 1}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-129"
   },
   {
@@ -1863,7 +1723,6 @@
    "expected_latex": "- 4 \\sin^{3}{\\left(x \\right)} + 3 \\sin{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-130"
   },
   {
@@ -1875,7 +1734,6 @@
    "expected_latex": "- \\sin{\\left(x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "note": "Auto-evaluates to -sin(x) before expand_trig runs.",
    "id": "toolkit-131"
   },
@@ -1886,10 +1744,9 @@
    ],
    "expected": "-(cot(x) - 1)/(cot(x) + 1)",
    "expected_latex": "- \\frac{\\cot{\\left(x \\right)} - 1}{\\cot{\\left(x \\right)} + 1}",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy first rewrites tan(x - pi/4) as -cot(x + pi/4), so the result is in cot; (tan(x) - 1)/(tan(x) + 1) is the textbook form.",
+   "note": "Auto-evaluation rewrites tan(x - pi/4) as -cot(x + pi/4) before expand_trig runs.",
    "id": "toolkit-132"
   },
   {
@@ -1901,7 +1758,6 @@
    "expected_latex": "1",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-133"
   },
   {
@@ -1913,8 +1769,7 @@
    "expected_latex": "0",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Identity step: lhs - rhs reduces to 0.",
+   "note": "lhs - rhs of the identity cos(x)/(1 - sin(x)) = (1 + sin(x))/cos(x).",
    "id": "toolkit-134"
   },
   {
@@ -1926,8 +1781,7 @@
    "expected_latex": "0",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "Identity step: lhs - rhs reduces to 0.",
+   "note": "lhs - rhs of the identity tan(x)*sin(x) + cos(x) = sec(x).",
    "id": "toolkit-135"
   },
   {
@@ -1937,10 +1791,9 @@
    ],
    "expected": "2*sin(x + pi/4)**2",
    "expected_latex": "2 \\sin^{2}{\\left(x + \\frac{\\pi}{4} \\right)}",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "SymPy's form is 2*sin(x + pi/4)**2; 1 + sin(2*x) is the textbook one.",
+   "note": "Equals 1 + sin(2*x).",
    "id": "toolkit-136"
   },
   {
@@ -1948,13 +1801,11 @@
    "args": [
     "tan(x) + cot(x) - sec(x)*csc(x)"
    ],
-   "expected": "0",
-   "expected_latex": "0",
+   "expected": "tan(x) + cot(x) - 2/sin(2*x)",
+   "expected_latex": "\\tan{\\left(x \\right)} + \\cot{\\left(x \\right)} - \\frac{2}{\\sin{\\left(2 x \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "lhs - rhs of a true identity; the step checker needs 0, and SymPy's trigsimp stops at a nonzero form.",
-   "sympy_gives": "tan(x) + cot(x) - 2/sin(2*x)",
+   "source": "sympy",
+   "note": "lhs - rhs of the identity tan(x) + cot(x) = sec(x)*csc(x).",
    "id": "toolkit-137"
   },
   {
@@ -1962,13 +1813,11 @@
    "args": [
     "(sec(x) - cos(x))/sin(x) - tan(x)"
    ],
-   "expected": "0",
-   "expected_latex": "0",
+   "expected": "-tan(x) - 1/tan(x) + 2/sin(2*x)",
+   "expected_latex": "- \\tan{\\left(x \\right)} - \\frac{1}{\\tan{\\left(x \\right)}} + \\frac{2}{\\sin{\\left(2 x \\right)}}",
    "compare": "exact",
-   "source": "spec",
-   "profile": "strict",
-   "note": "lhs - rhs of a true identity; the step checker needs 0, and SymPy's trigsimp stops at a nonzero form.",
-   "sympy_gives": "-tan(x) - 1/tan(x) + 2/sin(2*x)",
+   "source": "sympy",
+   "note": "lhs - rhs of the identity (sec(x) - cos(x))/sin(x) = tan(x).",
    "id": "toolkit-138"
   },
   {
@@ -1980,7 +1829,6 @@
    "expected_latex": "1",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-139"
   },
   {
@@ -1992,7 +1840,6 @@
    "expected_latex": "\\cos{\\left(2 x \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-140"
   },
   {
@@ -2004,7 +1851,6 @@
    "expected_latex": "\\sin{\\left(2 x \\right)} + 1",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-141"
   },
   {
@@ -2016,7 +1862,6 @@
    "expected_latex": "2 \\sin{\\left(x \\right)} \\cos{\\left(y \\right)}",
    "compare": "exact",
    "source": "sympy",
-   "profile": "both",
    "id": "toolkit-142"
   },
   {
@@ -2026,10 +1871,9 @@
    ],
    "expected": "-(sin(x) + 1)/cos(x) + cos(x)/(1 - sin(x))",
    "expected_latex": "- \\frac{\\sin{\\left(x \\right)} + 1}{\\cos{\\left(x \\right)}} + \\frac{\\cos{\\left(x \\right)}}{1 - \\sin{\\left(x \\right)}}",
-   "compare": "equivalent",
+   "compare": "exact",
    "source": "sympy",
-   "profile": "both",
-   "note": "fu does not combine fractions and returns this unchanged; trigsimp reduces it to 0.",
+   "note": "lhs - rhs of the identity cos(x)/(1 - sin(x)) = (1 + sin(x))/cos(x).",
    "id": "toolkit-143"
   }
  ]
