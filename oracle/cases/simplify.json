@@ -1,0 +1,146 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "simplify",
+ "cases": [
+  {
+   "op": "simplify",
+   "args": [
+    "sin(x)**2 + cos(x)**2"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "equivalent",
+   "id": "simplify-000"
+  },
+  {
+   "op": "simplify",
+   "args": [
+    "(x**2 + 2*x + 1)/(x + 1)"
+   ],
+   "expected": "x + 1",
+   "expected_latex": "x + 1",
+   "compare": "equivalent",
+   "id": "simplify-001"
+  },
+  {
+   "op": "simplify",
+   "args": [
+    "sec(x)**2 - 1"
+   ],
+   "expected": "tan(x)**2",
+   "expected_latex": "\\tan^{2}{\\left(x \\right)}",
+   "compare": "equivalent",
+   "id": "simplify-002"
+  },
+  {
+   "op": "simplify",
+   "args": [
+    "2*sin(x)*cos(x)"
+   ],
+   "expected": "sin(2*x)",
+   "expected_latex": "\\sin{\\left(2 x \\right)}",
+   "compare": "equivalent",
+   "id": "simplify-003"
+  },
+  {
+   "op": "simplify",
+   "args": [
+    "exp(x)*exp(y)"
+   ],
+   "expected": "exp(x + y)",
+   "expected_latex": "e^{x + y}",
+   "compare": "equivalent",
+   "id": "simplify-004"
+  },
+  {
+   "op": "simplify",
+   "args": [
+    "(1 - cos(x)**2)/sin(x)"
+   ],
+   "expected": "sin(x)",
+   "expected_latex": "\\sin{\\left(x \\right)}",
+   "compare": "equivalent",
+   "id": "simplify-005"
+  },
+  {
+   "op": "radsimp",
+   "args": [
+    "sqrt(2)/2"
+   ],
+   "expected": "sqrt(2)/2",
+   "expected_latex": "\\frac{\\sqrt{2}}{2}",
+   "compare": "exact",
+   "id": "simplify-006"
+  },
+  {
+   "op": "radsimp",
+   "args": [
+    "1/(1 + sqrt(2))"
+   ],
+   "expected": "-1 + sqrt(2)",
+   "expected_latex": "-1 + \\sqrt{2}",
+   "compare": "exact",
+   "id": "simplify-007"
+  },
+  {
+   "op": "radsimp",
+   "args": [
+    "3/(-sqrt(2) + sqrt(5))"
+   ],
+   "expected": "sqrt(2) + sqrt(5)",
+   "expected_latex": "\\sqrt{2} + \\sqrt{5}",
+   "compare": "exact",
+   "id": "simplify-008"
+  },
+  {
+   "op": "logcombine",
+   "args": [
+    "log(x) + log(y)"
+   ],
+   "expected": "log(x*y)",
+   "expected_latex": "\\log{\\left(x y \\right)}",
+   "compare": "exact",
+   "id": "simplify-009"
+  },
+  {
+   "op": "logcombine",
+   "args": [
+    "2*log(x) - log(y)"
+   ],
+   "expected": "log(x**2/y)",
+   "expected_latex": "\\log{\\left(\\frac{x^{2}}{y} \\right)}",
+   "compare": "exact",
+   "id": "simplify-010"
+  },
+  {
+   "op": "expand_log",
+   "args": [
+    "log(x*y)"
+   ],
+   "expected": "log(x) + log(y)",
+   "expected_latex": "\\log{\\left(x \\right)} + \\log{\\left(y \\right)}",
+   "compare": "exact",
+   "id": "simplify-011"
+  },
+  {
+   "op": "expand_log",
+   "args": [
+    "log(x**2/y)"
+   ],
+   "expected": "2*log(x) - log(y)",
+   "expected_latex": "2 \\log{\\left(x \\right)} - \\log{\\left(y \\right)}",
+   "compare": "exact",
+   "id": "simplify-012"
+  },
+  {
+   "op": "trigsimp",
+   "args": [
+    "sin(x)/cos(x)"
+   ],
+   "expected": "tan(x)",
+   "expected_latex": "\\tan{\\left(x \\right)}",
+   "compare": "equivalent",
+   "id": "simplify-013"
+  }
+ ]
+}

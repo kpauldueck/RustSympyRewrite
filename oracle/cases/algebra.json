@@ -1,0 +1,252 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "algebra",
+ "cases": [
+  {
+   "op": "expand",
+   "args": [
+    "(x + 1)**2"
+   ],
+   "expected": "x**2 + 2*x + 1",
+   "expected_latex": "x^{2} + 2 x + 1",
+   "compare": "exact",
+   "id": "algebra-000"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "(x - y)**3"
+   ],
+   "expected": "x**3 - 3*x**2*y + 3*x*y**2 - y**3",
+   "expected_latex": "x^{3} - 3 x^{2} y + 3 x y^{2} - y^{3}",
+   "compare": "exact",
+   "id": "algebra-001"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "(x - 5)*(2*x + 3)"
+   ],
+   "expected": "2*x**2 - 7*x - 15",
+   "expected_latex": "2 x^{2} - 7 x - 15",
+   "compare": "exact",
+   "id": "algebra-002"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "(x + y + z)**2"
+   ],
+   "expected": "x**2 + 2*x*y + 2*x*z + y**2 + 2*y*z + z**2",
+   "expected_latex": "x^{2} + 2 x y + 2 x z + y^{2} + 2 y z + z^{2}",
+   "compare": "exact",
+   "id": "algebra-003"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "(x**2 - 1)*(x**2 + x + 1)"
+   ],
+   "expected": "x**4 + x**3 - x - 1",
+   "expected_latex": "x^{4} + x^{3} - x - 1",
+   "compare": "exact",
+   "id": "algebra-004"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "(x + sqrt(2))**2"
+   ],
+   "expected": "x**2 + 2*sqrt(2)*x + 2",
+   "expected_latex": "x^{2} + 2 \\sqrt{2} x + 2",
+   "compare": "exact",
+   "id": "algebra-005"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "x**2 - 5*x + 6"
+   ],
+   "expected": "(x - 3)*(x - 2)",
+   "expected_latex": "\\left(x - 3\\right) \\left(x - 2\\right)",
+   "compare": "exact",
+   "id": "algebra-006"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "x**3 - 1"
+   ],
+   "expected": "(x - 1)*(x**2 + x + 1)",
+   "expected_latex": "\\left(x - 1\\right) \\left(x^{2} + x + 1\\right)",
+   "compare": "exact",
+   "id": "algebra-007"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "4*x**2 - 9*y**2"
+   ],
+   "expected": "(2*x - 3*y)*(2*x + 3*y)",
+   "expected_latex": "\\left(2 x - 3 y\\right) \\left(2 x + 3 y\\right)",
+   "compare": "exact",
+   "id": "algebra-008"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "x**4 - 16"
+   ],
+   "expected": "(x - 2)*(x + 2)*(x**2 + 4)",
+   "expected_latex": "\\left(x - 2\\right) \\left(x + 2\\right) \\left(x^{2} + 4\\right)",
+   "compare": "exact",
+   "id": "algebra-009"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "6*x**2 + 11*x - 35"
+   ],
+   "expected": "(2*x + 7)*(3*x - 5)",
+   "expected_latex": "\\left(2 x + 7\\right) \\left(3 x - 5\\right)",
+   "compare": "exact",
+   "id": "algebra-010"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "x**3 + 3*x**2*y + 3*x*y**2 + y**3"
+   ],
+   "expected": "(x + y)**3",
+   "expected_latex": "\\left(x + y\\right)^{3}",
+   "compare": "exact",
+   "id": "algebra-011"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "2*x**3 - 2*x"
+   ],
+   "expected": "2*x*(x - 1)*(x + 1)",
+   "expected_latex": "2 x \\left(x - 1\\right) \\left(x + 1\\right)",
+   "compare": "exact",
+   "id": "algebra-012"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "x**2 + 1"
+   ],
+   "expected": "x**2 + 1",
+   "expected_latex": "x^{2} + 1",
+   "compare": "exact",
+   "id": "algebra-013"
+  },
+  {
+   "op": "cancel",
+   "args": [
+    "(x**2 - 1)/(x - 1)"
+   ],
+   "expected": "x + 1",
+   "expected_latex": "x + 1",
+   "compare": "exact",
+   "id": "algebra-014"
+  },
+  {
+   "op": "cancel",
+   "args": [
+    "(x**2 + 5*x + 6)/(x**2 + x - 6)"
+   ],
+   "expected": "(x + 2)/(x - 2)",
+   "expected_latex": "\\frac{x + 2}{x - 2}",
+   "compare": "exact",
+   "id": "algebra-015"
+  },
+  {
+   "op": "cancel",
+   "args": [
+    "(x**3 - 8)/(x**2 - 4)"
+   ],
+   "expected": "(x**2 + 2*x + 4)/(x + 2)",
+   "expected_latex": "\\frac{x^{2} + 2 x + 4}{x + 2}",
+   "compare": "exact",
+   "id": "algebra-016"
+  },
+  {
+   "op": "together",
+   "args": [
+    "1/y + 1/x"
+   ],
+   "expected": "(x + y)/(x*y)",
+   "expected_latex": "\\frac{x + y}{x y}",
+   "compare": "exact",
+   "id": "algebra-017"
+  },
+  {
+   "op": "together",
+   "args": [
+    "1/(x + 1) - 1/(x - 1)"
+   ],
+   "expected": "-2/((x - 1)*(x + 1))",
+   "expected_latex": "- \\frac{2}{\\left(x - 1\\right) \\left(x + 1\\right)}",
+   "compare": "exact",
+   "id": "algebra-018"
+  },
+  {
+   "op": "apart",
+   "args": [
+    "1/(x**2 - 1)",
+    "x"
+   ],
+   "expected": "-1/(2*(x + 1)) + 1/(2*(x - 1))",
+   "expected_latex": "- \\frac{1}{2 \\left(x + 1\\right)} + \\frac{1}{2 \\left(x - 1\\right)}",
+   "compare": "exact",
+   "id": "algebra-019"
+  },
+  {
+   "op": "apart",
+   "args": [
+    "(3*x + 5)/((x + 1)*(x + 2))",
+    "x"
+   ],
+   "expected": "1/(x + 2) + 2/(x + 1)",
+   "expected_latex": "\\frac{1}{x + 2} + \\frac{2}{x + 1}",
+   "compare": "exact",
+   "id": "algebra-020"
+  },
+  {
+   "op": "apart",
+   "args": [
+    "(x**2 + 1)/(x*(x - 1)**2)",
+    "x"
+   ],
+   "expected": "2/(x - 1)**2 + 1/x",
+   "expected_latex": "\\frac{2}{\\left(x - 1\\right)^{2}} + \\frac{1}{x}",
+   "compare": "exact",
+   "id": "algebra-021"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "x**2 - 1",
+    "x**2 - 2*x + 1"
+   ],
+   "expected": "x - 1",
+   "expected_latex": "x - 1",
+   "compare": "exact",
+   "id": "algebra-022"
+  },
+  {
+   "op": "subs",
+   "args": [
+    "x**2 + 3*x",
+    "x",
+    "2"
+   ],
+   "expected": "10",
+   "expected_latex": "10",
+   "compare": "exact",
+   "id": "algebra-023"
+  }
+ ]
+}
