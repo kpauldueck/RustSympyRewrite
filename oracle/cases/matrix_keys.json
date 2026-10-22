@@ -1,0 +1,967 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "matrix_keys",
+ "cases": [
+  {
+   "op": "det",
+   "args": [
+    "Matrix([[2, 4], [1, 2]])"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-000"
+  },
+  {
+   "op": "det",
+   "args": [
+    "Matrix([[1/2, 1/3], [1/4, 1]])"
+   ],
+   "expected": "5/12",
+   "expected_latex": "\\frac{5}{12}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-001"
+  },
+  {
+   "op": "det",
+   "args": [
+    "Matrix([[sqrt(2), 1], [1, sqrt(2)]])"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-002"
+  },
+  {
+   "op": "det",
+   "args": [
+    "Matrix([[a, b], [c, d]])"
+   ],
+   "expected": "a*d - b*c",
+   "expected_latex": "a d - b c",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-003"
+  },
+  {
+   "op": "det",
+   "args": [
+    "Matrix([[1, 2, 3], [0, 1, 4], [5, 6, 0]])"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-004"
+  },
+  {
+   "op": "det",
+   "args": [
+    "Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-005"
+  },
+  {
+   "op": "det",
+   "args": [
+    "Matrix([[cos(t), -sin(t)], [sin(t), cos(t)]])"
+   ],
+   "expected": "sin(t)**2 + cos(t)**2",
+   "expected_latex": "\\sin^{2}{\\left(t \\right)} + \\cos^{2}{\\left(t \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "det does not simplify sin(t)**2 + cos(t)**2 to 1.",
+   "id": "matrix_keys-006"
+  },
+  {
+   "op": "det",
+   "args": [
+    "Matrix([[1, 2, 3], [4, 5, 6]])"
+   ],
+   "expected": "NonSquareMatrixError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A 2x3 matrix: det of a non-square matrix.",
+   "id": "matrix_keys-007"
+  },
+  {
+   "op": "inv",
+   "args": [
+    "Matrix([[2, 1], [5, 3]])"
+   ],
+   "expected": "Matrix([[3, -1], [-5, 2]])",
+   "expected_latex": "\\left[\\begin{matrix}3 & -1\\\\-5 & 2\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "det 1: an integer inverse.",
+   "id": "matrix_keys-008"
+  },
+  {
+   "op": "inv",
+   "args": [
+    "Matrix([[1/2, 1/3], [1/4, 1]])"
+   ],
+   "expected": "Matrix([[12/5, -4/5], [-3/5, 6/5]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{12}{5} & - \\frac{4}{5}\\\\- \\frac{3}{5} & \\frac{6}{5}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-009"
+  },
+  {
+   "op": "inv",
+   "args": [
+    "Matrix([[1/2, -sqrt(3)/2], [sqrt(3)/2, 1/2]])"
+   ],
+   "expected": "Matrix([[1/2, sqrt(3)/2], [-sqrt(3)/2, 1/2]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{1}{2} & \\frac{\\sqrt{3}}{2}\\\\- \\frac{\\sqrt{3}}{2} & \\frac{1}{2}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A rotation's inverse is its transpose.",
+   "id": "matrix_keys-010"
+  },
+  {
+   "op": "inv",
+   "args": [
+    "Matrix([[k, 2], [3, k]])"
+   ],
+   "expected": "Matrix([[k/(k**2 - 6), -2/(k**2 - 6)], [-3/(k**2 - 6), k/(k**2 - 6)]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{k}{k^{2} - 6} & - \\frac{2}{k^{2} - 6}\\\\- \\frac{3}{k^{2} - 6} & \\frac{k}{k^{2} - 6}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Symbolic entries: every entry over det = k**2 - 6.",
+   "id": "matrix_keys-011"
+  },
+  {
+   "op": "inv",
+   "args": [
+    "Matrix([[1, 2, 3], [0, 1, 4], [5, 6, 0]])"
+   ],
+   "expected": "Matrix([[-24, 18, 5], [20, -15, -4], [-5, 4, 1]])",
+   "expected_latex": "\\left[\\begin{matrix}-24 & 18 & 5\\\\20 & -15 & -4\\\\-5 & 4 & 1\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-012"
+  },
+  {
+   "op": "inv",
+   "args": [
+    "Matrix([[cos(t), -sin(t)], [sin(t), cos(t)]])"
+   ],
+   "expected": "Matrix([[-sin(t)**2/cos(t) + 1/cos(t), sin(t)], [-sin(t), cos(t)]])",
+   "expected_latex": "\\left[\\begin{matrix}- \\frac{\\sin^{2}{\\left(t \\right)}}{\\cos{\\left(t \\right)}} + \\frac{1}{\\cos{\\left(t \\right)}} & \\sin{\\left(t \\right)}\\\\- \\sin{\\left(t \\right)} & \\cos{\\left(t \\right)}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "inv does not simplify the (1, 1) entry -sin(t)**2/cos(t) + 1/cos(t), which equals cos(t).",
+   "id": "matrix_keys-013"
+  },
+  {
+   "op": "inv",
+   "args": [
+    "Matrix([[2, 4], [1, 2]])"
+   ],
+   "expected": "NonInvertibleMatrixError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "det = 0: a singular matrix.",
+   "id": "matrix_keys-014"
+  },
+  {
+   "op": "inv",
+   "args": [
+    "Matrix([[1, 2, 3], [4, 5, 6]])"
+   ],
+   "expected": "NonSquareMatrixError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A 2x3 matrix: inv of a non-square matrix.",
+   "id": "matrix_keys-015"
+  },
+  {
+   "op": "transpose",
+   "args": [
+    "Matrix([[1, 2, 3], [4, 5, 6]])"
+   ],
+   "expected": "Matrix([[1, 4], [2, 5], [3, 6]])",
+   "expected_latex": "\\left[\\begin{matrix}1 & 4\\\\2 & 5\\\\3 & 6\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-016"
+  },
+  {
+   "op": "transpose",
+   "args": [
+    "Matrix([[1], [2], [3]])"
+   ],
+   "expected": "Matrix([[1, 2, 3]])",
+   "expected_latex": "\\left[\\begin{matrix}1 & 2 & 3\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-017"
+  },
+  {
+   "op": "transpose",
+   "args": [
+    "Matrix([[a, b], [c, d]])"
+   ],
+   "expected": "Matrix([[a, c], [b, d]])",
+   "expected_latex": "\\left[\\begin{matrix}a & c\\\\b & d\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-018"
+  },
+  {
+   "op": "matmul",
+   "args": [
+    "Matrix([[1, 2], [3, 4]])",
+    "Matrix([[0, 1], [1, 0]])"
+   ],
+   "expected": "Matrix([[2, 1], [4, 3]])",
+   "expected_latex": "\\left[\\begin{matrix}2 & 1\\\\4 & 3\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-019"
+  },
+  {
+   "op": "matmul",
+   "args": [
+    "Matrix([[0, 1], [1, 0]])",
+    "Matrix([[1, 2], [3, 4]])"
+   ],
+   "expected": "Matrix([[3, 4], [1, 2]])",
+   "expected_latex": "\\left[\\begin{matrix}3 & 4\\\\1 & 2\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Matrix products do not commute: compare with A*B.",
+   "id": "matrix_keys-020"
+  },
+  {
+   "op": "matmul",
+   "args": [
+    "Matrix([[1, 2, 3], [4, 5, 6]])",
+    "Matrix([[1, 0], [0, 1], [1, 1]])"
+   ],
+   "expected": "Matrix([[4, 5], [10, 11]])",
+   "expected_latex": "\\left[\\begin{matrix}4 & 5\\\\10 & 11\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "(2x3)*(3x2) is 2x2.",
+   "id": "matrix_keys-021"
+  },
+  {
+   "op": "matmul",
+   "args": [
+    "Matrix([[1, 2, 3]])",
+    "Matrix([[4], [5], [6]])"
+   ],
+   "expected": "Matrix([[32]])",
+   "expected_latex": "\\left[\\begin{matrix}32\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Row times column: a 1x1 matrix, not a scalar.",
+   "id": "matrix_keys-022"
+  },
+  {
+   "op": "matmul",
+   "args": [
+    "Matrix([[a, b], [c, d]])",
+    "Matrix([[x], [y]])"
+   ],
+   "expected": "Matrix([[a*x + b*y], [c*x + d*y]])",
+   "expected_latex": "\\left[\\begin{matrix}a x + b y\\\\c x + d y\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-023"
+  },
+  {
+   "op": "matmul",
+   "args": [
+    "Matrix([[1/2, -sqrt(3)/2], [sqrt(3)/2, 1/2]])",
+    "Matrix([[1/2, -sqrt(3)/2], [sqrt(3)/2, 1/2]])"
+   ],
+   "expected": "Matrix([[-1/2, -sqrt(3)/2], [sqrt(3)/2, -1/2]])",
+   "expected_latex": "\\left[\\begin{matrix}- \\frac{1}{2} & - \\frac{\\sqrt{3}}{2}\\\\\\frac{\\sqrt{3}}{2} & - \\frac{1}{2}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Two 60 degree rotations make a 120 degree rotation.",
+   "id": "matrix_keys-024"
+  },
+  {
+   "op": "matmul",
+   "args": [
+    "Matrix([[2, 1], [5, 3]])",
+    "Matrix([[3, -1], [-5, 2]])"
+   ],
+   "expected": "Matrix([[1, 0], [0, 1]])",
+   "expected_latex": "\\left[\\begin{matrix}1 & 0\\\\0 & 1\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A matrix times its inverse.",
+   "id": "matrix_keys-025"
+  },
+  {
+   "op": "matmul",
+   "args": [
+    "Matrix([[1, 2, 3], [4, 5, 6]])",
+    "Matrix([[1, 2, 3], [4, 5, 6]])"
+   ],
+   "expected": "ShapeError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "(2x3)*(2x3): the inner sizes differ.",
+   "id": "matrix_keys-026"
+  },
+  {
+   "op": "matpow",
+   "args": [
+    "Matrix([[4/5, 3/10], [1/5, 7/10]])",
+    "10"
+   ],
+   "expected": "Matrix([[1537/2560, 3069/5120], [1023/2560, 2051/5120]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{1537}{2560} & \\frac{3069}{5120}\\\\\\frac{1023}{2560} & \\frac{2051}{5120}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Exact fractions with powers of 2 in the denominators.",
+   "id": "matrix_keys-027"
+  },
+  {
+   "op": "matpow",
+   "args": [
+    "Matrix([[4/5, 3/10], [1/5, 7/10]])",
+    "0"
+   ],
+   "expected": "Matrix([[1, 0], [0, 1]])",
+   "expected_latex": "\\left[\\begin{matrix}1 & 0\\\\0 & 1\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "M**0 is the identity.",
+   "id": "matrix_keys-028"
+  },
+  {
+   "op": "matpow",
+   "args": [
+    "Matrix([[1, 2], [3, 4]])",
+    "-2"
+   ],
+   "expected": "Matrix([[11/2, -5/2], [-15/4, 7/4]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{11}{2} & - \\frac{5}{2}\\\\- \\frac{15}{4} & \\frac{7}{4}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A negative power is a power of the inverse.",
+   "id": "matrix_keys-029"
+  },
+  {
+   "op": "matpow",
+   "args": [
+    "Matrix([[1, 1], [1, 0]])",
+    "10"
+   ],
+   "expected": "Matrix([[89, 55], [55, 34]])",
+   "expected_latex": "\\left[\\begin{matrix}89 & 55\\\\55 & 34\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Fibonacci numbers.",
+   "id": "matrix_keys-030"
+  },
+  {
+   "op": "matpow",
+   "args": [
+    "Matrix([[1, 1], [0, 1]])",
+    "n"
+   ],
+   "expected": "Matrix([[1, n], [0, 1]])",
+   "expected_latex": "\\left[\\begin{matrix}1 & n\\\\0 & 1\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Symbolic power of a shear.",
+   "id": "matrix_keys-031"
+  },
+  {
+   "op": "matpow",
+   "args": [
+    "Matrix([[4/5, 3/10], [1/5, 7/10]])",
+    "n"
+   ],
+   "expected": "Matrix([[3/5 + 2/(5*2**n), 3/5 - 3/(5*2**n)], [2/5 - 2/(5*2**n), 2/5 + 3/(5*2**n)]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{3}{5} + \\frac{2 \\cdot 2^{- n}}{5} & \\frac{3}{5} - \\frac{3 \\cdot 2^{- n}}{5}\\\\\\frac{2}{5} - \\frac{2 \\cdot 2^{- n}}{5} & \\frac{2}{5} + \\frac{3 \\cdot 2^{- n}}{5}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Symbolic power: a closed form from the eigenvalues 1 and 1/2.",
+   "id": "matrix_keys-032"
+  },
+  {
+   "op": "matpow",
+   "args": [
+    "Matrix([[2, 4], [1, 2]])",
+    "-1"
+   ],
+   "expected": "NonInvertibleMatrixError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A negative power needs the inverse, and det = 0.",
+   "id": "matrix_keys-033"
+  },
+  {
+   "op": "matpow",
+   "args": [
+    "Matrix([[1, 2, 3], [4, 5, 6]])",
+    "2"
+   ],
+   "expected": "NonSquareMatrixError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A 2x3 matrix: powers of a non-square matrix.",
+   "id": "matrix_keys-034"
+  },
+  {
+   "op": "matvec_pow",
+   "args": [
+    "Matrix([[4/5, 3/10], [1/5, 7/10]])",
+    "1",
+    "Matrix([[1], [0]])"
+   ],
+   "expected": "Matrix([[4/5], [1/5]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{4}{5}\\\\\\frac{1}{5}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "note": "One step from state 1.",
+   "id": "matrix_keys-035"
+  },
+  {
+   "op": "matvec_pow",
+   "args": [
+    "Matrix([[4/5, 3/10], [1/5, 7/10]])",
+    "3",
+    "Matrix([[1], [0]])"
+   ],
+   "expected": "Matrix([[13/20], [7/20]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{13}{20}\\\\\\frac{7}{20}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "id": "matrix_keys-036"
+  },
+  {
+   "op": "matvec_pow",
+   "args": [
+    "Matrix([[4/5, 3/10], [1/5, 7/10]])",
+    "10",
+    "Matrix([[1], [0]])"
+   ],
+   "expected": "Matrix([[1537/2560], [1023/2560]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{1537}{2560}\\\\\\frac{1023}{2560}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "id": "matrix_keys-037"
+  },
+  {
+   "op": "matvec_pow",
+   "args": [
+    "Matrix([[4/5, 3/10], [1/5, 7/10]])",
+    "4",
+    "Matrix([[300], [200]])"
+   ],
+   "expected": "Matrix([[300], [200]])",
+   "expected_latex": "\\left[\\begin{matrix}300\\\\200\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "note": "The population starts at the steady state.",
+   "id": "matrix_keys-038"
+  },
+  {
+   "op": "matvec_pow",
+   "args": [
+    "Matrix([[7/10, 1/5, 1/10], [1/5, 3/5, 1/5], [1/10, 1/5, 7/10]])",
+    "3",
+    "Matrix([[100], [0], [0]])"
+   ],
+   "expected": "Matrix([[226/5], [156/5], [118/5]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{226}{5}\\\\\\frac{156}{5}\\\\\\frac{118}{5}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "id": "matrix_keys-039"
+  },
+  {
+   "op": "matvec_pow",
+   "args": [
+    "Matrix([[4/5, 3/10], [1/5, 7/10]])",
+    "n",
+    "Matrix([[1], [0]])"
+   ],
+   "expected": "Matrix([[3/5 + 2/(5*2**n)], [2/5 - 2/(5*2**n)]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{3}{5} + \\frac{2 \\cdot 2^{- n}}{5}\\\\\\frac{2}{5} - \\frac{2 \\cdot 2^{- n}}{5}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "note": "Symbolic number of steps: a closed form in 2**n.",
+   "id": "matrix_keys-040"
+  },
+  {
+   "op": "matvec_pow",
+   "args": [
+    "Matrix([[0.8, 0.3], [0.2, 0.7]])",
+    "3",
+    "Matrix([[1], [0]])"
+   ],
+   "expected": "Matrix([[0.650000000000000], [0.350000000000000]])",
+   "expected_latex": "\\left[\\begin{matrix}0.65\\\\0.35\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "note": "Decimals typed in SymPy syntax are Floats, so the state is printed with 15-digit Floats.",
+   "id": "matrix_keys-041"
+  },
+  {
+   "op": "is_invertible",
+   "args": [
+    "Matrix([[2, 1], [5, 3]])"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "matrix_keys-042"
+  },
+  {
+   "op": "is_invertible",
+   "args": [
+    "Matrix([[2, 4], [1, 2]])"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "matrix_keys-043"
+  },
+  {
+   "op": "is_invertible",
+   "args": [
+    "Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "matrix_keys-044"
+  },
+  {
+   "op": "is_invertible",
+   "args": [
+    "Matrix([[sqrt(2), 2], [1, sqrt(2)]])"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "det = sqrt(2)*sqrt(2) - 2, which SymPy evaluates to 0.",
+   "id": "matrix_keys-045"
+  },
+  {
+   "op": "is_invertible",
+   "args": [
+    "Matrix([[a, 1], [0, a]])"
+   ],
+   "assumptions": {
+    "a": {
+     "positive": true
+    }
+   },
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "det = a**2 with a positive; != compares structurally.",
+   "id": "matrix_keys-046"
+  },
+  {
+   "op": "is_invertible",
+   "args": [
+    "Matrix([[1, 2, 3], [4, 5, 6]])"
+   ],
+   "expected": "NonSquareMatrixError",
+   "compare": "error",
+   "source": "app",
+   "note": "A 2x3 matrix: M.det() raises inside the recipe.",
+   "id": "matrix_keys-047"
+  },
+  {
+   "op": "eigenvects",
+   "args": [
+    "Matrix([[4/5, 3/10], [1/5, 7/10]])"
+   ],
+   "expected": "[(1/2, 1, [Matrix([[-1], [1]])]), (1, 1, [Matrix([[3/2], [1]])])]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Transition matrix: eigenvalues 1 and 1/2.",
+   "id": "matrix_keys-048"
+  },
+  {
+   "op": "eigenvects",
+   "args": [
+    "Matrix([[1, 1/5], [0, 4/5]])"
+   ],
+   "expected": "[(4/5, 1, [Matrix([[-1], [1]])]), (1, 1, [Matrix([[1], [0]])])]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Absorbing state 1.",
+   "id": "matrix_keys-049"
+  },
+  {
+   "op": "eigenvects",
+   "args": [
+    "Matrix([[2, 1], [1, 2]])"
+   ],
+   "expected": "[(1, 1, [Matrix([[-1], [1]])]), (3, 1, [Matrix([[1], [1]])])]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Symmetric: orthogonal eigenvectors.",
+   "id": "matrix_keys-050"
+  },
+  {
+   "op": "eigenvects",
+   "args": [
+    "Matrix([[1, 1], [1, 0]])"
+   ],
+   "expected": "[(1/2 - sqrt(5)/2, 1, [Matrix([[1/2 - sqrt(5)/2], [1]])]), (1/2 + sqrt(5)/2, 1, [Matrix([[1/2 + sqrt(5)/2], [1]])])]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Symmetric with irrational eigenvalues (golden ratio).",
+   "id": "matrix_keys-051"
+  },
+  {
+   "op": "eigenvects",
+   "args": [
+    "Matrix([[2, 1], [0, 2]])"
+   ],
+   "expected": "[(2, 2, [Matrix([[1], [0]])])]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Defective: eigenvalue 2 has multiplicity 2 but one eigenvector.",
+   "id": "matrix_keys-052"
+  },
+  {
+   "op": "eigenvects",
+   "args": [
+    "Matrix([[1/2, 1/4, 1/4], [1/4, 1/2, 1/4], [1/4, 1/4, 1/2]])"
+   ],
+   "expected": "[(1/4, 2, [Matrix([[-1], [1], [0]]), Matrix([[-1], [0], [1]])]), (1, 1, [Matrix([[1], [1], [1]])])]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Eigenvalue 1/4 has a two-dimensional eigenspace.",
+   "id": "matrix_keys-053"
+  },
+  {
+   "op": "steady_state",
+   "args": [
+    "Matrix([[4/5, 3/10], [1/5, 7/10]])"
+   ],
+   "expected": "Matrix([[3/5], [2/5]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{3}{5}\\\\\\frac{2}{5}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "id": "matrix_keys-054"
+  },
+  {
+   "op": "steady_state",
+   "args": [
+    "Matrix([[9/10, 1/2], [1/10, 1/2]])"
+   ],
+   "expected": "Matrix([[5/6], [1/6]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{5}{6}\\\\\\frac{1}{6}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "id": "matrix_keys-055"
+  },
+  {
+   "op": "steady_state",
+   "args": [
+    "Matrix([[1, 1/5], [0, 4/5]])"
+   ],
+   "expected": "Matrix([[1], [0]])",
+   "expected_latex": "\\left[\\begin{matrix}1\\\\0\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "note": "Absorbing state 1.",
+   "id": "matrix_keys-056"
+  },
+  {
+   "op": "steady_state",
+   "args": [
+    "Matrix([[0, 1], [1, 0]])"
+   ],
+   "expected": "Matrix([[1/2], [1/2]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{1}{2}\\\\\\frac{1}{2}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "note": "M**n*v oscillates and never converges, but eigenvalue 1 has a one-dimensional eigenspace.",
+   "id": "matrix_keys-057"
+  },
+  {
+   "op": "steady_state",
+   "args": [
+    "Matrix([[1/2, 1/3, 0], [1/2, 1/3, 1/2], [0, 1/3, 1/2]])"
+   ],
+   "expected": "Matrix([[2/7], [3/7], [2/7]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{2}{7}\\\\\\frac{3}{7}\\\\\\frac{2}{7}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "id": "matrix_keys-058"
+  },
+  {
+   "op": "steady_state",
+   "args": [
+    "Matrix([[1, 0], [0, 1]])"
+   ],
+   "expected": "Matrix([[1], [0]])",
+   "expected_latex": "\\left[\\begin{matrix}1\\\\0\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "note": "Every vector is fixed: the eigenspace for 1 is two-dimensional, and the recipe takes its first basis vector.",
+   "id": "matrix_keys-059"
+  },
+  {
+   "op": "steady_state",
+   "args": [
+    "Matrix([[1/2, 1/2], [1/4, 3/4]])"
+   ],
+   "expected": "Matrix([[1/2], [1/2]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{1}{2}\\\\\\frac{1}{2}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "note": "Row-stochastic (the rows sum to 1, not the columns): the recipe uses the column convention regardless.",
+   "id": "matrix_keys-060"
+  },
+  {
+   "op": "steady_state",
+   "args": [
+    "Matrix([[6/5, 1/2], [-1/5, 1/2]])"
+   ],
+   "expected": "Matrix([[5/3], [-2/3]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{5}{3}\\\\- \\frac{2}{3}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "app",
+   "note": "Each column sums to 1 but the entry -1/5 is not a probability; the recipe does not check.",
+   "id": "matrix_keys-061"
+  },
+  {
+   "op": "nsimplify_entries",
+   "args": [
+    "Matrix([[0.8, 0.3], [0.2, 0.7]])"
+   ],
+   "expected": "Matrix([[4/5, 3/10], [1/5, 7/10]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{4}{5} & \\frac{3}{10}\\\\\\frac{1}{5} & \\frac{7}{10}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-062"
+  },
+  {
+   "op": "nsimplify_entries",
+   "args": [
+    "Matrix([[0.3333333333333333, 0.6666666666666666], [1.5, -2.0]])"
+   ],
+   "expected": "Matrix([[1/3, 2/3], [3/2, -2]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{1}{3} & \\frac{2}{3}\\\\\\frac{3}{2} & -2\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Full-precision repeating decimals become 1/3 and 2/3.",
+   "id": "matrix_keys-063"
+  },
+  {
+   "op": "nsimplify_entries",
+   "args": [
+    "Matrix([[0.333, 0.1], [0.05, 0.001]])"
+   ],
+   "expected": "Matrix([[333/1000, 1/10], [1/20, 1/1000]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{333}{1000} & \\frac{1}{10}\\\\\\frac{1}{20} & \\frac{1}{1000}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A short decimal keeps its typed digits: 333/1000, not 1/3.",
+   "id": "matrix_keys-064"
+  },
+  {
+   "op": "nsimplify_entries",
+   "args": [
+    "Matrix([[0.8660254037844386, -0.5], [0.5, 0.8660254037844386]])"
+   ],
+   "expected": "Matrix([[sqrt(3)/2, -1/2], [1/2, sqrt(3)/2]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{\\sqrt{3}}{2} & - \\frac{1}{2}\\\\\\frac{1}{2} & \\frac{\\sqrt{3}}{2}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "nsimplify recognises sqrt(3)/2.",
+   "id": "matrix_keys-065"
+  },
+  {
+   "op": "nsimplify_entries",
+   "args": [
+    "Matrix([[3.14159265358979, 2.5e-5]])"
+   ],
+   "expected": "Matrix([[314159265358979/100000000000000, 1/40000]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{314159265358979}{100000000000000} & \\frac{1}{40000}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "pi is not guessed: without constants nsimplify keeps the digits.",
+   "id": "matrix_keys-066"
+  },
+  {
+   "op": "nsimplify_entries",
+   "args": [
+    "Matrix([[0.9, 0.5], [0.1, 0.5]])**3"
+   ],
+   "expected": "Matrix([[211/250, 39/50], [39/250, 11/50]])",
+   "expected_latex": "\\left[\\begin{matrix}\\frac{211}{250} & \\frac{39}{50}\\\\\\frac{39}{250} & \\frac{11}{50}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The Float power is computed first; nsimplify absorbs its rounding error.",
+   "id": "matrix_keys-067"
+  },
+  {
+   "op": "rref",
+   "args": [
+    "Matrix([[2, 1, -1, 8], [-3, -1, 2, -11], [-2, 1, 2, -3]])"
+   ],
+   "expected": "Matrix([[1, 0, 0, 2], [0, 1, 0, 3], [0, 0, 1, -1]])",
+   "expected_latex": "\\left[\\begin{matrix}1 & 0 & 0 & 2\\\\0 & 1 & 0 & 3\\\\0 & 0 & 1 & -1\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Augmented 3x3 system with one solution.",
+   "id": "matrix_keys-068"
+  },
+  {
+   "op": "rref",
+   "args": [
+    "Matrix([[1, 2, 1, 4], [2, 4, 0, 6], [1, 2, 2, 5]])"
+   ],
+   "expected": "Matrix([[1, 2, 0, 3], [0, 0, 1, 1], [0, 0, 0, 0]])",
+   "expected_latex": "\\left[\\begin{matrix}1 & 2 & 0 & 3\\\\0 & 0 & 1 & 1\\\\0 & 0 & 0 & 0\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Dependent system: a free variable and a zero row.",
+   "id": "matrix_keys-069"
+  },
+  {
+   "op": "rref",
+   "args": [
+    "Matrix([[1, 1, 2], [1, 1, 3]])"
+   ],
+   "expected": "Matrix([[1, 1, 0], [0, 0, 1]])",
+   "expected_latex": "\\left[\\begin{matrix}1 & 1 & 0\\\\0 & 0 & 1\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Inconsistent system: the row [0, 0, 1].",
+   "id": "matrix_keys-070"
+  },
+  {
+   "op": "rref",
+   "args": [
+    "Matrix([[1/2, 1/3, 1], [1/4, 1, 2]])"
+   ],
+   "expected": "Matrix([[1, 0, 4/5], [0, 1, 9/5]])",
+   "expected_latex": "\\left[\\begin{matrix}1 & 0 & \\frac{4}{5}\\\\0 & 1 & \\frac{9}{5}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-071"
+  },
+  {
+   "op": "rref",
+   "args": [
+    "Matrix([[1, sqrt(2), 3], [sqrt(2), 1, 0]])"
+   ],
+   "expected": "Matrix([[1, 0, -3], [0, 1, 3*sqrt(2)]])",
+   "expected_latex": "\\left[\\begin{matrix}1 & 0 & -3\\\\0 & 1 & 3 \\sqrt{2}\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-072"
+  },
+  {
+   "op": "rref",
+   "args": [
+    "Matrix([[0, 0, 1], [0, 2, 4]])"
+   ],
+   "expected": "Matrix([[0, 1, 0], [0, 0, 1]])",
+   "expected_latex": "\\left[\\begin{matrix}0 & 1 & 0\\\\0 & 0 & 1\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A zero first column: pivots in columns 2 and 3.",
+   "id": "matrix_keys-073"
+  },
+  {
+   "op": "solve_linear_system",
+   "args": [
+    "Matrix([[1, 1, 5], [2, -1, 1]])",
+    "(x, y)"
+   ],
+   "expected": "{x: 2, y: 3}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-074"
+  },
+  {
+   "op": "solve_linear_system",
+   "args": [
+    "Matrix([[2, 3, 5], [4, 6, 10]])",
+    "(x, y)"
+   ],
+   "expected": "{x: 5/2 - 3*y/2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Dependent: infinitely many solutions; the free unknown y gets no key in the dict.",
+   "id": "matrix_keys-075"
+  },
+  {
+   "op": "solve_linear_system",
+   "args": [
+    "Matrix([[2, 3, 5], [4, 6, 11]])",
+    "(x, y)"
+   ],
+   "expected": "None",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Inconsistent: SymPy returns None.",
+   "id": "matrix_keys-076"
+  },
+  {
+   "op": "solve_linear_system",
+   "args": [
+    "Matrix([[2, 1, -1, 8], [-3, -1, 2, -11], [-2, 1, 2, -3]])",
+    "(x, y, z)"
+   ],
+   "expected": "{x: 2, y: 3, z: -1}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-077"
+  },
+  {
+   "op": "solve_linear_system",
+   "args": [
+    "Matrix([[1, 2, 3, 6], [2, 4, 6, 12], [1, 0, 1, 2]])",
+    "(x, y, z)"
+   ],
+   "expected": "{x: 2 - z, y: 2 - z}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "One free unknown, z: no key for z in the dict.",
+   "id": "matrix_keys-078"
+  },
+  {
+   "op": "solve_linear_system",
+   "args": [
+    "Matrix([[3, -2, 1/2], [5, 4, 7]])",
+    "(x, y)"
+   ],
+   "expected": "{x: 8/11, y: 37/44}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "matrix_keys-079"
+  },
+  {
+   "op": "solve_linear_system",
+   "args": [
+    "Matrix([[1, 1, 3], [1, -1, 1], [2, 1, 5]])",
+    "(x, y)"
+   ],
+   "expected": "{x: 2, y: 1}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Three equations, two unknowns, consistent.",
+   "id": "matrix_keys-080"
+  }
+ ]
+}

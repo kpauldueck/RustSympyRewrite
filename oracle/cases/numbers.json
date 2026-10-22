@@ -1,0 +1,324 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "numbers",
+ "cases": [
+  {
+   "op": "sympify",
+   "args": [
+    "1/3 + 1/6"
+   ],
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-000"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "-7/4 * 8/21"
+   ],
+   "expected": "-2/3",
+   "expected_latex": "- \\frac{2}{3}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-001"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2**100"
+   ],
+   "expected": "1267650600228229401496703205376",
+   "expected_latex": "1267650600228229401496703205376",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-002"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(-3)**5"
+   ],
+   "expected": "-243",
+   "expected_latex": "-243",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-003"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(2/3)**-3"
+   ],
+   "expected": "27/8",
+   "expected_latex": "\\frac{27}{8}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-004"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(8)"
+   ],
+   "expected": "2*sqrt(2)",
+   "expected_latex": "2 \\sqrt{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-005"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(12) + sqrt(27)"
+   ],
+   "expected": "5*sqrt(3)",
+   "expected_latex": "5 \\sqrt{3}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-006"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(9/4)"
+   ],
+   "expected": "3/2",
+   "expected_latex": "\\frac{3}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-007"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Abs(-5 + 12*I)"
+   ],
+   "expected": "13",
+   "expected_latex": "13",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-008"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "100 % 7"
+   ],
+   "expected": "2",
+   "expected_latex": "2",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-009"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "factorial(20)"
+   ],
+   "expected": "2432902008176640000",
+   "expected_latex": "2432902008176640000",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-010"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "binomial(30, 12)"
+   ],
+   "expected": "86493225",
+   "expected_latex": "86493225",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-011"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "(1 + I)*(2 - 3*I)"
+   ],
+   "expected": "5 - I",
+   "expected_latex": "5 - i",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-012"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "(3 + 4*I)/(1 - 2*I)"
+   ],
+   "expected": "-1 + 2*I",
+   "expected_latex": "-1 + 2 i",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-013"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "84",
+    "36"
+   ],
+   "expected": "12",
+   "expected_latex": "12",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-014"
+  },
+  {
+   "op": "lcm",
+   "args": [
+    "84",
+    "36"
+   ],
+   "expected": "252",
+   "expected_latex": "252",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-015"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "1099511627776",
+    "3656158440062976"
+   ],
+   "expected": "1048576",
+   "expected_latex": "1048576",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-016"
+  },
+  {
+   "op": "lcm",
+   "args": [
+    "1099511627776",
+    "3656158440062976"
+   ],
+   "expected": "3833759992447475122176",
+   "expected_latex": "3833759992447475122176",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-017"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "-12",
+    "18"
+   ],
+   "expected": "6",
+   "expected_latex": "6",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-018"
+  },
+  {
+   "op": "lcm",
+   "args": [
+    "-12",
+    "18"
+   ],
+   "expected": "36",
+   "expected_latex": "36",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-019"
+  },
+  {
+   "op": "factorint",
+   "args": [
+    "360"
+   ],
+   "expected": "{2: 3, 3: 2, 5: 1}",
+   "expected_latex": "\\left\\{ 2 : 3, \\  3 : 2, \\  5 : 1\\right\\}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-020"
+  },
+  {
+   "op": "factorint",
+   "args": [
+    "2147483647"
+   ],
+   "expected": "{2147483647: 1}",
+   "expected_latex": "\\left\\{ 2147483647 : 1\\right\\}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-021"
+  },
+  {
+   "op": "factorint",
+   "args": [
+    "600851475143"
+   ],
+   "expected": "{71: 1, 839: 1, 1471: 1, 6857: 1}",
+   "expected_latex": "\\left\\{ 71 : 1, \\  839 : 1, \\  1471 : 1, \\  6857 : 1\\right\\}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-022"
+  },
+  {
+   "op": "factorint",
+   "args": [
+    "1000000000039"
+   ],
+   "expected": "{1000000000039: 1}",
+   "expected_latex": "\\left\\{ 1000000000039 : 1\\right\\}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-023"
+  },
+  {
+   "op": "evalf",
+   "args": [
+    "pi",
+    "30"
+   ],
+   "expected": "3.14159265358979323846264338328",
+   "expected_latex": "3.14159265358979323846264338328",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-024"
+  },
+  {
+   "op": "evalf",
+   "args": [
+    "sqrt(2)",
+    "50"
+   ],
+   "expected": "1.4142135623730950488016887242096980785696718753769",
+   "expected_latex": "1.4142135623730950488016887242096980785696718753769",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-025"
+  },
+  {
+   "op": "evalf",
+   "args": [
+    "E",
+    "20"
+   ],
+   "expected": "2.7182818284590452354",
+   "expected_latex": "2.7182818284590452354",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-026"
+  },
+  {
+   "op": "evalf",
+   "args": [
+    "1/7",
+    "25"
+   ],
+   "expected": "0.1428571428571428571428571",
+   "expected_latex": "0.1428571428571428571428571",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "numbers-027"
+  }
+ ]
+}

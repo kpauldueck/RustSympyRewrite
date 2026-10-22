@@ -1,0 +1,2551 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "forms",
+ "cases": [
+  {
+   "op": "sympify",
+   "args": [
+    "(x - 2)*(x - 3)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x - 1*2)*(x - 1*3)",
+   "expected_latex": "\\left(x - 2\\right) \\left(x - 3\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated subtraction stores x - 2 as Add(x, Mul(-1, 2)), which prints as x - 1*2.",
+   "id": "forms-000"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x - 2)*(x - 3)"
+   ],
+   "expected": "(x - 3)*(x - 2)",
+   "expected_latex": "\\left(x - 3\\right) \\left(x - 2\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation reorders the factors: (x - 3)*(x - 2).",
+   "id": "forms-001"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "(x - 2)*(x - 3)"
+   ],
+   "expected": "(x - 3)*(x - 2)",
+   "expected_latex": "\\left(x - 3\\right) \\left(x - 2\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-002"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2 - 5*x + 6"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x**2 - 5*x + 6",
+   "expected_latex": "x^{2} - 5 x + 6",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-003"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2 - 5*x + 6"
+   ],
+   "expected": "x**2 - 5*x + 6",
+   "expected_latex": "x^{2} - 5 x + 6",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-004"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "x**2 - 5*x + 6"
+   ],
+   "expected": "(x - 3)*(x - 2)",
+   "expected_latex": "\\left(x - 3\\right) \\left(x - 2\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-005"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2*x + 4"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "2*x + 4",
+   "expected_latex": "2 x + 4",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-006"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2*x + 4"
+   ],
+   "expected": "2*x + 4",
+   "expected_latex": "2 x + 4",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-007"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "2*x + 4"
+   ],
+   "expected": "2*(x + 2)",
+   "expected_latex": "2 \\left(x + 2\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "factor pulls out the integer content.",
+   "id": "forms-008"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2*x + 3"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "2*x + 3",
+   "expected_latex": "2 x + 3",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-009"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2*x + 3"
+   ],
+   "expected": "2*x + 3",
+   "expected_latex": "2 x + 3",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-010"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "2*x + 3"
+   ],
+   "expected": "2*x + 3",
+   "expected_latex": "2 x + 3",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-011"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "6*(x + 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "6*(x + 1)",
+   "expected_latex": "6 \\left(x + 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-012"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "6*(x + 1)"
+   ],
+   "expected": "6*x + 6",
+   "expected_latex": "6 x + 6",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes the 6 over the sum: 6*x + 6.",
+   "id": "forms-013"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "6*(x + 1)"
+   ],
+   "expected": "6*(x + 1)",
+   "expected_latex": "6 \\left(x + 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "factor pulls the integer content 6 back out of the evaluated 6*x + 6.",
+   "id": "forms-014"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 1)**2"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x + 1)**2",
+   "expected_latex": "\\left(x + 1\\right)^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-015"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 1)**2"
+   ],
+   "expected": "(x + 1)**2",
+   "expected_latex": "\\left(x + 1\\right)^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-016"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "(x + 1)**2"
+   ],
+   "expected": "(x + 1)**2",
+   "expected_latex": "\\left(x + 1\\right)^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-017"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 1)*(x + 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x + 1)*(x + 1)",
+   "expected_latex": "\\left(x + 1\\right) \\left(x + 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated, the repeated factor stays written out twice.",
+   "id": "forms-018"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 1)*(x + 1)"
+   ],
+   "expected": "(x + 1)**2",
+   "expected_latex": "\\left(x + 1\\right)^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation collects the repeated factor into a power.",
+   "id": "forms-019"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "(x + 1)*(x + 1)"
+   ],
+   "expected": "(x + 1)**2",
+   "expected_latex": "\\left(x + 1\\right)^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-020"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x*(x**2 - 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x*(x**2 - 1*1)",
+   "expected_latex": "x \\left(x^{2} - 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-021"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x*(x**2 - 1)"
+   ],
+   "expected": "x*(x**2 - 1)",
+   "expected_latex": "x \\left(x^{2} - 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-022"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "x*(x**2 - 1)"
+   ],
+   "expected": "x*(x - 1)*(x + 1)",
+   "expected_latex": "x \\left(x - 1\\right) \\left(x + 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-023"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2 + 1"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x**2 + 1",
+   "expected_latex": "x^{2} + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-024"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2 + 1"
+   ],
+   "expected": "x**2 + 1",
+   "expected_latex": "x^{2} + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-025"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "x**2 + 1"
+   ],
+   "expected": "x**2 + 1",
+   "expected_latex": "x^{2} + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-026"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2 - 2"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x**2 - 1*2",
+   "expected_latex": "x^{2} - 2",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-027"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2 - 2"
+   ],
+   "expected": "x**2 - 2",
+   "expected_latex": "x^{2} - 2",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-028"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "x**2 - 2"
+   ],
+   "expected": "x**2 - 2",
+   "expected_latex": "x^{2} - 2",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Irreducible over the rationals, factor's default domain.",
+   "id": "forms-029"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(2*x + 2)*(x - 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x - 1*1)*(2*x + 2)",
+   "expected_latex": "\\left(x - 1\\right) \\left(2 x + 2\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-030"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(2*x + 2)*(x - 1)"
+   ],
+   "expected": "(x - 1)*(2*x + 2)",
+   "expected_latex": "\\left(x - 1\\right) \\left(2 x + 2\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-031"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "(2*x + 2)*(x - 1)"
+   ],
+   "expected": "2*(x - 1)*(x + 1)",
+   "expected_latex": "2 \\left(x - 1\\right) \\left(x + 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "factor pulls the content 2 out of the factor 2*x + 2.",
+   "id": "forms-032"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x*(x + 1) + 2*(x + 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x*(x + 1) + 2*(x + 1)",
+   "expected_latex": "x \\left(x + 1\\right) + 2 \\left(x + 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-033"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x*(x + 1) + 2*(x + 1)"
+   ],
+   "expected": "x*(x + 1) + 2*x + 2",
+   "expected_latex": "x \\left(x + 1\\right) + 2 x + 2",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes 2*(x + 1) but not x*(x + 1).",
+   "id": "forms-034"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "x*(x + 1) + 2*(x + 1)"
+   ],
+   "expected": "(x + 1)*(x + 2)",
+   "expected_latex": "\\left(x + 1\\right) \\left(x + 2\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-035"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "-(x - 2)*(x + 3)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(2 - x)*(x + 3)",
+   "expected_latex": "\\left(2 - x\\right) \\left(x + 3\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Even unevaluated, the leading minus is folded into the first sum: (2 - x)*(x + 3).",
+   "id": "forms-036"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "-(x - 2)*(x + 3)"
+   ],
+   "expected": "(2 - x)*(x + 3)",
+   "expected_latex": "\\left(2 - x\\right) \\left(x + 3\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation folds the leading minus into the first factor: (2 - x)*(x + 3).",
+   "id": "forms-037"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "-(x - 2)*(x + 3)"
+   ],
+   "expected": "-(x - 2)*(x + 3)",
+   "expected_latex": "- \\left(x - 2\\right) \\left(x + 3\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "factor moves the sign of the evaluated (2 - x)*(x + 3) back out in front.",
+   "id": "forms-038"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**3 - 8"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x**3 - 1*8",
+   "expected_latex": "x^{3} - 8",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-039"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**3 - 8"
+   ],
+   "expected": "x**3 - 8",
+   "expected_latex": "x^{3} - 8",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-040"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "x**3 - 8"
+   ],
+   "expected": "(x - 2)*(x**2 + 2*x + 4)",
+   "expected_latex": "\\left(x - 2\\right) \\left(x^{2} + 2 x + 4\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-041"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x - 2)*(x**2 + 2*x + 4)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x - 1*2)*(x**2 + 2*x + 4)",
+   "expected_latex": "\\left(x - 2\\right) \\left(x^{2} + 2 x + 4\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-042"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x - 2)*(x**2 + 2*x + 4)"
+   ],
+   "expected": "(x - 2)*(x**2 + 2*x + 4)",
+   "expected_latex": "\\left(x - 2\\right) \\left(x^{2} + 2 x + 4\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-043"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "(x - 2)*(x**2 + 2*x + 4)"
+   ],
+   "expected": "(x - 2)*(x**2 + 2*x + 4)",
+   "expected_latex": "\\left(x - 2\\right) \\left(x^{2} + 2 x + 4\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-044"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x**2 - 4)*(x**2 + 4)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x**2 + 4)*(x**2 - 1*4)",
+   "expected_latex": "\\left(x^{2} + 4\\right) \\left(x^{2} - 4\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-045"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x**2 - 4)*(x**2 + 4)"
+   ],
+   "expected": "(x**2 - 4)*(x**2 + 4)",
+   "expected_latex": "\\left(x^{2} - 4\\right) \\left(x^{2} + 4\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-046"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "(x**2 - 4)*(x**2 + 4)"
+   ],
+   "expected": "(x - 2)*(x + 2)*(x**2 + 4)",
+   "expected_latex": "\\left(x - 2\\right) \\left(x + 2\\right) \\left(x^{2} + 4\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-047"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2 + 2*x*y + y**2"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x**2 + 2*x*y + y**2",
+   "expected_latex": "x^{2} + 2 x y + y^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-048"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2 + 2*x*y + y**2"
+   ],
+   "expected": "x**2 + 2*x*y + y**2",
+   "expected_latex": "x^{2} + 2 x y + y^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-049"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "x**2 + 2*x*y + y**2"
+   ],
+   "expected": "(x + y)**2",
+   "expected_latex": "\\left(x + y\\right)^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-050"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 2)/2"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x + 2)/2",
+   "expected_latex": "\\frac{x + 2}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-051"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 2)/2"
+   ],
+   "expected": "x/2 + 1",
+   "expected_latex": "\\frac{x}{2} + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes 1/2 over the sum: x/2 + 1.",
+   "id": "forms-052"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "(x + 2)/2"
+   ],
+   "expected": "(x + 2)/2",
+   "expected_latex": "\\frac{x + 2}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "factor pulls the rational content 1/2 back out of the evaluated x/2 + 1.",
+   "id": "forms-053"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3*x**2*y"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "3*x**2*y",
+   "expected_latex": "3 x^{2} y",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-054"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3*x**2*y"
+   ],
+   "expected": "3*x**2*y",
+   "expected_latex": "3 x^{2} y",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-055"
+  },
+  {
+   "op": "factor",
+   "args": [
+    "3*x**2*y"
+   ],
+   "expected": "3*x**2*y",
+   "expected_latex": "3 x^{2} y",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-056"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2 + 2*x + 1"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x**2 + 2*x + 1",
+   "expected_latex": "x^{2} + 2 x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-057"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2 + 2*x + 1"
+   ],
+   "expected": "x**2 + 2*x + 1",
+   "expected_latex": "x^{2} + 2 x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-058"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "x**2 + 2*x + 1"
+   ],
+   "expected": "x**2 + 2*x + 1",
+   "expected_latex": "x^{2} + 2 x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-059"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "(x + 1)**2"
+   ],
+   "expected": "x**2 + 2*x + 1",
+   "expected_latex": "x^{2} + 2 x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-060"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 1)*(x - 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x + 1)*(x - 1*1)",
+   "expected_latex": "\\left(x + 1\\right) \\left(x - 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-061"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 1)*(x - 1)"
+   ],
+   "expected": "(x - 1)*(x + 1)",
+   "expected_latex": "\\left(x - 1\\right) \\left(x + 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-062"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "(x + 1)*(x - 1)"
+   ],
+   "expected": "x**2 - 1",
+   "expected_latex": "x^{2} - 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-063"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2*(x + 3)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "2*(x + 3)",
+   "expected_latex": "2 \\left(x + 3\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated, the number is not distributed over the sum.",
+   "id": "forms-064"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2*(x + 3)"
+   ],
+   "expected": "2*x + 6",
+   "expected_latex": "2 x + 6",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes a number over a sum.",
+   "id": "forms-065"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "2*(x + 3)"
+   ],
+   "expected": "2*x + 6",
+   "expected_latex": "2 x + 6",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-066"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x*y + x*z"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x*y + x*z",
+   "expected_latex": "x y + x z",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-067"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x*y + x*z"
+   ],
+   "expected": "x*y + x*z",
+   "expected_latex": "x y + x z",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-068"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "x*y + x*z"
+   ],
+   "expected": "x*y + x*z",
+   "expected_latex": "x y + x z",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-069"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3*x**2 - 4*x*y + y**2"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "3*x**2 - 4*x*y + y**2",
+   "expected_latex": "3 x^{2} - 4 x y + y^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-070"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3*x**2 - 4*x*y + y**2"
+   ],
+   "expected": "3*x**2 - 4*x*y + y**2",
+   "expected_latex": "3 x^{2} - 4 x y + y^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-071"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "3*x**2 - 4*x*y + y**2"
+   ],
+   "expected": "3*x**2 - 4*x*y + y**2",
+   "expected_latex": "3 x^{2} - 4 x y + y^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-072"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2 + x + x + 1"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x**2 + x + x + 1",
+   "expected_latex": "x^{2} + x + x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated, the repeated x terms stay separate.",
+   "id": "forms-073"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2 + x + x + 1"
+   ],
+   "expected": "x**2 + 2*x + 1",
+   "expected_latex": "x^{2} + 2 x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation combines the repeated x terms.",
+   "id": "forms-074"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "x**2 + x + x + 1"
+   ],
+   "expected": "x**2 + 2*x + 1",
+   "expected_latex": "x^{2} + 2 x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-075"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(2*x)**2 + 4*x + 1"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "4*x + (2*x)**2 + 1",
+   "expected_latex": "4 x + \\left(2 x\\right)^{2} + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated, (2*x)**2 stays a power of a product.",
+   "id": "forms-076"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(2*x)**2 + 4*x + 1"
+   ],
+   "expected": "4*x**2 + 4*x + 1",
+   "expected_latex": "4 x^{2} + 4 x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation turns (2*x)**2 into 4*x**2.",
+   "id": "forms-077"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "(2*x)**2 + 4*x + 1"
+   ],
+   "expected": "4*x**2 + 4*x + 1",
+   "expected_latex": "4 x^{2} + 4 x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-078"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "-2*(x - 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "-2*(x - 1*1)",
+   "expected_latex": "- 2 \\left(x - 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated, -2 stays one Integer(-2) factor: Mul(-2, x - 1). srepr() still prints Mul(Integer(-1), Integer(2), ...) because it lists as_ordered_factors().",
+   "id": "forms-079"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "-2*(x - 1)"
+   ],
+   "expected": "2 - 2*x",
+   "expected_latex": "2 - 2 x",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes -2 over the sum: 2 - 2*x.",
+   "id": "forms-080"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "-2*(x - 1)"
+   ],
+   "expected": "2 - 2*x",
+   "expected_latex": "2 - 2 x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-081"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 1)**2 - 2*x"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "-2*x + (x + 1)**2",
+   "expected_latex": "- 2 x + \\left(x + 1\\right)^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-082"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 1)**2 - 2*x"
+   ],
+   "expected": "-2*x + (x + 1)**2",
+   "expected_latex": "- 2 x + \\left(x + 1\\right)^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-083"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "(x + 1)**2 - 2*x"
+   ],
+   "expected": "x**2 + 1",
+   "expected_latex": "x^{2} + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The 2*x cancels against the expanded square.",
+   "id": "forms-084"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 1)/2"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x + 1)/2",
+   "expected_latex": "\\frac{x + 1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-085"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 1)/2"
+   ],
+   "expected": "x/2 + 1/2",
+   "expected_latex": "\\frac{x}{2} + \\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes 1/2 over the sum: x/2 + 1/2.",
+   "id": "forms-086"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "(x + 1)/2"
+   ],
+   "expected": "x/2 + 1/2",
+   "expected_latex": "\\frac{x}{2} + \\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-087"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x/2 + 1/2"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x/2 + 1/2",
+   "expected_latex": "\\frac{x}{2} + 1 \\cdot \\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-088"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x/2 + 1/2"
+   ],
+   "expected": "x/2 + 1/2",
+   "expected_latex": "\\frac{x}{2} + \\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-089"
+  },
+  {
+   "op": "expand",
+   "args": [
+    "x/2 + 1/2"
+   ],
+   "expected": "x/2 + 1/2",
+   "expected_latex": "\\frac{x}{2} + \\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-090"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 1)/(x - 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x + 1)/(x - 1*1)",
+   "expected_latex": "\\frac{x + 1}{x - 1}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-091"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "(x + 1)/(x - 1)"
+   ],
+   "expected": "(x + 1, x - 1)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-092"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "x + 1",
+    "x - 1"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-093"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x**2 - 1)/(x - 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x**2 - 1*1)/(x - 1*1)",
+   "expected_latex": "\\frac{x^{2} - 1}{x - 1}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-094"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "(x**2 - 1)/(x - 1)"
+   ],
+   "expected": "(x**2 - 1, x - 1)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation does not cancel a common polynomial factor.",
+   "id": "forms-095"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "x**2 - 1",
+    "x - 1"
+   ],
+   "expected": "x - 1",
+   "expected_latex": "x - 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-096"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x**2 + 5*x + 6)/(x**2 + x - 6)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x**2 + 5*x + 6)/(x**2 + x - 1*6)",
+   "expected_latex": "\\frac{x^{2} + 5 x + 6}{x^{2} + x - 6}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-097"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "(x**2 + 5*x + 6)/(x**2 + x - 6)"
+   ],
+   "expected": "(x**2 + 5*x + 6, x**2 + x - 6)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-098"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "x**2 + 5*x + 6",
+    "x**2 + x - 6"
+   ],
+   "expected": "x + 3",
+   "expected_latex": "x + 3",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-099"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 2)/(x - 2)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x + 2)/(x - 1*2)",
+   "expected_latex": "\\frac{x + 2}{x - 2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-100"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "(x + 2)/(x - 2)"
+   ],
+   "expected": "(x + 2, x - 2)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-101"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "x + 2",
+    "x - 2"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-102"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(2*x + 4)/6"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(2*x + 4)/6",
+   "expected_latex": "\\frac{2 x + 4}{6}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-103"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "(2*x + 4)/6"
+   ],
+   "expected": "(x/3 + 2/3, 1)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes 1/6 over the sum (x/3 + 2/3). fraction() does not look inside a sum, so the denominator is 1.",
+   "id": "forms-104"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 2)/3"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x + 2)/3",
+   "expected_latex": "\\frac{x + 2}{3}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-105"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "(x + 2)/3"
+   ],
+   "expected": "(x/3 + 2/3, 1)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes 1/3 over the sum (x/3 + 2/3). fraction() does not look inside a sum, so the denominator is 1.",
+   "id": "forms-106"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "6/8"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "6/8",
+   "expected_latex": "\\frac{6}{8}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated, an integer quotient stays Mul(6, Pow(8, -1)).",
+   "id": "forms-107"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "6/8"
+   ],
+   "expected": "(3, 4)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation reduces the integer quotient to 3/4.",
+   "id": "forms-108"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "3",
+    "4"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-109"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(1/x)/(1 + 1/x)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "1/(x*(1 + 1/x))",
+   "expected_latex": "1 \\frac{1}{x} \\frac{1}{1 + 1 \\frac{1}{x}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A nested fraction, read without evaluation.",
+   "id": "forms-110"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "(1/x)/(1 + 1/x)"
+   ],
+   "expected": "(1, x*(1 + 1/x))",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "fraction() does not clear the 1/x nested in the denominator.",
+   "id": "forms-111"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "1",
+    "x*(1 + 1/x)"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-112"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x/(x**2 + x)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x/(x**2 + x)",
+   "expected_latex": "\\frac{x}{x^{2} + x}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-113"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "x/(x**2 + x)"
+   ],
+   "expected": "(x, x**2 + x)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-114"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "x",
+    "x**2 + x"
+   ],
+   "expected": "x",
+   "expected_latex": "x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-115"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x - 1)/(1 - x)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x - 1*1)/(1 - x)",
+   "expected_latex": "\\frac{x - 1}{1 - x}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-116"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "(x - 1)/(1 - x)"
+   ],
+   "expected": "(x - 1, 1 - x)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Numerator and denominator differ only in sign.",
+   "id": "forms-117"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "x - 1",
+    "1 - x"
+   ],
+   "expected": "x - 1",
+   "expected_latex": "x - 1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "gcd of a polynomial and its negative.",
+   "id": "forms-118"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x**2 + 1)/(x + 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x**2 + 1)/(x + 1)",
+   "expected_latex": "\\frac{x^{2} + 1}{x + 1}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-119"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "(x**2 + 1)/(x + 1)"
+   ],
+   "expected": "(x**2 + 1, x + 1)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-120"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "x**2 + 1",
+    "x + 1"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-121"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x**2/x"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x**2/x",
+   "expected_latex": "\\frac{x^{2}}{x}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated, both powers of x stay.",
+   "id": "forms-122"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "x**2/x"
+   ],
+   "expected": "(x, 1)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation cancels x**2/x to x before fraction() sees it.",
+   "id": "forms-123"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x + 1"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "x + 1",
+   "expected_latex": "x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-124"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "x + 1"
+   ],
+   "expected": "(x + 1, 1)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-125"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1/x + 1/y"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "1/y + 1/x",
+   "expected_latex": "1 \\frac{1}{y} + 1 \\frac{1}{x}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-126"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "1/x + 1/y"
+   ],
+   "expected": "(1/y + 1/x, 1)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "fraction() does not combine a sum of fractions.",
+   "id": "forms-127"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(2*x + 1)/(4*x + 2)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(2*x + 1)/(4*x + 2)",
+   "expected_latex": "\\frac{2 x + 1}{4 x + 2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-128"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "(2*x + 1)/(4*x + 2)"
+   ],
+   "expected": "(2*x + 1, 4*x + 2)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-129"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "2*x + 1",
+    "4*x + 2"
+   ],
+   "expected": "2*x + 1",
+   "expected_latex": "2 x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The denominator is 2 times the numerator.",
+   "id": "forms-130"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(x + 1)/(2*(x - 1))"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(x + 1)/((2*(x - 1*1)))",
+   "expected_latex": "\\frac{x + 1}{2 \\left(x - 1\\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "str() of this unevaluated quotient prints doubled parentheses.",
+   "id": "forms-131"
+  },
+  {
+   "op": "fraction",
+   "args": [
+    "(x + 1)/(2*(x - 1))"
+   ],
+   "expected": "(x + 1, 2*x - 2)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes the 2 inside the denominator.",
+   "id": "forms-132"
+  },
+  {
+   "op": "gcd",
+   "args": [
+    "x + 1",
+    "2*x - 2"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-133"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, 2*x + 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y, 2*x + 1)",
+   "expected_latex": "y = 2 x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-134"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, 2*x + 1)"
+   ],
+   "expected": "Eq(y, 2*x + 1)",
+   "expected_latex": "y = 2 x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-135"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, x)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y, x)",
+   "expected_latex": "y = x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-136"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, x)"
+   ],
+   "expected": "Eq(y, x)",
+   "expected_latex": "y = x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-137"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, -x)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y, -x)",
+   "expected_latex": "y = - x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-138"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, -x)"
+   ],
+   "expected": "Eq(y, -x)",
+   "expected_latex": "y = - x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-139"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, 5)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y, 5)",
+   "expected_latex": "y = 5",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-140"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, 5)"
+   ],
+   "expected": "Eq(y, 5)",
+   "expected_latex": "y = 5",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-141"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, 3 - 2*x)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y, 3 - 2*x)",
+   "expected_latex": "y = 3 - 2 x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-142"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, 3 - 2*x)"
+   ],
+   "expected": "Eq(y, 3 - 2*x)",
+   "expected_latex": "y = 3 - 2 x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-143"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(2*x + 1, y)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(2*x + 1, y)",
+   "expected_latex": "2 x + 1 = y",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-144"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(2*x + 1, y)"
+   ],
+   "expected": "Eq(2*x + 1, y)",
+   "expected_latex": "2 x + 1 = y",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-145"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, x/2 + 3)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y, x/2 + 3)",
+   "expected_latex": "y = \\frac{x}{2} + 3",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-146"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, x/2 + 3)"
+   ],
+   "expected": "Eq(y, x/2 + 3)",
+   "expected_latex": "y = \\frac{x}{2} + 3",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-147"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, 0.5*x + 2)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y, 0.5*x + 2)",
+   "expected_latex": "y = 0.5 x + 2",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A typed decimal is a Float even unevaluated.",
+   "id": "forms-148"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, 0.5*x + 2)"
+   ],
+   "expected": "Eq(y, 0.5*x + 2)",
+   "expected_latex": "y = 0.5 x + 2",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A typed decimal slope stays a Float.",
+   "id": "forms-149"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, sqrt(2)*x + 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y, sqrt(2)*x + 1)",
+   "expected_latex": "y = \\sqrt{2} x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-150"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, sqrt(2)*x + 1)"
+   ],
+   "expected": "Eq(y, sqrt(2)*x + 1)",
+   "expected_latex": "y = \\sqrt{2} x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-151"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(2*y, 4*x + 2)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(2*y, 4*x + 2)",
+   "expected_latex": "2 y = 4 x + 2",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-152"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(2*y, 4*x + 2)"
+   ],
+   "expected": "Eq(2*y, 4*x + 2)",
+   "expected_latex": "2 y = 4 x + 2",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-153"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y - 1, 2*(x - 3))"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y - 1*1, 2*(x - 1*3))",
+   "expected_latex": "y - 1 = 2 \\left(x - 3\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated subtraction on both sides prints as - 1*1 and - 1*3.",
+   "id": "forms-154"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y - 1, 2*(x - 3))"
+   ],
+   "expected": "Eq(y - 1, 2*x - 6)",
+   "expected_latex": "y - 1 = 2 x - 6",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes the 2 on the right side.",
+   "id": "forms-155"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(2*x - y + 1, 0)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(2*x - y + 1, 0)",
+   "expected_latex": "2 x - y + 1 = 0",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-156"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(2*x - y + 1, 0)"
+   ],
+   "expected": "Eq(2*x - y + 1, 0)",
+   "expected_latex": "2 x - y + 1 = 0",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-157"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, 2*(x + 1))"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y, 2*(x + 1))",
+   "expected_latex": "y = 2 \\left(x + 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-158"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, 2*(x + 1))"
+   ],
+   "expected": "Eq(y, 2*x + 2)",
+   "expected_latex": "y = 2 x + 2",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes the 2 over x + 1.",
+   "id": "forms-159"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, 2*x + 3*x - 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y, 2*x + 3*x - 1*1)",
+   "expected_latex": "y = 2 x + 3 x - 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-160"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, 2*x + 3*x - 1)"
+   ],
+   "expected": "Eq(y, 5*x - 1)",
+   "expected_latex": "y = 5 x - 1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation combines the like x terms.",
+   "id": "forms-161"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, (4*x + 2)/2)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y, (4*x + 2)/2)",
+   "expected_latex": "y = \\frac{4 x + 2}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-162"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, (4*x + 2)/2)"
+   ],
+   "expected": "Eq(y, 2*x + 1)",
+   "expected_latex": "y = 2 x + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes 1/2 over the sum.",
+   "id": "forms-163"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, x**2 + 1)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(y, x**2 + 1)",
+   "expected_latex": "y = x^{2} + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-164"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(y, x**2 + 1)"
+   ],
+   "expected": "Eq(y, x**2 + 1)",
+   "expected_latex": "y = x^{2} + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-165"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(x, 3)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "Eq(x, 3)",
+   "expected_latex": "x = 3",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-166"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "Eq(x, 3)"
+   ],
+   "expected": "Eq(x, 3)",
+   "expected_latex": "x = 3",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-167"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(8)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "sqrt(8)",
+   "expected_latex": "\\sqrt{8}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-168"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(8)"
+   ],
+   "expected": "2*sqrt(2)",
+   "expected_latex": "2 \\sqrt{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation pulls the square factor 4 out of the radical.",
+   "id": "forms-169"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2*sqrt(2)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "2*sqrt(2)",
+   "expected_latex": "2 \\sqrt{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-170"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2*sqrt(2)"
+   ],
+   "expected": "2*sqrt(2)",
+   "expected_latex": "2 \\sqrt{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-171"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(4)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "sqrt(4)",
+   "expected_latex": "\\sqrt{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-172"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(4)"
+   ],
+   "expected": "2",
+   "expected_latex": "2",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation takes the root of a perfect square.",
+   "id": "forms-173"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(7)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "sqrt(7)",
+   "expected_latex": "\\sqrt{7}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-174"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(7)"
+   ],
+   "expected": "sqrt(7)",
+   "expected_latex": "\\sqrt{7}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-175"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1/sqrt(2)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "1/sqrt(2)",
+   "expected_latex": "1 \\frac{1}{\\sqrt{2}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated, the radical stays in the denominator as Mul(1, Pow(sqrt(2), -1)).",
+   "id": "forms-176"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1/sqrt(2)"
+   ],
+   "expected": "sqrt(2)/2",
+   "expected_latex": "\\frac{\\sqrt{2}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation moves a numeric square root out of the denominator.",
+   "id": "forms-177"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(2)/2"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "sqrt(2)/2",
+   "expected_latex": "\\frac{\\sqrt{2}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-178"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(2)/2"
+   ],
+   "expected": "sqrt(2)/2",
+   "expected_latex": "\\frac{\\sqrt{2}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-179"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(1/2)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "sqrt(1/2)",
+   "expected_latex": "\\sqrt{1 \\cdot \\frac{1}{2}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated, the fraction stays under the radical.",
+   "id": "forms-180"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(1/2)"
+   ],
+   "expected": "sqrt(2)/2",
+   "expected_latex": "\\frac{\\sqrt{2}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation takes the fraction out from under the radical.",
+   "id": "forms-181"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3*sqrt(2)/2"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "3*sqrt(2)/2",
+   "expected_latex": "\\frac{3 \\sqrt{2}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-182"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3*sqrt(2)/2"
+   ],
+   "expected": "3*sqrt(2)/2",
+   "expected_latex": "\\frac{3 \\sqrt{2}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-183"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(3/4)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "sqrt(3/4)",
+   "expected_latex": "\\sqrt{\\frac{3}{4}}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-184"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(3/4)"
+   ],
+   "expected": "sqrt(3)/2",
+   "expected_latex": "\\frac{\\sqrt{3}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation takes the fraction out from under the radical.",
+   "id": "forms-185"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(3)/2"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "sqrt(3)/2",
+   "expected_latex": "\\frac{\\sqrt{3}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-186"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(3)/2"
+   ],
+   "expected": "sqrt(3)/2",
+   "expected_latex": "\\frac{\\sqrt{3}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-187"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(50)/5"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "sqrt(50)/5",
+   "expected_latex": "\\frac{\\sqrt{50}}{5}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-188"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(50)/5"
+   ],
+   "expected": "sqrt(2)",
+   "expected_latex": "\\sqrt{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation pulls 5 out of sqrt(50), which cancels the 5 below.",
+   "id": "forms-189"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2/(1 + sqrt(3))"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "2/(1 + sqrt(3))",
+   "expected_latex": "\\frac{2}{1 + \\sqrt{3}}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-190"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2/(1 + sqrt(3))"
+   ],
+   "expected": "2/(1 + sqrt(3))",
+   "expected_latex": "\\frac{2}{1 + \\sqrt{3}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation leaves a binomial radical denominator alone.",
+   "id": "forms-191"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(3) - 1"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "-1*1 + sqrt(3)",
+   "expected_latex": "\\left(-1\\right) 1 + \\sqrt{3}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated subtraction of 1 is Mul(-1, 1), printed -1*1.",
+   "id": "forms-192"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(3) - 1"
+   ],
+   "expected": "-1 + sqrt(3)",
+   "expected_latex": "-1 + \\sqrt{3}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-193"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(1 + sqrt(2))/2"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "(1 + sqrt(2))/2",
+   "expected_latex": "\\frac{1 + \\sqrt{2}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-194"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "(1 + sqrt(2))/2"
+   ],
+   "expected": "1/2 + sqrt(2)/2",
+   "expected_latex": "\\frac{1}{2} + \\frac{\\sqrt{2}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation distributes 1/2 over the sum.",
+   "id": "forms-195"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(x**3)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "sqrt(x**3)",
+   "expected_latex": "\\sqrt{x^{3}}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-196"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "sqrt(x**3)"
+   ],
+   "expected": "sqrt(x**3)",
+   "expected_latex": "\\sqrt{x^{3}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "With no assumptions on x, the radical is not split.",
+   "id": "forms-197"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x*sqrt(x)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "sqrt(x)*x",
+   "expected_latex": "\\sqrt{x} x",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated, x*sqrt(x) stays a product.",
+   "id": "forms-198"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "x*sqrt(x)"
+   ],
+   "expected": "x**(3/2)",
+   "expected_latex": "x^{\\frac{3}{2}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation merges the product into one power of x.",
+   "id": "forms-199"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "16**(1/3)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "16**(1/3)",
+   "expected_latex": "16^{1 \\cdot \\frac{1}{3}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unevaluated, the exponent 1/3 is Mul(1, Pow(3, -1)), not Rational(1, 3).",
+   "id": "forms-200"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "16**(1/3)"
+   ],
+   "expected": "2*2**(1/3)",
+   "expected_latex": "2 \\sqrt[3]{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Evaluation pulls the cube factor 8 out of a cube root.",
+   "id": "forms-201"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2*2**(1/3)"
+   ],
+   "options": {
+    "evaluate": false
+   },
+   "expected": "2*2**(1/3)",
+   "expected_latex": "2 \\cdot 2^{1 \\cdot \\frac{1}{3}}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-202"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2*2**(1/3)"
+   ],
+   "expected": "2*2**(1/3)",
+   "expected_latex": "2 \\sqrt[3]{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "forms-203"
+  }
+ ]
+}

@@ -1,0 +1,509 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "calculus",
+ "cases": [
+  {
+   "op": "diff",
+   "args": [
+    "x**3 - 2*x",
+    "x"
+   ],
+   "expected": "3*x**2 - 2",
+   "expected_latex": "3 x^{2} - 2",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-000"
+  },
+  {
+   "op": "diff",
+   "args": [
+    "sin(x)*cos(x)",
+    "x"
+   ],
+   "expected": "-sin(x)**2 + cos(x)**2",
+   "expected_latex": "- \\sin^{2}{\\left(x \\right)} + \\cos^{2}{\\left(x \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-001"
+  },
+  {
+   "op": "diff",
+   "args": [
+    "exp(x**2)",
+    "x"
+   ],
+   "expected": "2*x*exp(x**2)",
+   "expected_latex": "2 x e^{x^{2}}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-002"
+  },
+  {
+   "op": "diff",
+   "args": [
+    "log(x**2 + 1)",
+    "x"
+   ],
+   "expected": "2*x/(x**2 + 1)",
+   "expected_latex": "\\frac{2 x}{x^{2} + 1}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-003"
+  },
+  {
+   "op": "diff",
+   "args": [
+    "x/(x + 1)",
+    "x"
+   ],
+   "expected": "-x/(x + 1)**2 + 1/(x + 1)",
+   "expected_latex": "- \\frac{x}{\\left(x + 1\\right)^{2}} + \\frac{1}{x + 1}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-004"
+  },
+  {
+   "op": "diff",
+   "args": [
+    "tan(x)",
+    "x"
+   ],
+   "expected": "tan(x)**2 + 1",
+   "expected_latex": "\\tan^{2}{\\left(x \\right)} + 1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-005"
+  },
+  {
+   "op": "diff",
+   "args": [
+    "sqrt(1 - x**2)",
+    "x"
+   ],
+   "expected": "-x/sqrt(1 - x**2)",
+   "expected_latex": "- \\frac{x}{\\sqrt{1 - x^{2}}}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-006"
+  },
+  {
+   "op": "diff",
+   "args": [
+    "x**x",
+    "x"
+   ],
+   "expected": "x**x*(log(x) + 1)",
+   "expected_latex": "x^{x} \\left(\\log{\\left(x \\right)} + 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-007"
+  },
+  {
+   "op": "diff",
+   "args": [
+    "asin(x)",
+    "x"
+   ],
+   "expected": "1/sqrt(1 - x**2)",
+   "expected_latex": "\\frac{1}{\\sqrt{1 - x^{2}}}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-008"
+  },
+  {
+   "op": "diff",
+   "args": [
+    "sin(x)**2",
+    "x",
+    "2"
+   ],
+   "expected": "2*(-sin(x)**2 + cos(x)**2)",
+   "expected_latex": "2 \\left(- \\sin^{2}{\\left(x \\right)} + \\cos^{2}{\\left(x \\right)}\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-009"
+  },
+  {
+   "op": "limit",
+   "args": [
+    "sin(x)/x",
+    "x",
+    "0",
+    "+-"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-010"
+  },
+  {
+   "op": "limit",
+   "args": [
+    "(1 + 1/x)**x",
+    "x",
+    "oo",
+    "-"
+   ],
+   "expected": "E",
+   "expected_latex": "e",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-011"
+  },
+  {
+   "op": "limit",
+   "args": [
+    "(x**2 - 1)/(x - 1)",
+    "x",
+    "1",
+    "+-"
+   ],
+   "expected": "2",
+   "expected_latex": "2",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-012"
+  },
+  {
+   "op": "limit",
+   "args": [
+    "1/x",
+    "x",
+    "0",
+    "+"
+   ],
+   "expected": "oo",
+   "expected_latex": "\\infty",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-013"
+  },
+  {
+   "op": "limit",
+   "args": [
+    "1/x",
+    "x",
+    "0",
+    "-"
+   ],
+   "expected": "-oo",
+   "expected_latex": "-\\infty",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-014"
+  },
+  {
+   "op": "limit",
+   "args": [
+    "(3*x**2 + 1)/(x**2 - 5)",
+    "x",
+    "oo",
+    "-"
+   ],
+   "expected": "3",
+   "expected_latex": "3",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-015"
+  },
+  {
+   "op": "limit",
+   "args": [
+    "(1 - cos(x))/x**2",
+    "x",
+    "0",
+    "+-"
+   ],
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-016"
+  },
+  {
+   "op": "limit",
+   "args": [
+    "x*log(x)",
+    "x",
+    "0",
+    "+"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-017"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "x**2 + 3*x",
+    "x"
+   ],
+   "expected": "x**3/3 + 3*x**2/2",
+   "expected_latex": "\\frac{x^{3}}{3} + \\frac{3 x^{2}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-018"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "1/x",
+    "x"
+   ],
+   "expected": "log(x)",
+   "expected_latex": "\\log{\\left(x \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-019"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "sin(x)*cos(x)",
+    "x"
+   ],
+   "expected": "sin(x)**2/2",
+   "expected_latex": "\\frac{\\sin^{2}{\\left(x \\right)}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-020"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "x*exp(x)",
+    "x"
+   ],
+   "expected": "(x - 1)*exp(x)",
+   "expected_latex": "\\left(x - 1\\right) e^{x}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-021"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "x*sin(x)",
+    "x"
+   ],
+   "expected": "-x*cos(x) + sin(x)",
+   "expected_latex": "- x \\cos{\\left(x \\right)} + \\sin{\\left(x \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-022"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "1/(x**2 - 1)",
+    "x"
+   ],
+   "expected": "log(x - 1)/2 - log(x + 1)/2",
+   "expected_latex": "\\frac{\\log{\\left(x - 1 \\right)}}{2} - \\frac{\\log{\\left(x + 1 \\right)}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-023"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "1/(x**2 + 1)",
+    "x"
+   ],
+   "expected": "atan(x)",
+   "expected_latex": "\\operatorname{atan}{\\left(x \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-024"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "2*x*cos(x**2)",
+    "x"
+   ],
+   "expected": "sin(x**2)",
+   "expected_latex": "\\sin{\\left(x^{2} \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-025"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "log(x)",
+    "x"
+   ],
+   "expected": "x*log(x) - x",
+   "expected_latex": "x \\log{\\left(x \\right)} - x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-026"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "cos(x)**(-2)",
+    "x"
+   ],
+   "expected": "sin(x)/cos(x)",
+   "expected_latex": "\\frac{\\sin{\\left(x \\right)}}{\\cos{\\left(x \\right)}}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-027"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "x**2",
+    "x",
+    "0",
+    "3"
+   ],
+   "expected": "9",
+   "expected_latex": "9",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-028"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "sin(x)",
+    "x",
+    "0",
+    "pi"
+   ],
+   "expected": "2",
+   "expected_latex": "2",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-029"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "exp(-x)",
+    "x",
+    "0",
+    "oo"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-030"
+  },
+  {
+   "op": "integrate",
+   "args": [
+    "x**(-2)",
+    "x",
+    "1",
+    "oo"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-031"
+  },
+  {
+   "op": "series",
+   "args": [
+    "exp(x)",
+    "x",
+    "0",
+    "6"
+   ],
+   "expected": "1 + x + x**2/2 + x**3/6 + x**4/24 + x**5/120 + O(x**6)",
+   "expected_latex": "1 + x + \\frac{x^{2}}{2} + \\frac{x^{3}}{6} + \\frac{x^{4}}{24} + \\frac{x^{5}}{120} + O\\left(x^{6}\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-032"
+  },
+  {
+   "op": "series",
+   "args": [
+    "sin(x)",
+    "x",
+    "0",
+    "6"
+   ],
+   "expected": "x - x**3/6 + x**5/120 + O(x**6)",
+   "expected_latex": "x - \\frac{x^{3}}{6} + \\frac{x^{5}}{120} + O\\left(x^{6}\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-033"
+  },
+  {
+   "op": "series",
+   "args": [
+    "log(x + 1)",
+    "x",
+    "0",
+    "6"
+   ],
+   "expected": "x - x**2/2 + x**3/3 - x**4/4 + x**5/5 + O(x**6)",
+   "expected_latex": "x - \\frac{x^{2}}{2} + \\frac{x^{3}}{3} - \\frac{x^{4}}{4} + \\frac{x^{5}}{5} + O\\left(x^{6}\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-034"
+  },
+  {
+   "op": "series",
+   "args": [
+    "1/(1 - x)",
+    "x",
+    "0",
+    "6"
+   ],
+   "expected": "1 + x + x**2 + x**3 + x**4 + x**5 + O(x**6)",
+   "expected_latex": "1 + x + x^{2} + x^{3} + x^{4} + x^{5} + O\\left(x^{6}\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-035"
+  },
+  {
+   "op": "summation",
+   "args": [
+    "n**2",
+    "n",
+    "1",
+    "10"
+   ],
+   "assumptions": {
+    "n": {
+     "integer": true
+    }
+   },
+   "expected": "385",
+   "expected_latex": "385",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-036"
+  },
+  {
+   "op": "summation",
+   "args": [
+    "(1/2)**n",
+    "n",
+    "0",
+    "oo"
+   ],
+   "assumptions": {
+    "n": {
+     "integer": true
+    }
+   },
+   "expected": "2",
+   "expected_latex": "2",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "calculus-037"
+  }
+ ]
+}

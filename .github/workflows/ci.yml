@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  # SymPy's output can depend on hash order and on its ground types; pin both
+  # so the regenerated cases are byte-identical to the committed ones.
+  PYTHONHASHSEED: "0"
+  SYMPY_GROUND_TYPES: python
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo test --workspace -- --nocapture
+
+  # Regenerates the golden cases and fails if they differ from what is
+  # committed, so nobody hand-edits the answer key.
+  oracle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install -r oracle/requirements.txt
+      - run: python oracle/gen_cases.py
+      - run: git diff --exit-code oracle/cases
+      # A case whose answer depends on hash order can't be copied 1:1; catch
+      # it here (and classify it `unstable`) instead of in a flaky port.
+      - run: python oracle/gen_cases.py
+        env:
+          PYTHONHASHSEED: "1"
+      - run: git diff --exit-code oracle/cases

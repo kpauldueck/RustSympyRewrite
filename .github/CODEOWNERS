@@ -1,0 +1,5 @@
+# Changes to the answer key and its escape hatches need the owner.
+# (Enforced once branch protection requires code-owner review.)
+/oracle/divergences.json @kpauldueck
+/oracle/baseline.json    @kpauldueck
+/oracle/requirements.txt @kpauldueck

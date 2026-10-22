@@ -1,0 +1,11 @@
+[package]
+name = "rsympy-num"
+description = "Exact numbers for rsympy: integers, rationals, modular integers, Python-compatible RNG"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true

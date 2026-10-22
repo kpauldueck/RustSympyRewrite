@@ -1,0 +1,1629 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "latex_parse",
+ "cases": [
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\Delta x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar knows \\delta but has no \\Delta.",
+   "id": "latex_parse-000"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{\\Delta y}{\\Delta x}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The unknown \\Delta sits inside a fraction.",
+   "id": "latex_parse-001"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\Delta x^{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\Delta command.",
+   "id": "latex_parse-002"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\Delta v_{x}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\Delta command.",
+   "id": "latex_parse-003"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "F\\Delta t = m\\Delta v"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The unknown \\Delta follows an implicit product, in an equation.",
+   "id": "latex_parse-004"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{dy}{dx}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "(derivative, x)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A bare Leibniz fraction returns the Python tuple ('derivative', x), not a SymPy object.",
+   "id": "latex_parse-005"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{d}{dx}x^{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Derivative(x**2, x)",
+   "expected_latex": "\\frac{d}{d x} x^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "d/dx in front of an expression builds an unevaluated Derivative.",
+   "id": "latex_parse-006"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{d^{2}y}{dx^{2}}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "Fails at the y after d^{2}: a power cannot be followed by a letter, so the input never reaches the fraction.",
+   "id": "latex_parse-007"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{d}{t}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "d/t",
+   "expected_latex": "\\frac{d}{t}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The denominator t does not start with d, so the numerator is the plain Symbol d and the result is the quotient d/t. Only a denominator of d followed by an implicit-product factor gives the ('derivative', factor) tuple, whatever the numerator.",
+   "id": "latex_parse-008"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\overline{AB}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "conjugate(A)*conjugate(B)",
+   "expected_latex": "\\overline{A} \\overline{B}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "\\overline is complex conjugation, applied to the product A*B.",
+   "id": "latex_parse-009"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "AB"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "A*B",
+   "expected_latex": "A B",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A run of capital letters is an implicit product of symbols.",
+   "id": "latex_parse-010"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "AB^{2} + BC^{2} = AC^{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Eq(A*B**2 + B*C**2, A*C**2)",
+   "expected_latex": "A B^{2} + B C^{2} = A C^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Each exponent binds to the last letter only, giving A*B**2.",
+   "id": "latex_parse-011"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{1}{2}bh"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "b*h/2",
+   "expected_latex": "\\frac{b h}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "An implicit product follows the fraction.",
+   "id": "latex_parse-012"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\angle ABC"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\angle command.",
+   "id": "latex_parse-013"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "m\\angle ABC = 90^{\\circ}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\angle command.",
+   "id": "latex_parse-014"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\triangle ABC"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\triangle command.",
+   "id": "latex_parse-015"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "AB \\cong CD"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\cong command.",
+   "id": "latex_parse-016"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "AB \\parallel CD"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\parallel command.",
+   "id": "latex_parse-017"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\vec{v}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\vec command.",
+   "id": "latex_parse-018"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\hat{i}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\hat command.",
+   "id": "latex_parse-019"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\mathbf{v}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\mathbf command.",
+   "id": "latex_parse-020"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\overrightarrow{AB}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\overrightarrow command.",
+   "id": "latex_parse-021"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "3\\hat{i} - 4\\hat{j}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The unknown \\hat follows a number, in a sum.",
+   "id": "latex_parse-022"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "30^{\\circ}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The grammar has no \\circ, so a braced degree mark does not parse.",
+   "id": "latex_parse-023"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "30^\\circ"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The unbraced degree mark does not parse either.",
+   "id": "latex_parse-024"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "30\\degree"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\degree command.",
+   "id": "latex_parse-025"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sin(30^{\\circ})"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The degree mark is inside a function's parentheses.",
+   "id": "latex_parse-026"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "(2x+10)^{\\circ}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The degree mark is on a parenthesised expression.",
+   "id": "latex_parse-027"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "f \\circ g"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "\\circ as function composition is not in the grammar either.",
+   "id": "latex_parse-028"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\mathrm{m/s}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The grammar has \\mathrm only in the fixed differential token \\mathrm{d}, so \\mathrm{m/s} matches no terminal.",
+   "id": "latex_parse-029"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "9.8\\,\\mathrm{m/s^2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The \\, spacing parses; the parse fails at \\mathrm{m/s^2}, which is not the token \\mathrm{d}.",
+   "id": "latex_parse-030"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "5\\text{ cm}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The grammar has \\text only in the fixed differential token \\text{d}, so \\text{ cm} matches no terminal.",
+   "id": "latex_parse-031"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\int x \\mathrm{d}x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Integral(x, x)",
+   "expected_latex": "\\int x\\, dx",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "\\mathrm{d} is the upright differential of an integral.",
+   "id": "latex_parse-032"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\lim_{x \\to 0} \\frac{\\sin x}{x}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Limit(sin(x)/x, x, 0, dir='+-')",
+   "expected_latex": "\\lim_{x \\to 0}\\left(\\frac{\\sin{\\left(x \\right)}}{x}\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A limit is built unevaluated, two-sided (dir='+-'), not computed.",
+   "id": "latex_parse-033"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "x\\in[0,1]"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\in command.",
+   "id": "latex_parse-034"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Matrix([[1, 2], [3, 4]])",
+   "expected_latex": "\\left[\\begin{matrix}1 & 2\\\\3 & 4\\end{matrix}\\right]",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A pmatrix environment becomes a Matrix.",
+   "id": "latex_parse-035"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "x_1"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "x_{1}",
+   "expected_latex": "x_{1}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "x_1 becomes one Symbol named x_{1}: the transformer always writes the subscript in braces, even when none were typed.",
+   "id": "latex_parse-036"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "v_{0x}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A braced subscript of a digit then a letter does not tokenize.",
+   "id": "latex_parse-037"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "F_{net}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "F_{net}",
+   "expected_latex": "F_{net}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A braced all-letter subscript is part of one Symbol's name.",
+   "id": "latex_parse-038"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "a_{c}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "a_{c}",
+   "expected_latex": "a_{c}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A braced one-letter subscript.",
+   "id": "latex_parse-039"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "x_{12}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A braced multi-digit subscript does not tokenize, though x_1 does.",
+   "id": "latex_parse-040"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "v_{0}t + \\frac{1}{2}at^{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "a*t**2/2 + t*v_{0}",
+   "expected_latex": "\\frac{a t^{2}}{2} + t v_{0}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Subscripted symbols take part in implicit products.",
+   "id": "latex_parse-041"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "v_x^{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "v_{x}**2",
+   "expected_latex": "v_{x}^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The exponent applies to the subscripted symbol.",
+   "id": "latex_parse-042"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "a_n"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "a_{n}",
+   "expected_latex": "a_{n}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-043"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "a_{n-1}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A subscript containing an operator does not tokenize.",
+   "id": "latex_parse-044"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "a_{n+1} = 2a_n"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A recurrence: the subscript with an operator fails first.",
+   "id": "latex_parse-045"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "400e^{\\ln(0.75)t}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "400*e**log(0.75*t)",
+   "expected_latex": "400 e^{\\log{\\left(0.75 t \\right)}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "e is the Symbol e, and the argument of \\ln(0.75) runs on over the following t.",
+   "id": "latex_parse-046"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\ln\\sqrt{x}^{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [log(x), log(sqrt(x))**2])",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings.",
+   "id": "latex_parse-047"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sin 2x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "sin(2*x)",
+   "expected_latex": "\\sin{\\left(2 x \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "An unparenthesised argument runs over the implicit product 2x.",
+   "id": "latex_parse-048"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\ln x^{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [log(x**2), log(x)**2])",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings.",
+   "id": "latex_parse-049"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sin x^{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [sin(x**2), sin(x)**2])",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings.",
+   "id": "latex_parse-050"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sin(x)^{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [sin(x**2), sin(x)**2])",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Ambiguous even with parentheses: both readings come back in a Tree('_ambig').",
+   "id": "latex_parse-051"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\ln x + \\ln y"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [log(x + log(y)), log(x) + log(y)])",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings. One reading is log(x + log(y)).",
+   "id": "latex_parse-052"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "2\\sin x\\cos x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [2*sin(x*cos(x)), 2*sin(x)*cos(x)])",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings. One reading is 2*sin(x*cos(x)).",
+   "id": "latex_parse-053"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sin^{2}x+\\cos^{2}x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [sin(x + cos(x)**2)**2, sin(x)**2 + cos(x)**2])",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings. One reading is sin(x + cos(x)**2)**2.",
+   "id": "latex_parse-054"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sqrt{x}^{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "x",
+   "expected_latex": "x",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "sqrt(x)**2 evaluates to x at construction.",
+   "id": "latex_parse-055"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "x^2y"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A power followed by a letter does not parse: no implicit-product rule takes a power as its left factor.",
+   "id": "latex_parse-056"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "x^{2}y"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "Bracing the exponent does not help: a power still cannot be followed by a letter.",
+   "id": "latex_parse-057"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "x(x+1)"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Tree('_ambig', [x(x + 1), x*(x + 1)])",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Ambiguous: Lark returns a Tree('_ambig') holding both readings. One reading applies an undefined function x to x + 1.",
+   "id": "latex_parse-058"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "-x^2"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "-x**2",
+   "expected_latex": "- x^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unary minus versus the power.",
+   "id": "latex_parse-059"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "-2^2"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "-4",
+   "expected_latex": "-4",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Unary minus versus the power, on numbers.",
+   "id": "latex_parse-060"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "e"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "e",
+   "expected_latex": "e",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A lone e is the plain Symbol e, not Euler's number E.",
+   "id": "latex_parse-061"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "e^{x}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "e**x",
+   "expected_latex": "e^{x}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A power of the Symbol e, not exp(x).",
+   "id": "latex_parse-062"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "e^{\\ln 5}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "e**log(5)",
+   "expected_latex": "e^{\\log{\\left(5 \\right)}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "With e a Symbol, e**log(5) does not reduce to 5.",
+   "id": "latex_parse-063"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\pi"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\pi command.",
+   "id": "latex_parse-064"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "2\\pi r"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\pi command.",
+   "id": "latex_parse-065"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{3\\pi}{4}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\pi command.",
+   "id": "latex_parse-066"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\cos\\left(\\frac{\\pi}{3}\\right)"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\pi command.",
+   "id": "latex_parse-067"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "0.75"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "0.750000000000000",
+   "expected_latex": "0.75",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A typed decimal becomes a Float.",
+   "id": "latex_parse-068"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "0.1+0.2"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "0.300000000000000",
+   "expected_latex": "0.3",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The Floats are added at construction.",
+   "id": "latex_parse-069"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "1.5x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "1.5*x",
+   "expected_latex": "1.5 x",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A Float coefficient.",
+   "id": "latex_parse-070"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    ".5"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A decimal without a leading digit does not tokenize.",
+   "id": "latex_parse-071"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "-0.5"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "-0.500000000000000",
+   "expected_latex": "-0.5",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A negative Float.",
+   "id": "latex_parse-072"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "x^{0.5}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "x**0.5",
+   "expected_latex": "x^{0.5}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A Float exponent, not sqrt(x).",
+   "id": "latex_parse-073"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "(0.75)^{t}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "0.75**t",
+   "expected_latex": "{0.75}^{t}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A Float base.",
+   "id": "latex_parse-074"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "2x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "2*x",
+   "expected_latex": "2 x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-075"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "3(x+1)"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "3*x + 3",
+   "expected_latex": "3 x + 3",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "SymPy distributes a number over a sum at construction.",
+   "id": "latex_parse-076"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "xy"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "x*y",
+   "expected_latex": "x y",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-077"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac12"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Brace-less \\frac with two digits.",
+   "id": "latex_parse-078"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{x^2-1}{x-1}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "(x**2 - 1)/(x - 1)",
+   "expected_latex": "\\frac{x^{2} - 1}{x - 1}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Parsing does not cancel the removable factor.",
+   "id": "latex_parse-079"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{1}{1+\\frac{1}{x}}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "1/(1 + 1/x)",
+   "expected_latex": "\\frac{1}{1 + \\frac{1}{x}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A nested fraction stays nested.",
+   "id": "latex_parse-080"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sqrt{50}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "5*sqrt(2)",
+   "expected_latex": "5 \\sqrt{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "SymPy simplifies the radical at construction.",
+   "id": "latex_parse-081"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sqrt[3]{x}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "x**(1/3)",
+   "expected_latex": "\\sqrt[3]{x}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-082"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sqrt{x^{2}}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "sqrt(x**2)",
+   "expected_latex": "\\sqrt{x^{2}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Without assumptions sqrt(x**2) does not simplify.",
+   "id": "latex_parse-083"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\left(x+1\\right)^2"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "(x + 1)**2",
+   "expected_latex": "\\left(x + 1\\right)^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-084"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "2\\cdot3"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "6",
+   "expected_latex": "6",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-085"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "2 \\times x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "2*x",
+   "expected_latex": "2 x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-086"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "6\\div 3"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "2",
+   "expected_latex": "2",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-087"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "|x|"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Abs(x)",
+   "expected_latex": "\\left|{x}\\right|",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-088"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\left|x\\right|"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Abs(x)",
+   "expected_latex": "\\left|{x}\\right|",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-089"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "|2x+1| = 5"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Eq(Abs(2*x + 1), 5)",
+   "expected_latex": "\\left|{2 x + 1}\\right| = 5",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-090"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sin^{-1} x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "asin(x)",
+   "expected_latex": "\\operatorname{asin}{\\left(x \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "^{-1} on a trig function is the inverse function, not a reciprocal.",
+   "id": "latex_parse-091"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\arcsin x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "asin(x)",
+   "expected_latex": "\\operatorname{asin}{\\left(x \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-092"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\cos^{-1}\\left(\\frac{1}{2}\\right)"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "pi/3",
+   "expected_latex": "\\frac{\\pi}{3}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "acos(1/2) evaluates to pi/3 at construction.",
+   "id": "latex_parse-093"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\log_2 x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "log(x)/log(2)",
+   "expected_latex": "\\frac{\\log{\\left(x \\right)}}{\\log{\\left(2 \\right)}}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-094"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\log_{10}(x)"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "log(x)/log(10)",
+   "expected_latex": "\\frac{\\log{\\left(x \\right)}}{\\log{\\left(10 \\right)}}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-095"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\log_2 8"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "3",
+   "expected_latex": "3",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "An exact integer logarithm evaluates.",
+   "id": "latex_parse-096"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\log x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "log(x)",
+   "expected_latex": "\\log{\\left(x \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "An unsubscripted \\log is the natural log, the same as \\ln.",
+   "id": "latex_parse-097"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\log(100)"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "log(100)",
+   "expected_latex": "\\log{\\left(100 \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The natural log of 100 stays unevaluated.",
+   "id": "latex_parse-098"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\ln x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "log(x)",
+   "expected_latex": "\\log{\\left(x \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-099"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "2\\ln x"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "2*log(x)",
+   "expected_latex": "2 \\log{\\left(x \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-100"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "x^{-1/2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "1/sqrt(x)",
+   "expected_latex": "\\frac{1}{\\sqrt{x}}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-101"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sigma"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The grammar's Greek letters leave out \\sigma (and \\pi).",
+   "id": "latex_parse-102"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sin\\theta"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "sin(theta)",
+   "expected_latex": "\\sin{\\left(\\theta \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A Greek letter is a valid unparenthesised function argument.",
+   "id": "latex_parse-103"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "-2x+5"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "5 - 2*x",
+   "expected_latex": "5 - 2 x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-104"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "-(x-3)"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "3 - x",
+   "expected_latex": "3 - x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-105"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "x = 3"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Eq(x, 3)",
+   "expected_latex": "x = 3",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-106"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "2x+1 \\le 5"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "2*x + 1 <= 5",
+   "expected_latex": "2 x + 1 \\leq 5",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-107"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "2x - 1 > 3"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "2*x - 1 > 3",
+   "expected_latex": "2 x - 1 > 3",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A strict inequality is a StrictGreaterThan.",
+   "id": "latex_parse-108"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "x \\geq -2"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "x >= -2",
+   "expected_latex": "x \\geq -2",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-109"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "x \\ne 0"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "Ne(x, 0)",
+   "expected_latex": "x \\neq 0",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-110"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\infty"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "oo",
+   "expected_latex": "\\infty",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-111"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "-\\infty"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "-oo",
+   "expected_latex": "-\\infty",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "latex_parse-112"
+  }
+ ]
+}

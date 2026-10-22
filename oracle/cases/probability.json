@@ -1,0 +1,1131 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "probability",
+ "cases": [
+  {
+   "op": "P",
+   "args": [
+    "Die('X', 6)",
+    "X > 3"
+   ],
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-000"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Die('X', 6)",
+    "X >= 3"
+   ],
+   "expected": "2/3",
+   "expected_latex": "\\frac{2}{3}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-001"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Die('X', 6)",
+    "Eq(X, 3)"
+   ],
+   "expected": "1/6",
+   "expected_latex": "\\frac{1}{6}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-002"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Die('X', 6)",
+    "Eq(X % 2, 0)"
+   ],
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Even roll.",
+   "id": "probability-003"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Die('X', 6)",
+    "Ne(X, 6)"
+   ],
+   "expected": "5/6",
+   "expected_latex": "\\frac{5}{6}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-004"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Die('X', 6)",
+    "Not(X > 4)"
+   ],
+   "expected": "2/3",
+   "expected_latex": "\\frac{2}{3}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Complement.",
+   "id": "probability-005"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Die('X', 6)",
+    "X > 6"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Impossible event.",
+   "id": "probability-006"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Die('X', 6)",
+    "X <= 6"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Certain event.",
+   "id": "probability-007"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Die('D', 20)",
+    "D >= 15"
+   ],
+   "expected": "3/10",
+   "expected_latex": "\\frac{3}{10}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A 20-sided die.",
+   "id": "probability-008"
+  },
+  {
+   "op": "P",
+   "args": [
+    "[Die('X', 6), Die('Y', 6)]",
+    "Eq(X + Y, 7)"
+   ],
+   "expected": "1/6",
+   "expected_latex": "\\frac{1}{6}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Sum of two dice.",
+   "id": "probability-009"
+  },
+  {
+   "op": "P",
+   "args": [
+    "[Die('X', 6), Die('Y', 6)]",
+    "X + Y > 9"
+   ],
+   "expected": "1/6",
+   "expected_latex": "\\frac{1}{6}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-010"
+  },
+  {
+   "op": "P",
+   "args": [
+    "[Die('X', 6), Die('Y', 6)]",
+    "Eq(X, Y)"
+   ],
+   "expected": "1/6",
+   "expected_latex": "\\frac{1}{6}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Doubles.",
+   "id": "probability-011"
+  },
+  {
+   "op": "P",
+   "args": [
+    "[Die('X', 6), Die('Y', 6)]",
+    "Eq(X*Y, 12)"
+   ],
+   "expected": "1/9",
+   "expected_latex": "\\frac{1}{9}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-012"
+  },
+  {
+   "op": "P",
+   "args": [
+    "[Die('X', 6), Die('Y', 6)]",
+    "And(X > 3, Y > 3)"
+   ],
+   "expected": "1/4",
+   "expected_latex": "\\frac{1}{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Independent dice: 1/2 * 1/2.",
+   "id": "probability-013"
+  },
+  {
+   "op": "P",
+   "args": [
+    "[Die('X', 6), Die('Y', 6)]",
+    "Or(X > 3, Y > 3)"
+   ],
+   "expected": "3/4",
+   "expected_latex": "\\frac{3}{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "At least one: 1 - 1/4.",
+   "id": "probability-014"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Coin('C')",
+    "Eq(C, H)"
+   ],
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-015"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Coin('C', 2/3)",
+    "Eq(C, T)"
+   ],
+   "expected": "1/3",
+   "expected_latex": "\\frac{1}{3}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Biased coin: P(H) = 2/3.",
+   "id": "probability-016"
+  },
+  {
+   "op": "P",
+   "args": [
+    "[Coin('C1'), Coin('C2')]",
+    "And(Eq(C1, H), Eq(C2, H))"
+   ],
+   "expected": "1/4",
+   "expected_latex": "\\frac{1}{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-017"
+  },
+  {
+   "op": "P",
+   "args": [
+    "[Coin('C1'), Coin('C2')]",
+    "Or(Eq(C1, H), Eq(C2, H))"
+   ],
+   "expected": "3/4",
+   "expected_latex": "\\frac{3}{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-018"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Die('X', 6)",
+    "X > 3",
+    "X > 1"
+   ],
+   "expected": "3/5",
+   "expected_latex": "\\frac{3}{5}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-019"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Die('X', 6)",
+    "Eq(X % 2, 0)",
+    "X > 3"
+   ],
+   "expected": "2/3",
+   "expected_latex": "\\frac{2}{3}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Even given more than 3: {4, 6} out of {4, 5, 6}.",
+   "id": "probability-020"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Die('X', 6)",
+    "X > 3",
+    "Eq(X % 2, 0)"
+   ],
+   "expected": "TypeError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "Conditioning on Eq(X % 2, 0): given() solves the condition for X with solveset, gets a ConditionSet and iterates over it.",
+   "id": "probability-021"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Die('X', 6)",
+    "X > 3",
+    "X > 6"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The condition has probability 0.",
+   "id": "probability-022"
+  },
+  {
+   "op": "P",
+   "args": [
+    "[Die('X', 6), Die('Y', 6)]",
+    "Eq(X + Y, 7)",
+    "Eq(X, 3)"
+   ],
+   "expected": "1/6",
+   "expected_latex": "\\frac{1}{6}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The events are independent: equals P(X + Y = 7).",
+   "id": "probability-023"
+  },
+  {
+   "op": "P",
+   "args": [
+    "[Die('X', 6), Die('Y', 6)]",
+    "Eq(X, Y)",
+    "Eq(X + Y, 8)"
+   ],
+   "expected": "1/5",
+   "expected_latex": "\\frac{1}{5}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Doubles given a sum of 8: (4, 4) out of 5 outcomes.",
+   "id": "probability-024"
+  },
+  {
+   "op": "P",
+   "args": [
+    "[Die('X', 6), Die('Y', 6)]",
+    "X + Y >= 10",
+    "Eq(X, 6)"
+   ],
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-025"
+  },
+  {
+   "op": "P",
+   "args": [
+    "[Coin('C1'), Coin('C2')]",
+    "Eq(C1, H)",
+    "Eq(C2, H)"
+   ],
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Independent flips.",
+   "id": "probability-026"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Binomial('X', 10, 1/2)",
+    "Eq(X, 5)"
+   ],
+   "expected": "63/256",
+   "expected_latex": "\\frac{63}{256}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-027"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Binomial('X', 10, 1/2)",
+    "X >= 8"
+   ],
+   "expected": "7/128",
+   "expected_latex": "\\frac{7}{128}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-028"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Binomial('X', 5, 1/3)",
+    "X >= 1"
+   ],
+   "expected": "211/243",
+   "expected_latex": "\\frac{211}{243}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "At least one success: 1 - (2/3)**5.",
+   "id": "probability-029"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Binomial('X', 5, 1/3)",
+    "X <= 1"
+   ],
+   "expected": "112/243",
+   "expected_latex": "\\frac{112}{243}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-030"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Binomial('X', 3, 0)",
+    "Eq(X, 0)"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "p = 0: no successes for certain.",
+   "id": "probability-031"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Hypergeometric('X', 8, 5, 3)",
+    "Eq(X, 2)"
+   ],
+   "expected": "15/28",
+   "expected_latex": "\\frac{15}{28}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Without replacement: 2 of 3 drawn from 5 red and 3 blue, C(5, 2)*C(3, 1)/C(8, 3).",
+   "id": "probability-032"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Binomial('X', 3, p)",
+    "Eq(X, 2)"
+   ],
+   "expected": "3*p**2*(1 - p)",
+   "expected_latex": "3 p^{2} \\left(1 - p\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Symbolic success probability p.",
+   "id": "probability-033"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Binomial('X', 4, 0.3)",
+    "Eq(X, 2)"
+   ],
+   "expected": "0.264600000000000",
+   "expected_latex": "0.2646",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A typed decimal probability: 0.3 is a Float, so SymPy computes with Floats.",
+   "id": "probability-034"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Binomial('X', 5, 1/3)",
+    "Eq(X, 2)",
+    "X >= 1"
+   ],
+   "expected": "80/211",
+   "expected_latex": "\\frac{80}{211}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-035"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('X', {1: 1/2, 2: 1/4, 3: 1/4})",
+    "X > 1"
+   ],
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-036"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('X', {1: 1/2, 2: 1/4})",
+    "X > 1"
+   ],
+   "expected": "1/4",
+   "expected_latex": "\\frac{1}{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The probabilities sum to 3/4; FiniteRV checks the density only with check=True.",
+   "id": "probability-037"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('X', {1: 3/2, 2: -1/2})",
+    "X > 1"
+   ],
+   "expected": "-1/2",
+   "expected_latex": "- \\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A negative probability (the sum is 1); FiniteRV checks the density only with check=True.",
+   "id": "probability-038"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('X', {1: 1/2, 2: 1/4}, check=True)",
+    "X > 1"
+   ],
+   "expected": "ValueError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "check=True with probabilities that sum to 3/4. FiniteRV(check=True) validates the density while args[0] is read, so the ValueError comes from there, before P is called.",
+   "id": "probability-039"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('X', {1: 3/2, 2: -1/2}, check=True)",
+    "X > 1"
+   ],
+   "expected": "ValueError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "check=True with a negative probability. FiniteRV(check=True) validates the density while args[0] is read, so the ValueError comes from there, before P is called.",
+   "id": "probability-040"
+  },
+  {
+   "op": "P",
+   "args": [
+    "Bernoulli('B', 3/10)",
+    "Eq(B, 1)"
+   ],
+   "expected": "3/10",
+   "expected_latex": "\\frac{3}{10}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-041"
+  },
+  {
+   "op": "E",
+   "args": [
+    "Die('X', 6)",
+    "X"
+   ],
+   "expected": "7/2",
+   "expected_latex": "\\frac{7}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-042"
+  },
+  {
+   "op": "E",
+   "args": [
+    "Die('X', 6)",
+    "X**2"
+   ],
+   "expected": "91/6",
+   "expected_latex": "\\frac{91}{6}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-043"
+  },
+  {
+   "op": "E",
+   "args": [
+    "Die('X', 6)",
+    "2*X + 1"
+   ],
+   "expected": "8",
+   "expected_latex": "8",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Linearity: 2*E(X) + 1.",
+   "id": "probability-044"
+  },
+  {
+   "op": "E",
+   "args": [
+    "[Die('X', 6), Die('Y', 6)]",
+    "X + Y"
+   ],
+   "expected": "7",
+   "expected_latex": "7",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-045"
+  },
+  {
+   "op": "E",
+   "args": [
+    "Binomial('X', 10, 1/2)",
+    "X"
+   ],
+   "expected": "5",
+   "expected_latex": "5",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "n*p.",
+   "id": "probability-046"
+  },
+  {
+   "op": "E",
+   "args": [
+    "FiniteRV('X', {1: 1/2, 2: 1/4, 3: 1/4})",
+    "X"
+   ],
+   "expected": "7/4",
+   "expected_latex": "\\frac{7}{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-047"
+  },
+  {
+   "op": "E",
+   "args": [
+    "FiniteRV('W', {-1: 5/6, 4: 1/6})",
+    "W"
+   ],
+   "expected": "-1/6",
+   "expected_latex": "- \\frac{1}{6}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Expected winnings of a game: lose 1 on 5/6, win 4 on 1/6.",
+   "id": "probability-048"
+  },
+  {
+   "op": "E",
+   "args": [
+    "Binomial('X', 3, p)",
+    "X"
+   ],
+   "expected": "3*p**3 + 6*p**2*(1 - p) + 3*p*(1 - p)**2",
+   "expected_latex": "3 p^{3} + 6 p^{2} \\left(1 - p\\right) + 3 p \\left(1 - p\\right)^{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Symbolic p: SymPy leaves an unsimplified sum that equals 3*p.",
+   "id": "probability-049"
+  },
+  {
+   "op": "E",
+   "args": [
+    "Die('X', 6)",
+    "X",
+    "X > 3"
+   ],
+   "expected": "5",
+   "expected_latex": "5",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Conditional expectation: mean of {4, 5, 6}.",
+   "id": "probability-050"
+  },
+  {
+   "op": "E",
+   "args": [
+    "Die('X', 6)",
+    "X",
+    "X > 6"
+   ],
+   "expected": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The condition has probability 0; SymPy 1.14 returns the Python int 0 here.",
+   "id": "probability-051"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('G', {(9, 1): 30/200, (9, 0): 20/200, (10, 1): 45/200, (10, 0): 55/200, (11, 1): 35/200, (11, 0): 15/200})",
+    "Eq(G, (11, 1))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "As typed, Eq(G, (11, 1)) is False: SymPy evaluates an Eq between a RandomSymbol and a Tuple on sight.",
+   "id": "probability-052"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('G', {(9, 1): 30/200, (9, 0): 20/200, (10, 1): 45/200, (10, 0): 55/200, (11, 1): 35/200, (11, 0): 15/200})",
+    "Eq(G, (11, 1), evaluate=False)"
+   ],
+   "expected": "7/40",
+   "expected_latex": "\\frac{7}{40}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Two-way table, one cell kept as an event: 35/200.",
+   "id": "probability-053"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('G', {(9, 1): 30/200, (9, 0): 20/200, (10, 1): 45/200, (10, 0): 55/200, (11, 1): 35/200, (11, 0): 15/200})",
+    "Or(Eq(G, (9, 1)), Eq(G, (10, 1)), Eq(G, (11, 1)))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "As typed, each Eq is False on sight and sympify folds the Or of them to false.",
+   "id": "probability-054"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('G', {(9, 1): 30/200, (9, 0): 20/200, (10, 1): 45/200, (10, 0): 55/200, (11, 1): 35/200, (11, 0): 15/200})",
+    "Or(Eq(G, (9, 1), evaluate=False), Eq(G, (10, 1), evaluate=False), Eq(G, (11, 1), evaluate=False))"
+   ],
+   "expected": "11/20",
+   "expected_latex": "\\frac{11}{20}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Two-way table, column total: 110/200.",
+   "id": "probability-055"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('G', {(9, 1): 30/200, (9, 0): 20/200, (10, 1): 45/200, (10, 0): 55/200, (11, 1): 35/200, (11, 0): 15/200})",
+    "Or(Or(Eq(G, (9, 1)), Eq(G, (9, 0))), Or(Eq(G, (9, 1)), Eq(G, (10, 1)), Eq(G, (11, 1))))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "As typed, every Eq is False on sight, so both inner Ors and the outer Or fold to false.",
+   "id": "probability-056"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('G', {(9, 1): 30/200, (9, 0): 20/200, (10, 1): 45/200, (10, 0): 55/200, (11, 1): 35/200, (11, 0): 15/200})",
+    "Or(Or(Eq(G, (9, 1), evaluate=False), Eq(G, (9, 0), evaluate=False)), Or(Eq(G, (9, 1), evaluate=False), Eq(G, (10, 1), evaluate=False), Eq(G, (11, 1), evaluate=False)))"
+   ],
+   "expected": "13/20",
+   "expected_latex": "\\frac{13}{20}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Two-way table, union: (50 + 110 - 30)/200.",
+   "id": "probability-057"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('R', {(1, 1): 6/50, (1, 0): 14/50, (0, 1): 9/50, (0, 0): 21/50})",
+    "Or(Eq(R, (1, 1)), Eq(R, (0, 1)))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "As typed, each Eq is False on sight and sympify folds the Or of them to false.",
+   "id": "probability-058"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('R', {(1, 1): 6/50, (1, 0): 14/50, (0, 1): 9/50, (0, 0): 21/50})",
+    "Or(Eq(R, (1, 1), evaluate=False), Eq(R, (0, 1), evaluate=False))"
+   ],
+   "expected": "3/10",
+   "expected_latex": "\\frac{3}{10}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "2x2 table with independent row and column: P(column 1) = 15/50.",
+   "id": "probability-059"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('G', {(9, 1): 30/200, (9, 0): 20/200, (10, 1): 45/200, (10, 0): 55/200, (11, 1): 35/200, (11, 0): 15/200})",
+    "Eq(G, (9, 1))",
+    "Or(Eq(G, (9, 1)), Eq(G, (9, 0)))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "As typed, the event and the condition are both False.",
+   "id": "probability-060"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('G', {(9, 1): 30/200, (9, 0): 20/200, (10, 1): 45/200, (10, 0): 55/200, (11, 1): 35/200, (11, 0): 15/200})",
+    "Eq(G, (9, 1), evaluate=False)",
+    "Or(Eq(G, (9, 1), evaluate=False), Eq(G, (9, 0), evaluate=False))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "P(sport | grade 9). SymPy returns 0, although the table ratio P(A & B)/P(B) is 30/50; P(A, B) goes through given(), which moves the event onto the conditional space with xreplace; that rebuilds the Eq with evaluation on, so given() returns False.",
+   "id": "probability-061"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('G', {(9, 1): 30/200, (9, 0): 20/200, (10, 1): 45/200, (10, 0): 55/200, (11, 1): 35/200, (11, 0): 15/200})",
+    "Eq(G, (10, 0))",
+    "Or(Eq(G, (9, 0)), Eq(G, (10, 0)), Eq(G, (11, 0)))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "As typed, the event and the condition are both False.",
+   "id": "probability-062"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('G', {(9, 1): 30/200, (9, 0): 20/200, (10, 1): 45/200, (10, 0): 55/200, (11, 1): 35/200, (11, 0): 15/200})",
+    "Eq(G, (10, 0), evaluate=False)",
+    "Or(Eq(G, (9, 0), evaluate=False), Eq(G, (10, 0), evaluate=False), Eq(G, (11, 0), evaluate=False))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "P(grade 10 | no sport). SymPy returns 0, although the table ratio P(A & B)/P(B) is 55/90; P(A, B) goes through given(), which moves the event onto the conditional space with xreplace; that rebuilds the Eq with evaluation on, so given() returns False.",
+   "id": "probability-063"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('G', {(9, 1): 30/200, (9, 0): 20/200, (10, 1): 45/200, (10, 0): 55/200, (11, 1): 35/200, (11, 0): 15/200})",
+    "Or(Eq(G, (10, 1)), Eq(G, (10, 0)))",
+    "Or(Eq(G, (9, 1)), Eq(G, (10, 1)), Eq(G, (11, 1)))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "As typed, the event and the condition are both False.",
+   "id": "probability-064"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('G', {(9, 1): 30/200, (9, 0): 20/200, (10, 1): 45/200, (10, 0): 55/200, (11, 1): 35/200, (11, 0): 15/200})",
+    "Or(Eq(G, (10, 1), evaluate=False), Eq(G, (10, 0), evaluate=False))",
+    "Or(Eq(G, (9, 1), evaluate=False), Eq(G, (10, 1), evaluate=False), Eq(G, (11, 1), evaluate=False))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "P(grade 10 | sport). SymPy returns 0, although the table ratio P(A & B)/P(B) is 45/110; P(A, B) goes through given(), which moves the event onto the conditional space with xreplace; that rebuilds the Eq with evaluation on, so given() returns False.",
+   "id": "probability-065"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('R', {(1, 1): 6/50, (1, 0): 14/50, (0, 1): 9/50, (0, 0): 21/50})",
+    "Eq(R, (1, 1))",
+    "Or(Eq(R, (1, 1)), Eq(R, (1, 0)))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "As typed, the event and the condition are both False.",
+   "id": "probability-066"
+  },
+  {
+   "op": "P",
+   "args": [
+    "FiniteRV('R', {(1, 1): 6/50, (1, 0): 14/50, (0, 1): 9/50, (0, 0): 21/50})",
+    "Eq(R, (1, 1), evaluate=False)",
+    "Or(Eq(R, (1, 1), evaluate=False), Eq(R, (1, 0), evaluate=False))"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "P(column 1 | row 1). SymPy returns 0, although the table ratio P(A & B)/P(B) is 6/20; P(A, B) goes through given(), which moves the event onto the conditional space with xreplace; that rebuilds the Eq with evaluation on, so given() returns False.",
+   "id": "probability-067"
+  },
+  {
+   "op": "binomial",
+   "args": [
+    "52",
+    "5"
+   ],
+   "expected": "2598960",
+   "expected_latex": "2598960",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Five-card hands.",
+   "id": "probability-068"
+  },
+  {
+   "op": "binomial",
+   "args": [
+    "10",
+    "3"
+   ],
+   "expected": "120",
+   "expected_latex": "120",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-069"
+  },
+  {
+   "op": "binomial",
+   "args": [
+    "5",
+    "0"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Choosing nothing.",
+   "id": "probability-070"
+  },
+  {
+   "op": "binomial",
+   "args": [
+    "0",
+    "0"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-071"
+  },
+  {
+   "op": "binomial",
+   "args": [
+    "5",
+    "7"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "k > n.",
+   "id": "probability-072"
+  },
+  {
+   "op": "binomial",
+   "args": [
+    "5",
+    "-1"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Negative k.",
+   "id": "probability-073"
+  },
+  {
+   "op": "binomial",
+   "args": [
+    "-5",
+    "2"
+   ],
+   "expected": "15",
+   "expected_latex": "15",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Negative n: the general binomial coefficient (-5)*(-6)/2.",
+   "id": "probability-074"
+  },
+  {
+   "op": "binomial",
+   "args": [
+    "1/2",
+    "2"
+   ],
+   "expected": "-1/8",
+   "expected_latex": "- \\frac{1}{8}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Rational n (binomial series): (1/2)*(-1/2)/2.",
+   "id": "probability-075"
+  },
+  {
+   "op": "binomial",
+   "args": [
+    "5/2",
+    "2"
+   ],
+   "expected": "15/8",
+   "expected_latex": "\\frac{15}{8}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Rational n: (5/2)*(3/2)/2.",
+   "id": "probability-076"
+  },
+  {
+   "op": "binomial",
+   "args": [
+    "n",
+    "2"
+   ],
+   "assumptions": {
+    "n": {
+     "integer": true,
+     "nonnegative": true
+    }
+   },
+   "expected": "binomial(n, 2)",
+   "expected_latex": "{\\binom{n}{2}}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Symbolic n.",
+   "id": "probability-077"
+  },
+  {
+   "op": "binomial",
+   "args": [
+    "n",
+    "1"
+   ],
+   "assumptions": {
+    "n": {
+     "integer": true,
+     "nonnegative": true
+    }
+   },
+   "expected": "n",
+   "expected_latex": "n",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-078"
+  },
+  {
+   "op": "ff",
+   "args": [
+    "10",
+    "3"
+   ],
+   "expected": "720",
+   "expected_latex": "720",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-079"
+  },
+  {
+   "op": "ff",
+   "args": [
+    "5",
+    "5"
+   ],
+   "expected": "120",
+   "expected_latex": "120",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "All arrangements: 5!.",
+   "id": "probability-080"
+  },
+  {
+   "op": "ff",
+   "args": [
+    "5",
+    "0"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "probability-081"
+  },
+  {
+   "op": "ff",
+   "args": [
+    "3",
+    "5"
+   ],
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "k > n: the product passes through 0.",
+   "id": "probability-082"
+  },
+  {
+   "op": "ff",
+   "args": [
+    "5",
+    "-1"
+   ],
+   "expected": "1/6",
+   "expected_latex": "\\frac{1}{6}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Negative k: SymPy extends the falling factorial, ff(x, -1) = 1/(x + 1).",
+   "id": "probability-083"
+  },
+  {
+   "op": "ff",
+   "args": [
+    "-3",
+    "2"
+   ],
+   "expected": "12",
+   "expected_latex": "12",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Negative n: (-3)*(-4).",
+   "id": "probability-084"
+  },
+  {
+   "op": "ff",
+   "args": [
+    "n",
+    "2"
+   ],
+   "assumptions": {
+    "n": {
+     "integer": true,
+     "nonnegative": true
+    }
+   },
+   "expected": "n*(n - 1)",
+   "expected_latex": "n \\left(n - 1\\right)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Symbolic n.",
+   "id": "probability-085"
+  }
+ ]
+}

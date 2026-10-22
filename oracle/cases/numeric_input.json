@@ -1,0 +1,1127 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "numeric_input",
+ "cases": [
+  {
+   "op": "sympify",
+   "args": [
+    "  42  "
+   ],
+   "expected": "42",
+   "expected_latex": "42",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Spaces around the number.",
+   "id": "numeric_input-000"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "-0.5"
+   ],
+   "expected": "-0.500000000000000",
+   "expected_latex": "-0.5",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A typed decimal is a Float.",
+   "id": "numeric_input-001"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "−0.5"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "U+2212 MINUS SIGN is not a Python operator.",
+   "id": "numeric_input-002"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "+5"
+   ],
+   "expected": "5",
+   "expected_latex": "5",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "An explicit unary plus.",
+   "id": "numeric_input-003"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    ".5"
+   ],
+   "expected": "0.500000000000000",
+   "expected_latex": "0.5",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A decimal with no digit before the point.",
+   "id": "numeric_input-004"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "-.5"
+   ],
+   "expected": "-0.500000000000000",
+   "expected_latex": "-0.5",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A negative decimal with no digit before the point.",
+   "id": "numeric_input-005"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "5."
+   ],
+   "expected": "5.00000000000000",
+   "expected_latex": "5.0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A trailing decimal point makes a Float.",
+   "id": "numeric_input-006"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2.50"
+   ],
+   "expected": "2.50000000000000",
+   "expected_latex": "2.5",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A trailing zero after the point.",
+   "id": "numeric_input-007"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "0.00450"
+   ],
+   "expected": "0.00450000000000000",
+   "expected_latex": "0.0045",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Leading and trailing zeros around the digits.",
+   "id": "numeric_input-008"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.14"
+   ],
+   "expected": "3.14000000000000",
+   "expected_latex": "3.14",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A decimal with no exact binary value (and not pi).",
+   "id": "numeric_input-009"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1,200"
+   ],
+   "expected": "(1, 200)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A thousands comma: as Python, a comma builds a tuple, not a SymPy object.",
+   "id": "numeric_input-010"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1,234,567"
+   ],
+   "expected": "(1, 234, 567)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Two thousands commas.",
+   "id": "numeric_input-011"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "-1,234.5"
+   ],
+   "expected": "(-1, 234.5)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A thousands comma with a decimal part: the tuple holds an Integer and a Float.",
+   "id": "numeric_input-012"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1{,}200"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "LaTeX writes a thousands comma as {,}; as Python, {,} is not valid.",
+   "id": "numeric_input-013"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "1{,}200"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "LaTeX writes a thousands comma as {,}.",
+   "id": "numeric_input-014"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1,000"
+   ],
+   "expected": "(1, 0)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A European reader takes 1,000 as 1; the group 000 is the integer 0.",
+   "id": "numeric_input-015"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1,2"
+   ],
+   "expected": "(1, 2)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A European decimal comma.",
+   "id": "numeric_input-016"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "0,5"
+   ],
+   "expected": "(0, 5)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A European decimal comma after 0.",
+   "id": "numeric_input-017"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1,2345"
+   ],
+   "expected": "(1, 2345)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A 4-digit group after the comma.",
+   "id": "numeric_input-018"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "0,125"
+   ],
+   "expected": "(0, 125)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A European 0.125 whose 3-digit group looks like thousands grouping.",
+   "id": "numeric_input-019"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1234,567"
+   ],
+   "expected": "(1234, 567)",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A European 1234.567 with a 4-digit first group.",
+   "id": "numeric_input-020"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2e4"
+   ],
+   "expected": "32000.0000000000",
+   "expected_latex": "32000.0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "E notation.",
+   "id": "numeric_input-021"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2E4"
+   ],
+   "expected": "32000.0000000000",
+   "expected_latex": "32000.0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Capital E.",
+   "id": "numeric_input-022"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2e+4"
+   ],
+   "expected": "32000.0000000000",
+   "expected_latex": "32000.0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "An explicit plus in the exponent.",
+   "id": "numeric_input-023"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2e-4"
+   ],
+   "expected": "0.000320000000000000",
+   "expected_latex": "0.00032",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A negative exponent.",
+   "id": "numeric_input-024"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2*10^4"
+   ],
+   "expected": "32000.0000000000",
+   "expected_latex": "32000.0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "sympify converts ^ to ** by default (convert_xor=True).",
+   "id": "numeric_input-025"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2*10**4"
+   ],
+   "expected": "32000.0000000000",
+   "expected_latex": "32000.0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Python's ** power.",
+   "id": "numeric_input-026"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2*10^{4}"
+   ],
+   "expected": "TypeError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "As Python, {4} is a set, and a power with a set exponent raises TypeError.",
+   "id": "numeric_input-027"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "3.2*10^{4}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "32000.0000000000",
+   "expected_latex": "32000.0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A braced exponent after a plain *.",
+   "id": "numeric_input-028"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "3.2\\times10^{4}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "32000.0000000000",
+   "expected_latex": "32000.0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "LaTeX \\times with a braced exponent.",
+   "id": "numeric_input-029"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2\\times10^{4}"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Python tokenizer has no backslash token, so sympify does not read LaTeX.",
+   "id": "numeric_input-030"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "3.2\\times 10^4"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "32000.0000000000",
+   "expected_latex": "32000.0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "LaTeX \\times with a space and an unbraced exponent.",
+   "id": "numeric_input-031"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "3.2 \\times 10 ^ { 4 }"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "32000.0000000000",
+   "expected_latex": "32000.0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Spaces everywhere inside the power of ten.",
+   "id": "numeric_input-032"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2×10^4"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "U+00D7 MULTIPLICATION SIGN is not a Python operator.",
+   "id": "numeric_input-033"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2 x 10^4"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The letter x as a times sign; sympify's default transformations have no implicit multiplication.",
+   "id": "numeric_input-034"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2 X 10^4"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "Capital X as a times sign.",
+   "id": "numeric_input-035"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1.6x10^-19"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "x as a times sign with no spaces and an unbraced negative exponent.",
+   "id": "numeric_input-036"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2.5*10^(-3)"
+   ],
+   "expected": "0.00250000000000000",
+   "expected_latex": "0.0025",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A parenthesised exponent, as calculators write it.",
+   "id": "numeric_input-037"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "1.5 \\cdot 10^{3}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "1500.00000000000",
+   "expected_latex": "1500.0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "LaTeX \\cdot as the times sign.",
+   "id": "numeric_input-038"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1.5·10^3"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "U+00B7 MIDDLE DOT as the times sign.",
+   "id": "numeric_input-039"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "6.02\\times10^{23}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "6.02000000000000e+23",
+   "expected_latex": "6.02 \\cdot 10^{23}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A large power of ten; the Float prints in e notation.",
+   "id": "numeric_input-040"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "−1.6×10^{−19}"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "U+2212 minus signs in the mantissa and the braced exponent.",
+   "id": "numeric_input-041"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "−1.6×10^{−19}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "U+2212 minus signs in the mantissa and the braced exponent.",
+   "id": "numeric_input-042"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2×10⁴"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A unicode superscript exponent digit.",
+   "id": "numeric_input-043"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "10^{-3}"
+   ],
+   "expected": "TypeError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "As Python, {-3} is a set, so the power raises TypeError.",
+   "id": "numeric_input-044"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "10^{-3}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "1/1000",
+   "expected_latex": "\\frac{1}{1000}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A bare power of ten with a braced negative exponent.",
+   "id": "numeric_input-045"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "10^23"
+   ],
+   "expected": "100000000000000000000000",
+   "expected_latex": "100000000000000000000000",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The whole digit run after ^ is the exponent.",
+   "id": "numeric_input-046"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "3.2\\times10^{4.5}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "101192.885125388",
+   "expected_latex": "101192.885125388",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A power of ten with a non-integer exponent.",
+   "id": "numeric_input-047"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3.2e"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "E notation with no exponent digits.",
+   "id": "numeric_input-048"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "45%"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "% is Python's modulo operator, here with no right operand.",
+   "id": "numeric_input-049"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "45\\%"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "LaTeX's escaped percent sign.",
+   "id": "numeric_input-050"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "45 %"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A space before the percent sign.",
+   "id": "numeric_input-051"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "12.5%"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A decimal percent.",
+   "id": "numeric_input-052"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "3/4"
+   ],
+   "expected": "3/4",
+   "expected_latex": "\\frac{3}{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Integer division gives an exact Rational.",
+   "id": "numeric_input-053"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "-3/4"
+   ],
+   "expected": "-3/4",
+   "expected_latex": "- \\frac{3}{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A negative fraction.",
+   "id": "numeric_input-054"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "6/8"
+   ],
+   "expected": "3/4",
+   "expected_latex": "\\frac{3}{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "An unreduced fraction.",
+   "id": "numeric_input-055"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{3}{4}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "3/4",
+   "expected_latex": "\\frac{3}{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A LaTeX fraction of integers.",
+   "id": "numeric_input-056"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "-\\frac{3}{4}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "-3/4",
+   "expected_latex": "- \\frac{3}{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The sign before \\frac.",
+   "id": "numeric_input-057"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{-3}{4}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "-3/4",
+   "expected_latex": "- \\frac{3}{4}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The sign inside the numerator.",
+   "id": "numeric_input-058"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\dfrac{1}{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "\\dfrac, the display-style fraction.",
+   "id": "numeric_input-059"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1/0"
+   ],
+   "expected": "zoo",
+   "expected_latex": "\\tilde{\\infty}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Division by zero.",
+   "id": "numeric_input-060"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1 1/2"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A mixed number: two numbers separated by a space.",
+   "id": "numeric_input-061"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "-2 3/4"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A negative mixed number.",
+   "id": "numeric_input-062"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "1\\frac{1}{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A LaTeX mixed number: the integer and the fraction are adjacent, an implicit product.",
+   "id": "numeric_input-063"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sqrt{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "sqrt(2)",
+   "expected_latex": "\\sqrt{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "An exact square root.",
+   "id": "numeric_input-064"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sqrt{8}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "2*sqrt(2)",
+   "expected_latex": "2 \\sqrt{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A square root with a square factor, taken out at construction.",
+   "id": "numeric_input-065"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "2\\sqrt{3}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "2*sqrt(3)",
+   "expected_latex": "2 \\sqrt{3}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A coefficient times a root.",
+   "id": "numeric_input-066"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{1}{\\sqrt{2}}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "sqrt(2)/2",
+   "expected_latex": "\\frac{\\sqrt{2}}{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A root in the denominator.",
+   "id": "numeric_input-067"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sqrt[3]{2}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "2**(1/3)",
+   "expected_latex": "\\sqrt[3]{2}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A cube root.",
+   "id": "numeric_input-068"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\sqrt{-4}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "2*I",
+   "expected_latex": "2 i",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "The square root of a negative number.",
+   "id": "numeric_input-069"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "2\\pi"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "The Lark grammar has no \\pi command.",
+   "id": "numeric_input-070"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\frac{3\\pi}{4}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "UnexpectedCharacters",
+   "compare": "error",
+   "source": "sympy",
+   "note": "\\pi inside a fraction; the Lark grammar has no \\pi command.",
+   "id": "numeric_input-071"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2π"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "U+03C0 is a valid Python name, but nothing joins the number to it.",
+   "id": "numeric_input-072"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2pi"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A number followed by a name, with no implicit multiplication.",
+   "id": "numeric_input-073"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    ""
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "Nothing typed.",
+   "id": "numeric_input-074"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "   "
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "Only spaces.",
+   "id": "numeric_input-075"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "abc"
+   ],
+   "expected": "abc",
+   "expected_latex": "abc",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Letters become a Symbol.",
+   "id": "numeric_input-076"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1.2.3"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "Two decimal points.",
+   "id": "numeric_input-077"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "--5"
+   ],
+   "expected": "5",
+   "expected_latex": "5",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Python reads --5 as -(-5).",
+   "id": "numeric_input-078"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "4 2"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "Two numbers separated by a space.",
+   "id": "numeric_input-079"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2+3"
+   ],
+   "expected": "5",
+   "expected_latex": "5",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Arithmetic is evaluated.",
+   "id": "numeric_input-080"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "2 x 3"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "x as a times sign between two integers.",
+   "id": "numeric_input-081"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "1_000"
+   ],
+   "expected": "1000",
+   "expected_latex": "1000",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Python's underscore digit grouping.",
+   "id": "numeric_input-082"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "0x1F"
+   ],
+   "expected": "31",
+   "expected_latex": "31",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A Python hexadecimal literal.",
+   "id": "numeric_input-083"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "inf"
+   ],
+   "expected": "inf",
+   "expected_latex": "inf",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Python's float spelling of infinity; inf is not a SymPy name.",
+   "id": "numeric_input-084"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "nan"
+   ],
+   "expected": "nan",
+   "expected_latex": "\\text{NaN}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "Python's float spelling of not-a-number; nan is a SymPy name.",
+   "id": "numeric_input-085"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\infty"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "oo",
+   "expected_latex": "\\infty",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "LaTeX infinity.",
+   "id": "numeric_input-086"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "\\ln 2"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "log(2)",
+   "expected_latex": "\\log{\\left(2 \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A function applied to a number.",
+   "id": "numeric_input-087"
+  },
+  {
+   "op": "parse_latex",
+   "args": [
+    "0.\\overline{3}"
+   ],
+   "options": {
+    "backend": "lark"
+   },
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "A repeating-decimal bar; the Lark grammar reads \\overline as complex conjugation.",
+   "id": "numeric_input-088"
+  },
+  {
+   "op": "sympify",
+   "args": [
+    "12 m/s"
+   ],
+   "expected": "SympifyError",
+   "compare": "error",
+   "source": "sympy",
+   "note": "A number followed by a unit.",
+   "id": "numeric_input-089"
+  }
+ ]
+}

@@ -1,0 +1,1135 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "equivalence",
+ "cases": [
+  {
+   "op": "equivalent",
+   "args": [
+    "(x + 1)**2",
+    "x**2 + 2*x + 1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-000"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x - 3)*(x + 2)",
+    "x**2 - x - 6"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-001"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x - 3)*(x + 2)",
+    "x**2 + x - 6"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "sign error in the middle term",
+   "id": "equivalence-002"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x + 1)**2",
+    "x**2 + 1"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the classic dropped middle term",
+   "id": "equivalence-003"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "1/x + 1/y",
+    "(x + y)/(x*y)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-004"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "1/(x + 1) - 1/(x - 1)",
+    "-2/(x**2 - 1)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-005"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "1/(x + 1)",
+    "1/x + 1"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-006"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x**2 - 9)/(x + 3)",
+    "x - 3"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "the left side is undefined at x = -3",
+   "id": "equivalence-007"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x**2 - 1)/(x - 1)",
+    "x + 1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "the left side is undefined at x = 1",
+   "id": "equivalence-008"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "1/(1/x + 1)",
+    "x/(x + 1)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "the left side is also undefined at x = 0",
+   "id": "equivalence-009"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x**3 - x)/(x**2 - x)",
+    "(x**2 - 1)/(x - 1)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "both cancel to x + 1; the left side is undefined at 0 and 1, the right side only at 1",
+   "id": "equivalence-010"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x**2 - 1)/(x - 1)",
+    "(x**2 + 2*x - 3)/(x - 1) - 2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "both are x + 1 away from x = 1",
+   "id": "equivalence-011"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "tan(x)*cos(x)",
+    "sin(x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "the left side is undefined where cos(x) = 0",
+   "id": "equivalence-012"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "log(8)",
+    "3*log(2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-013"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "log(x, 2)",
+    "log(x)/log(2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "change of base; sympify already reads log(x, 2) as log(x)/log(2)",
+   "id": "equivalence-014"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "2*log(x)",
+    "log(x**2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "for a plain (complex) x, simplify leaves 2*log(x) - log(x**2) as it is",
+   "id": "equivalence-015"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "log(x) + log(y)",
+    "log(x*y)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the product rule needs x, y positive (x = y = -1 gives 2*I*pi vs 0); for plain (complex) symbols simplify does not combine the logs",
+   "id": "equivalence-016"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "log(x + y)",
+    "log(x) + log(y)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "log of a sum is not a sum of logs; for plain (complex) symbols simplify does not combine or expand the logs",
+   "id": "equivalence-017"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "log(x**2)",
+    "2*log(Abs(x))"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "equal only for real x != 0 (x = I gives I*pi vs 0); for a plain (complex) x simplify does not expand log(x**2)",
+   "id": "equivalence-018"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "E**(x + y)",
+    "E**x*E**y"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-019"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "4**x",
+    "2**(2*x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-020"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "400*(3/4)**t",
+    "300**t"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the coefficient was multiplied into the base",
+   "id": "equivalence-021"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "400*(3/4)**t",
+    "400*exp(t*log(3/4))"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "(3/4)**t is exp(t*log(3/4)) by definition, but simplify does not rewrite one into the other",
+   "id": "equivalence-022"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sin(x)**2 + cos(x)**2",
+    "1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-023"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sin(2*x)",
+    "2*sin(x)*cos(x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-024"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "cos(2*x)",
+    "1 - 2*sin(x)**2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-025"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "tan(x)",
+    "sin(x)/cos(x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-026"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sec(x)**2",
+    "1 + tan(x)**2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-027"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sin(x + y)",
+    "sin(x)*cos(y) + cos(x)*sin(y)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-028"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sin(2*x)",
+    "2*sin(x)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-029"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sin(x + y)",
+    "sin(x) + sin(y)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-030"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "tan(2*x)",
+    "2*tan(x)/(1 - tan(x)**2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the tangent double-angle identity, which simplify does not prove",
+   "id": "equivalence-031"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(8)",
+    "2*sqrt(2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "sympify already evaluates sqrt(8) to 2*sqrt(2)",
+   "id": "equivalence-032"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(12)",
+    "3*sqrt(2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-033"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "1/(1 + sqrt(2))",
+    "sqrt(2) - 1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-034"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(2) + sqrt(3)",
+    "sqrt(5)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-035"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(x**2 + 9)",
+    "x + 3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-036"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(x**2)",
+    "x"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "for a plain (complex) x, sqrt(x**2) stays unevaluated",
+   "id": "equivalence-037"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(x**2)",
+    "Abs(x)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "for complex x, sqrt(x**2) is not |x| (x = I gives I vs 1)",
+   "id": "equivalence-038"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "Abs(x - 2)",
+    "Abs(2 - x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "sympify already writes Abs(2 - x) as Abs(x - 2)",
+   "id": "equivalence-039"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "Abs(x)",
+    "x"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-040"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "x + 1",
+    "x - 1"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-041"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "2*x",
+    "x**2"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-042"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "x**2*x**3",
+    "x**6"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "exponents add when multiplying",
+   "id": "equivalence-043"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "-(x - 3)",
+    "x - 3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-044"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "v0*t + a*t**2/2",
+    "t*(2*v0 + a*t)/2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-045"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "pi/2",
+    "90*pi/180"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-046"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "pi",
+    "22/7"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-047"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "pi",
+    "3.14159"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "3.14159 is a Float, and pi - 3.14159 stays unevaluated",
+   "id": "equivalence-048"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "0.5*x",
+    "x/2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "0.5*x - x/2 collapses to 0 as soon as the difference is formed",
+   "id": "equivalence-049"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "x**0.333",
+    "x**(1/3)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "a Float exponent and a Rational exponent",
+   "id": "equivalence-050"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "x**0.5",
+    "sqrt(x)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the Float exponent 0.5 is not the Rational 1/2",
+   "id": "equivalence-051"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "2**0.5",
+    "sqrt(2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "sympify evaluates 2**0.5 to a Float",
+   "id": "equivalence-052"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "log(0.5)",
+    "-log(2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "sympify evaluates log(0.5) to a Float",
+   "id": "equivalence-053"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "400*exp(log(0.75)*t)",
+    "400*(3/4)**t"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "sympify evaluates log(0.75) to a Float, so the left side is 400*exp(-0.287682072451781*t)",
+   "id": "equivalence-054"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "0.1 + 0.2",
+    "0.3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the binary Floats leave a difference of about 5.6e-17, which simplify keeps",
+   "id": "equivalence-055"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "0.3333333333333333",
+    "1/3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the 16-digit Float differs from 1/3 by about 3.5e-17, which simplify keeps",
+   "id": "equivalence-056"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "oo",
+    "oo"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "oo - oo is nan",
+   "id": "equivalence-057"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "oo",
+    "-oo"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-058"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "zoo",
+    "zoo"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "zoo - zoo is nan",
+   "id": "equivalence-059"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "oo",
+    "zoo"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-060"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "nan",
+    "nan"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "nan - nan is nan, but nan == nan structurally",
+   "id": "equivalence-061"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "nan",
+    "0"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-062"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "oo - oo",
+    "0"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "sympify evaluates oo - oo to nan",
+   "id": "equivalence-063"
+  },
+  {
+   "op": "simplify",
+   "args": [
+    "log(x) + log(y) - log(x*y)"
+   ],
+   "assumptions": {
+    "x": {
+     "positive": true
+    },
+    "y": {
+     "positive": true
+    }
+   },
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "equivalence-064"
+  },
+  {
+   "op": "simplify",
+   "args": [
+    "2*log(x) - log(x**2)"
+   ],
+   "assumptions": {
+    "x": {
+     "positive": true
+    }
+   },
+   "expected": "0",
+   "expected_latex": "0",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "equivalence-065"
+  },
+  {
+   "op": "simplify",
+   "args": [
+    "-log(x) - log(y) + log(x + y)"
+   ],
+   "assumptions": {
+    "x": {
+     "positive": true
+    },
+    "y": {
+     "positive": true
+    }
+   },
+   "expected": "log((x + y)/(x*y))",
+   "expected_latex": "\\log{\\left(\\frac{x + y}{x y} \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "simplify combines the logs but nothing cancels",
+   "id": "equivalence-066"
+  },
+  {
+   "op": "simplify",
+   "args": [
+    "log(x**2) - 2*log(Abs(x))"
+   ],
+   "assumptions": {
+    "x": {
+     "real": true
+    }
+   },
+   "expected": "log(x**2) - 2*log(Abs(x))",
+   "expected_latex": "\\log{\\left(x^{2} \\right)} - 2 \\log{\\left(\\left|{x}\\right| \\right)}",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "log(x**2) = 2*log(Abs(x)) for real x != 0, but simplify leaves the difference unchanged",
+   "id": "equivalence-067"
+  },
+  {
+   "op": "sqrt",
+   "args": [
+    "x**2"
+   ],
+   "assumptions": {
+    "x": {
+     "positive": true
+    }
+   },
+   "expected": "x",
+   "expected_latex": "x",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "equivalence-068"
+  },
+  {
+   "op": "sqrt",
+   "args": [
+    "x**2"
+   ],
+   "assumptions": {
+    "x": {
+     "real": true
+    }
+   },
+   "expected": "Abs(x)",
+   "expected_latex": "\\left|{x}\\right|",
+   "compare": "exact",
+   "source": "sympy",
+   "id": "equivalence-069"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(y, 2*x + 1)",
+    "Eq(2*x - y + 1, 0)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "the one-side forms differ by a factor of -1",
+   "id": "equivalence-070"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(x, 3)",
+    "Eq(3, x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "swapping sides is a factor of -1",
+   "id": "equivalence-071"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(y, 2*x + 1)",
+    "Eq(y, 2*x - 1)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "a different line",
+   "id": "equivalence-072"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(y, 2*x + 1)",
+    "Eq(2*y, 4*x + 1)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "only some terms were doubled (a different line)",
+   "id": "equivalence-073"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(y, 2*x + 1)",
+    "Eq(2*y, 4*x + 2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the one-side forms differ by the factor 2",
+   "id": "equivalence-074"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(y, 2*x + 1)",
+    "Eq(x, (y - 1)/2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "solving for x instead multiplies the one-side form by -1/2",
+   "id": "equivalence-075"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(2*x + 3, 11)",
+    "Eq(x, 4)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the one-side forms 2*x - 8 and x - 4 differ by the factor 2",
+   "id": "equivalence-076"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(x/2 + y/3, 1)",
+    "Eq(3*x + 2*y, 6)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "clearing denominators multiplies the one-side form by 6",
+   "id": "equivalence-077"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(x**2, 4)",
+    "Eq(x, 2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "squaring lost the root x = -2",
+   "id": "equivalence-078"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(x**2, 4)",
+    "Eq(Abs(x), 2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the same roots, but x**2 - 4 and Abs(x) - 2 are different expressions",
+   "id": "equivalence-079"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(x*y, 1)",
+    "Eq(y, 1/x)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the one-side forms differ by the factor x",
+   "id": "equivalence-080"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(x, 3)",
+    "x >= 3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "an equation and an inequality",
+   "id": "equivalence-081"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x > 3",
+    "3 < x"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "sympify keeps 3 < x as StrictLessThan(3, x)",
+   "id": "equivalence-082"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x > 3",
+    "-x < -3"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "id": "equivalence-083"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x > 3",
+    "2*x > 6"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the same solution set, but the one-side forms differ by the factor 2",
+   "id": "equivalence-084"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "2*x - 3 > 5",
+    "x > 4"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the same solution set, but the one-side forms are 2*x - 8 and x - 4",
+   "id": "equivalence-085"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x**2 < 4",
+    "Abs(x) < 2"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the same real solution set, but 4 - x**2 and 2 - Abs(x) are different expressions",
+   "id": "equivalence-086"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x > 3",
+    "-x > -3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the direction was not flipped when multiplying by -1",
+   "id": "equivalence-087"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x > 3",
+    "x < 3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "wrong direction",
+   "id": "equivalence-088"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x > 3",
+    "x >= 3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "strict vs non-strict",
+   "id": "equivalence-089"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x**2 < 4",
+    "x < 2"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "lost the lower bound -2",
+   "id": "equivalence-090"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "y > 2*x + 1",
+    "2*x - y < -1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "app",
+   "note": "both are y - 2*x - 1 > 0 on one side",
+   "id": "equivalence-091"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "y > 2*x + 1",
+    "-y > -2*x - 1"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the direction was not flipped when multiplying by -1",
+   "id": "equivalence-092"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "y > 2*x + 1",
+    "2*y > 4*x + 2"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "app",
+   "note": "the same half-plane, but the one-side forms differ by the factor 2",
+   "id": "equivalence-093"
+  }
+ ]
+}
