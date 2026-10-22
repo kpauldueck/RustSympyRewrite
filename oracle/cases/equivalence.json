@@ -1,0 +1,1329 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "equivalence",
+ "cases": [
+  {
+   "op": "equivalent",
+   "args": [
+    "(x + 1)**2",
+    "x**2 + 2*x + 1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-000"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x - 3)*(x + 2)",
+    "x**2 - x - 6"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-001"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x - 3)*(x + 2)",
+    "x**2 + x - 6"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; sign error in the middle term",
+   "id": "equivalence-002"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x + 1)**2",
+    "x**2 + 1"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; the classic dropped middle term",
+   "id": "equivalence-003"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x**2 - 9)/(x + 3)",
+    "x - 3"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; removable holes are ignored without the function option",
+   "id": "equivalence-004"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "1/x + 1/y",
+    "(x + y)/(x*y)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-005"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "1/(x + 1) - 1/(x - 1)",
+    "-2/(x**2 - 1)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-006"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "1/(x + 1)",
+    "1/x + 1"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-007"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "log(8)",
+    "3*log(2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-008"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "log(x, 2)",
+    "log(x)/log(2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; change of base",
+   "id": "equivalence-009"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "log(x) + log(y)",
+    "log(x*y)"
+   ],
+   "options": {
+    "assumptions": {
+     "x": {
+      "positive": true
+     },
+     "y": {
+      "positive": true
+     }
+    }
+   },
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-010"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "2*log(x)",
+    "log(x**2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; symbols are complex unless the item sets assumptions",
+   "id": "equivalence-011"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "2*log(x)",
+    "log(x**2)"
+   ],
+   "options": {
+    "assumptions": {
+     "x": {
+      "positive": true
+     }
+    }
+   },
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-012"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "log(x + y)",
+    "log(x) + log(y)"
+   ],
+   "options": {
+    "assumptions": {
+     "x": {
+      "positive": true
+     },
+     "y": {
+      "positive": true
+     }
+    }
+   },
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; log of a sum is not a sum of logs, even for positive x, y",
+   "id": "equivalence-013"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "E**(x + y)",
+    "E**x*E**y"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-014"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "4**x",
+    "2**(2*x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-015"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "400*(3/4)**t",
+    "300**t"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; the coefficient was multiplied into the base",
+   "id": "equivalence-016"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sin(x)**2 + cos(x)**2",
+    "1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-017"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sin(2*x)",
+    "2*sin(x)*cos(x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-018"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "cos(2*x)",
+    "1 - 2*sin(x)**2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-019"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "tan(x)",
+    "sin(x)/cos(x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-020"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sec(x)**2",
+    "1 + tan(x)**2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-021"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sin(x + y)",
+    "sin(x)*cos(y) + cos(x)*sin(y)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-022"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sin(2*x)",
+    "2*sin(x)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-023"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sin(x + y)",
+    "sin(x) + sin(y)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-024"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(8)",
+    "2*sqrt(2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-025"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(12)",
+    "3*sqrt(2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-026"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "1/(1 + sqrt(2))",
+    "sqrt(2) - 1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-027"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(2) + sqrt(3)",
+    "sqrt(5)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-028"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(x**2 + 9)",
+    "x + 3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-029"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(x**2)",
+    "x"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; symbols are complex unless the item sets assumptions",
+   "id": "equivalence-030"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(x**2)",
+    "x"
+   ],
+   "options": {
+    "assumptions": {
+     "x": {
+      "positive": true
+     }
+    }
+   },
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-031"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(x**2)",
+    "Abs(x)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; for complex x, sqrt(x**2) is not |x| (x = I gives I vs 1)",
+   "id": "equivalence-032"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "sqrt(x**2)",
+    "Abs(x)"
+   ],
+   "options": {
+    "assumptions": {
+     "x": {
+      "real": true
+     }
+    }
+   },
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-033"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "Abs(x - 2)",
+    "Abs(2 - x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-034"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "Abs(x)",
+    "x"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-035"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "x + 1",
+    "x - 1"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-036"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "2*x",
+    "x**2"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-037"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "x**2*x**3",
+    "x**6"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; exponents add when multiplying",
+   "id": "equivalence-038"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "-(x - 3)",
+    "x - 3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-039"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "v0*t + a*t**2/2",
+    "t*(2*v0 + a*t)/2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-040"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "pi/2",
+    "90*pi/180"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-041"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "pi",
+    "22/7"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-042"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "pi",
+    "3.14159"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; a typed decimal is an exact rational, never pi",
+   "id": "equivalence-043"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "0.5*x",
+    "x/2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-044"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "x**0.333",
+    "x**(1/3)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; 0.333 is exactly 333/1000, not 1/3",
+   "id": "equivalence-045"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "0.3333333333333333",
+    "1/3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; a 16-digit decimal is exact and is not 1/3",
+   "id": "equivalence-046"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "oo",
+    "oo"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; decided True too; oo - oo is nan, so the expand fallback decides",
+   "id": "equivalence-047"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "oo",
+    "-oo"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-048"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "zoo",
+    "zoo"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; decided True too; the expand fallback decides",
+   "id": "equivalence-049"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "oo",
+    "zoo"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-050"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "nan",
+    "0"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm",
+   "id": "equivalence-051"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "oo - oo",
+    "0"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm; oo - oo is nan",
+   "id": "equivalence-052"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "400*(3/4)**t",
+    "400*exp(t*log(3/4))"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "(3/4)**t is by definition exp(t*log(3/4)), but simplify never rewrites one into the other, so the app marks a correct exponential rewrite wrong.",
+   "sympy_gives": "False",
+   "id": "equivalence-053"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "tan(2*x)",
+    "2*tan(x)/(1 - tan(x)**2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The tangent double-angle identity holds wherever both sides are defined, but simplify cannot prove it, so the app marks it wrong.",
+   "sympy_gives": "False",
+   "id": "equivalence-054"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "log(x**2)",
+    "2*log(Abs(x))"
+   ],
+   "options": {
+    "assumptions": {
+     "x": {
+      "real": true
+     }
+    }
+   },
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "For real x (x != 0, both sides undefined at 0) log(x**2) = 2*log(|x|), but simplify cannot prove it even with x real.",
+   "sympy_gives": "False",
+   "id": "equivalence-055"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "400*exp(log(0.75)*t)",
+    "400*(3/4)**t"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Typed decimals are exact (0.75 = 3/4), so this is the same function; SymPy turns log(0.75) into a Float and never matches.",
+   "sympy_gives": "False",
+   "id": "equivalence-056"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "x**0.5",
+    "sqrt(x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Typed decimals are exact, so x**0.5 is x**(1/2); SymPy never equates a Float exponent with a Rational one.",
+   "sympy_gives": "False",
+   "id": "equivalence-057"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "0.1 + 0.2",
+    "0.3"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Typed decimals are exact (1/10 + 2/10 = 3/10); with binary Floats SymPy says the sum differs from 0.3.",
+   "sympy_gives": "False",
+   "id": "equivalence-058"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "log(0.5)",
+    "-log(2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Typed decimals are exact, so log(0.5) = log(1/2) = -log(2); SymPy evaluates log(0.5) to a Float.",
+   "sympy_gives": "False",
+   "id": "equivalence-059"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "2**0.5",
+    "sqrt(2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Typed decimals are exact, so 2**0.5 = 2**(1/2) = sqrt(2); SymPy evaluates 2**0.5 to a Float.",
+   "sympy_gives": "False",
+   "id": "equivalence-060"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "nan",
+    "nan"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "nan is equivalent to nothing, itself included (decided); the app's expand fallback says nan == nan.",
+   "sympy_gives": "True",
+   "id": "equivalence-061"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x**2 - 1)/(x - 1)",
+    "x + 1"
+   ],
+   "options": {
+    "function": true
+   },
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "As functions the left side has a hole at x = 1 that x + 1 lacks; the default (no option) answer ignores it.",
+   "sympy_gives": "True",
+   "id": "equivalence-062"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "1/(1/x + 1)",
+    "x/(x + 1)"
+   ],
+   "options": {
+    "function": true
+   },
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "As functions the complex fraction is undefined at x = 0 as well as x = -1, while x/(x + 1) is defined at 0.",
+   "sympy_gives": "True",
+   "id": "equivalence-063"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x**3 - x)/(x**2 - x)",
+    "(x**2 - 1)/(x - 1)"
+   ],
+   "options": {
+    "function": true
+   },
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Both simplify to x + 1, but the left side has holes at 0 and 1 and the right side only at 1.",
+   "sympy_gives": "True",
+   "id": "equivalence-064"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "tan(x)*cos(x)",
+    "sin(x)"
+   ],
+   "options": {
+    "function": true
+   },
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "As functions tan(x)*cos(x) is undefined where cos(x) = 0 (SymPy's continuous_domain misses this and says Reals).",
+   "sympy_gives": "True",
+   "id": "equivalence-065"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "1/(x + 1) - 1/(x - 1)",
+    "-2/(x**2 - 1)"
+   ],
+   "options": {
+    "function": true
+   },
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Both sides exclude exactly x = 1 and x = -1, so they are equal as functions.",
+   "sympy_gives": "True",
+   "id": "equivalence-066"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x**2 - 1)/(x - 1)",
+    "(x**2 + 2*x - 3)/(x - 1) - 2"
+   ],
+   "options": {
+    "function": true
+   },
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Both sides are x + 1 with the same single hole at x = 1, so they are equal as functions.",
+   "sympy_gives": "True",
+   "id": "equivalence-067"
+  },
+  {
+   "op": "equivalent",
+   "args": [
+    "(x + 1)**2",
+    "x**2 + 2*x + 1"
+   ],
+   "options": {
+    "function": true
+   },
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Polynomials have no holes, so the function option does not change the answer.",
+   "sympy_gives": "True",
+   "id": "equivalence-068"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(y, 2*x + 1)",
+    "Eq(2*x - y + 1, 0)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm (one side, up to sign); the sides differ by a factor of -1",
+   "id": "equivalence-069"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(x, 3)",
+    "Eq(3, x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm (one side, up to sign); swapping sides is a factor of -1",
+   "id": "equivalence-070"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(y, 2*x + 1)",
+    "Eq(y, 2*x - 1)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm (one side, up to sign); a different line",
+   "id": "equivalence-071"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(y, 2*x + 1)",
+    "Eq(2*y, 4*x + 1)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm (one side, up to sign); only some terms were doubled, so lhs - rhs are not constant multiples (a different line)",
+   "id": "equivalence-072"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(x**2, 4)",
+    "Eq(x, 2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm (one side, up to sign); squaring lost the root x = -2",
+   "id": "equivalence-073"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(x**2, 4)",
+    "Eq(Abs(x), 2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm (one side, up to sign); same roots, but lhs - rhs are not constant multiples, so not equivalent under the decided rule either",
+   "id": "equivalence-074"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(x*y, 1)",
+    "Eq(y, 1/x)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm (one side, up to sign); the sides differ by the factor x, which is not a constant, so the decided rule also says False",
+   "id": "equivalence-075"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(x, 3)",
+    "x >= 3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm (one side, up to sign); an equation is never equivalent to an inequality",
+   "id": "equivalence-076"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(y, 2*x + 1)",
+    "Eq(2*y, 4*x + 2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "lhs - rhs differ by the constant factor 2 (decided rule); the app today only allows a factor of -1.",
+   "sympy_gives": "False",
+   "id": "equivalence-077"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(y, 2*x + 1)",
+    "Eq(x, (y - 1)/2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Solving for x instead of y multiplies lhs - rhs by -1/2 (decided rule); the app today only allows a factor of -1.",
+   "sympy_gives": "False",
+   "id": "equivalence-078"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(2*x + 3, 11)",
+    "Eq(x, 4)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "lhs - rhs differ by the constant factor 2 (decided rule); the app today only allows a factor of -1.",
+   "sympy_gives": "False",
+   "id": "equivalence-079"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "Eq(x/2 + y/3, 1)",
+    "Eq(3*x + 2*y, 6)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Clearing denominators multiplies lhs - rhs by 6 (decided rule); the app today only allows a factor of -1.",
+   "sympy_gives": "False",
+   "id": "equivalence-080"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x > 3",
+    "3 < x"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "same solution set over the reals (solveset); the app's one-side rule agrees",
+   "id": "equivalence-081"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x > 3",
+    "-x < -3"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "same solution set over the reals (solveset); the app's one-side rule agrees",
+   "id": "equivalence-082"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x > 3",
+    "2*x > 6"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "same solution set over the reals (solveset); the app's one-side rule (up to sign only) says False",
+   "id": "equivalence-083"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "2*x - 3 > 5",
+    "x > 4"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "same solution set over the reals (solveset); the app's one-side rule (up to sign only) says False",
+   "id": "equivalence-084"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x**2 < 4",
+    "Abs(x) < 2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "same solution set over the reals (solveset); the app's one-side rule says False",
+   "id": "equivalence-085"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x > 3",
+    "-x > -3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "same solution set over the reals (solveset); the sign was not flipped when multiplying by -1",
+   "id": "equivalence-086"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x > 3",
+    "x < 3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "same solution set over the reals (solveset); wrong direction",
+   "id": "equivalence-087"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x > 3",
+    "x >= 3"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "same solution set over the reals (solveset); strict vs non-strict",
+   "id": "equivalence-088"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "x**2 < 4",
+    "x < 2"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "same solution set over the reals (solveset); lost the lower bound -2",
+   "id": "equivalence-089"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "y > 2*x + 1",
+    "2*x - y < -1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm (one side, up to sign); both are y - 2*x - 1 > 0",
+   "id": "equivalence-090"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "y > 2*x + 1",
+    "-y > -2*x - 1"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "sympy",
+   "note": "app algorithm (one side, up to sign); the direction was not flipped when multiplying by -1, giving the other half-plane",
+   "id": "equivalence-091"
+  },
+  {
+   "op": "equivalent_relation",
+   "args": [
+    "y > 2*x + 1",
+    "2*y > 4*x + 2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Multiplying both sides by 2 keeps the same half-plane (same solution set); the app's one-side rule says False.",
+   "sympy_gives": "False",
+   "id": "equivalence-092"
+  },
+  {
+   "op": "equivalent_factors",
+   "args": [
+    "[x + 3, x - 2]",
+    "[x - 2, x + 3]"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Order of the factors does not matter.",
+   "sympy_gives": "True",
+   "id": "equivalence-093"
+  },
+  {
+   "op": "equivalent_factors",
+   "args": [
+    "[2 - x, -x - 3]",
+    "[x - 2, x + 3]"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Each factor matches up to sign and the two sign changes cancel in the product.",
+   "sympy_gives": "True",
+   "id": "equivalence-094"
+  },
+  {
+   "op": "equivalent_factors",
+   "args": [
+    "[2 - x, x + 3]",
+    "[x - 2, x + 3]"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Each factor matches up to sign, but the product has the wrong sign.",
+   "sympy_gives": "False",
+   "id": "equivalence-095"
+  },
+  {
+   "op": "equivalent_factors",
+   "args": [
+    "[-1, 2 - x, x + 3]",
+    "[x - 2, x + 3]"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The unit -1 is ignored when pairing factors and fixes the sign of the product.",
+   "sympy_gives": "True",
+   "id": "equivalence-096"
+  },
+  {
+   "op": "equivalent_factors",
+   "args": [
+    "[x**2 - 4, x + 3]",
+    "[x - 2, x + 2, x + 3]"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The products are equal but x**2 - 4 is not one of the key's factors.",
+   "sympy_gives": "True",
+   "id": "equivalence-097"
+  },
+  {
+   "op": "equivalent_factors",
+   "args": [
+    "[x + 3, x - 2]",
+    "[x + 2, x - 3]"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Sign error inside both factors: neither factor matches and the products differ.",
+   "sympy_gives": "False",
+   "id": "equivalence-098"
+  },
+  {
+   "op": "equivalent_factors",
+   "args": [
+    "[-2, 1 - x, x + 1]",
+    "[2, x - 1, x + 1]"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Numeric factors pair up to sign like the others (-2 with 2, 1 - x with x - 1) and the products agree.",
+   "sympy_gives": "True",
+   "id": "equivalence-099"
+  },
+  {
+   "op": "equivalent_factors",
+   "args": [
+    "[2*x - 2, x + 1]",
+    "[2, x - 1, x + 1]"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Units are only 1 and -1, so 2*x - 2 does not pair with x - 1 and the lists have different lengths (decided).",
+   "sympy_gives": "True",
+   "id": "equivalence-100"
+  },
+  {
+   "op": "equivalent_factors",
+   "args": [
+    "[x**2 + 2*x + 1, x - 5]",
+    "[(x + 1)**2, x - 5]"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Factors are compared by equivalence, not by form; whether the student's form is factored is a separate form check.",
+   "sympy_gives": "True",
+   "id": "equivalence-101"
+  }
+ ]
+}

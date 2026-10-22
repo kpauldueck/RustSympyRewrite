@@ -10,6 +10,7 @@
    "expected": "1",
    "expected_latex": "1",
    "compare": "equivalent",
+   "source": "sympy",
    "id": "simplify-000"
   },
   {
@@ -20,6 +21,7 @@
    "expected": "x + 1",
    "expected_latex": "x + 1",
    "compare": "equivalent",
+   "source": "sympy",
    "id": "simplify-001"
   },
   {
@@ -30,6 +32,7 @@
    "expected": "tan(x)**2",
    "expected_latex": "\\tan^{2}{\\left(x \\right)}",
    "compare": "equivalent",
+   "source": "sympy",
    "id": "simplify-002"
   },
   {
@@ -40,6 +43,7 @@
    "expected": "sin(2*x)",
    "expected_latex": "\\sin{\\left(2 x \\right)}",
    "compare": "equivalent",
+   "source": "sympy",
    "id": "simplify-003"
   },
   {
@@ -50,6 +54,7 @@
    "expected": "exp(x + y)",
    "expected_latex": "e^{x + y}",
    "compare": "equivalent",
+   "source": "sympy",
    "id": "simplify-004"
   },
   {
@@ -60,6 +65,7 @@
    "expected": "sin(x)",
    "expected_latex": "\\sin{\\left(x \\right)}",
    "compare": "equivalent",
+   "source": "sympy",
    "id": "simplify-005"
   },
   {
@@ -70,6 +76,7 @@
    "expected": "sqrt(2)/2",
    "expected_latex": "\\frac{\\sqrt{2}}{2}",
    "compare": "exact",
+   "source": "sympy",
    "id": "simplify-006"
   },
   {
@@ -80,6 +87,7 @@
    "expected": "-1 + sqrt(2)",
    "expected_latex": "-1 + \\sqrt{2}",
    "compare": "exact",
+   "source": "sympy",
    "id": "simplify-007"
   },
   {
@@ -90,6 +98,7 @@
    "expected": "sqrt(2) + sqrt(5)",
    "expected_latex": "\\sqrt{2} + \\sqrt{5}",
    "compare": "exact",
+   "source": "sympy",
    "id": "simplify-008"
   },
   {
@@ -100,6 +109,7 @@
    "expected": "log(x*y)",
    "expected_latex": "\\log{\\left(x y \\right)}",
    "compare": "exact",
+   "source": "sympy",
    "id": "simplify-009"
   },
   {
@@ -110,6 +120,7 @@
    "expected": "log(x**2/y)",
    "expected_latex": "\\log{\\left(\\frac{x^{2}}{y} \\right)}",
    "compare": "exact",
+   "source": "sympy",
    "id": "simplify-010"
   },
   {
@@ -120,6 +131,7 @@
    "expected": "log(x) + log(y)",
    "expected_latex": "\\log{\\left(x \\right)} + \\log{\\left(y \\right)}",
    "compare": "exact",
+   "source": "sympy",
    "id": "simplify-011"
   },
   {
@@ -130,6 +142,7 @@
    "expected": "2*log(x) - log(y)",
    "expected_latex": "2 \\log{\\left(x \\right)} - \\log{\\left(y \\right)}",
    "compare": "exact",
+   "source": "sympy",
    "id": "simplify-012"
   },
   {
@@ -140,6 +153,7 @@
    "expected": "tan(x)",
    "expected_latex": "\\tan{\\left(x \\right)}",
    "compare": "equivalent",
+   "source": "sympy",
    "id": "simplify-013"
   }
  ]

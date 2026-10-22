@@ -1,0 +1,1318 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "numeric_input",
+ "cases": [
+  {
+   "op": "parse_number",
+   "args": [
+    "  42  "
+   ],
+   "expected": "42",
+   "expected_latex": "42",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); surrounding whitespace is ignored",
+   "sympy_gives": "42",
+   "id": "numeric_input-000"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "-0.5"
+   ],
+   "expected": "-1/2",
+   "expected_latex": "- \\frac{1}{2}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); typed decimals are exact rationals, never Floats",
+   "sympy_gives": "-0.500000000000000",
+   "id": "numeric_input-001"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "−0.5"
+   ],
+   "expected": "-1/2",
+   "expected_latex": "- \\frac{1}{2}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); unicode minus U+2212 is a minus sign (sympify cannot read it)",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-002"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "+5"
+   ],
+   "expected": "5",
+   "expected_latex": "5",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); an explicit plus sign is allowed",
+   "sympy_gives": "5",
+   "id": "numeric_input-003"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    ".5"
+   ],
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); a decimal may start with the point",
+   "sympy_gives": "0.500000000000000",
+   "id": "numeric_input-004"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "-.5"
+   ],
+   "expected": "-1/2",
+   "expected_latex": "- \\frac{1}{2}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); a negative decimal may start with the point",
+   "sympy_gives": "-0.500000000000000",
+   "id": "numeric_input-005"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "5."
+   ],
+   "expected": "5",
+   "expected_latex": "5",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); a trailing decimal point is allowed (it only matters for sig_figs)",
+   "sympy_gives": "5.00000000000000",
+   "id": "numeric_input-006"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "2.50"
+   ],
+   "expected": "5/2",
+   "expected_latex": "\\frac{5}{2}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); trailing zeros do not change the value",
+   "sympy_gives": "2.50000000000000",
+   "id": "numeric_input-007"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "0.00450"
+   ],
+   "expected": "9/2000",
+   "expected_latex": "\\frac{9}{2000}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); leading and trailing zeros; exact",
+   "sympy_gives": "0.00450000000000000",
+   "id": "numeric_input-008"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.14"
+   ],
+   "expected": "157/50",
+   "expected_latex": "\\frac{157}{50}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); 3.14 is the decimal typed, not pi",
+   "sympy_gives": "3.14000000000000",
+   "id": "numeric_input-009"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1,200"
+   ],
+   "expected": "1200",
+   "expected_latex": "1200",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); comma thousands separator (groups of exactly 3); sympify reads a tuple",
+   "sympy_gives": "(1, 200)",
+   "id": "numeric_input-010"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1,234,567"
+   ],
+   "expected": "1234567",
+   "expected_latex": "1234567",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); several thousands groups",
+   "sympy_gives": "(1, 234, 567)",
+   "id": "numeric_input-011"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "-1,234.5"
+   ],
+   "expected": "-2469/2",
+   "expected_latex": "- \\frac{2469}{2}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); thousands separator with a decimal part",
+   "sympy_gives": "(-1, 234.5)",
+   "id": "numeric_input-012"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1{,}200"
+   ],
+   "expected": "1200",
+   "expected_latex": "1200",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); LaTeX writes a thousands comma as {,}",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-013"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1,000"
+   ],
+   "expected": "1000",
+   "expected_latex": "1000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); decided: a 3-digit group is a thousands separator even though a European reader would take 1,000 as 1",
+   "sympy_gives": "(1, 0)",
+   "id": "numeric_input-014"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1,2"
+   ],
+   "expected": "invalid:ambiguous_comma",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); decided: a group that is not 3 digits could be a decimal comma, so it is refused rather than guessed",
+   "sympy_gives": "(1, 2)",
+   "id": "numeric_input-015"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "0,5"
+   ],
+   "expected": "invalid:ambiguous_comma",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); European decimal comma; refused, never read as 5 or 0.5",
+   "sympy_gives": "(0, 5)",
+   "id": "numeric_input-016"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1,2345"
+   ],
+   "expected": "invalid:ambiguous_comma",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); 4-digit group",
+   "sympy_gives": "(1, 2345)",
+   "id": "numeric_input-017"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "0,125"
+   ],
+   "expected": "invalid:ambiguous_comma",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); a 3-digit group after a leading 0 is a European decimal (0.125), never thousands grouping; sympify reads a tuple",
+   "sympy_gives": "(0, 125)",
+   "id": "numeric_input-018"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1234,567"
+   ],
+   "expected": "invalid:ambiguous_comma",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); a 4-digit first group is not thousands grouping (1234.567 in European notation)",
+   "sympy_gives": "(1234, 567)",
+   "id": "numeric_input-019"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2e4"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); e notation",
+   "sympy_gives": "32000.0000000000",
+   "id": "numeric_input-020"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2E4"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); capital E",
+   "sympy_gives": "32000.0000000000",
+   "id": "numeric_input-021"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2e+4"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); explicit plus in the exponent",
+   "sympy_gives": "32000.0000000000",
+   "id": "numeric_input-022"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2e-4"
+   ],
+   "expected": "1/3125",
+   "expected_latex": "\\frac{1}{3125}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); negative exponent; exact",
+   "sympy_gives": "0.000320000000000000",
+   "id": "numeric_input-023"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2*10^4"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); caret power of ten (works in the app today)",
+   "sympy_gives": "32000.0000000000",
+   "id": "numeric_input-024"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2*10**4"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); Python power",
+   "sympy_gives": "32000.0000000000",
+   "id": "numeric_input-025"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2*10^{4}"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); braced exponent after a plain *; sympify reads {4} as a set",
+   "sympy_gives": "error: TypeError: unsupported operand type(s) for ** or pow(): 'Integer' and 'set'",
+   "id": "numeric_input-026"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2\\times10^{4}"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); LaTeX \\times with braced exponent (fails in the app today)",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-027"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2\\times 10^4"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); LaTeX \\times with a space and bare exponent",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-028"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2 \\times 10 ^ { 4 }"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); spaces everywhere inside the power of ten",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-029"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2×10^4"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); unicode multiplication sign U+00D7",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-030"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2 x 10^4"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); letter x used as a times sign between mantissa and 10^n",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-031"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2 X 10^4"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); capital X as a times sign",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-032"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1.6x10^-19"
+   ],
+   "expected": "1/6250000000000000000",
+   "expected_latex": "\\frac{1}{6250000000000000000}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); x with no spaces and an unbraced negative exponent, as students type it",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-033"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "2.5*10^(-3)"
+   ],
+   "expected": "1/400",
+   "expected_latex": "\\frac{1}{400}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); parenthesised exponent, as calculators write it; sympify gives a Float",
+   "sympy_gives": "0.00250000000000000",
+   "id": "numeric_input-034"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1.5 \\cdot 10^{3}"
+   ],
+   "expected": "1500",
+   "expected_latex": "1500",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); LaTeX \\cdot",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-035"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1.5·10^3"
+   ],
+   "expected": "1500",
+   "expected_latex": "1500",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); middle dot U+00B7",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-036"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "6.02\\times10^{23}"
+   ],
+   "expected": "602000000000000000000000",
+   "expected_latex": "602000000000000000000000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); Avogadro-sized exponent stays exact",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-037"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "−1.6×10^{−19}"
+   ],
+   "expected": "-1/6250000000000000000",
+   "expected_latex": "- \\frac{1}{6250000000000000000}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); unicode minus in the sign and the exponent",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-038"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2×10⁴"
+   ],
+   "expected": "32000",
+   "expected_latex": "32000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); unicode superscript exponent digits",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-039"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "10^{-3}"
+   ],
+   "expected": "1/1000",
+   "expected_latex": "\\frac{1}{1000}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); a bare power of ten",
+   "sympy_gives": "error: TypeError: unsupported operand type(s) for ** or pow(): 'Integer' and 'set'",
+   "id": "numeric_input-040"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "10^23"
+   ],
+   "expected": "100000000000000000000000",
+   "expected_latex": "100000000000000000000000",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); plain text: the whole digit run is the exponent (never 10^2 times 3)",
+   "sympy_gives": "100000000000000000000000",
+   "id": "numeric_input-041"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2\\times10^{4.5}"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); a power of ten needs an integer exponent",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-042"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3.2e"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); e with no exponent",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-043"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "45%"
+   ],
+   "expected": "9/20",
+   "expected_latex": "\\frac{9}{20}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); percent divides by 100",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-044"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "45\\%"
+   ],
+   "expected": "9/20",
+   "expected_latex": "\\frac{9}{20}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); LaTeX escaped percent (fails in the app today)",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-045"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "45 %"
+   ],
+   "expected": "9/20",
+   "expected_latex": "\\frac{9}{20}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); space before the percent sign",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-046"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "12.5%"
+   ],
+   "expected": "1/8",
+   "expected_latex": "\\frac{1}{8}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); decimal percent; exact",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-047"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "3/4"
+   ],
+   "expected": "3/4",
+   "expected_latex": "\\frac{3}{4}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); integer fraction",
+   "sympy_gives": "3/4",
+   "id": "numeric_input-048"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "-3/4"
+   ],
+   "expected": "-3/4",
+   "expected_latex": "- \\frac{3}{4}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); negative fraction",
+   "sympy_gives": "-3/4",
+   "id": "numeric_input-049"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "6/8"
+   ],
+   "expected": "3/4",
+   "expected_latex": "\\frac{3}{4}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); the value, not the form (form checks are separate)",
+   "sympy_gives": "3/4",
+   "id": "numeric_input-050"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "\\frac{3}{4}"
+   ],
+   "expected": "3/4",
+   "expected_latex": "\\frac{3}{4}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); LaTeX fraction",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-051"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "-\\frac{3}{4}"
+   ],
+   "expected": "-3/4",
+   "expected_latex": "- \\frac{3}{4}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); sign before \\frac",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-052"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "\\frac{-3}{4}"
+   ],
+   "expected": "-3/4",
+   "expected_latex": "- \\frac{3}{4}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); sign inside the numerator",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-053"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "\\dfrac{1}{2}"
+   ],
+   "expected": "1/2",
+   "expected_latex": "\\frac{1}{2}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); \\dfrac is read as \\frac",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-054"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1/0"
+   ],
+   "expected": "invalid:division_by_zero",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); refused, never zoo",
+   "sympy_gives": "zoo",
+   "id": "numeric_input-055"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1 1/2"
+   ],
+   "expected": "invalid:mixed_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); decided: a mixed number is refused rather than guessed as 3/2; the student is asked to write 3/2 or 1.5",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-056"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "-2 3/4"
+   ],
+   "expected": "invalid:mixed_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); negative mixed number (is it -11/4 or -5/4?)",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-057"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1\\frac{1}{2}"
+   ],
+   "expected": "invalid:mixed_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); LaTeX mixed number; implicit multiplication would silently read it as 1/2",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-058"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "\\sqrt{2}"
+   ],
+   "expected": "sqrt(2)",
+   "expected_latex": "\\sqrt{2}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); exact square root",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-059"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "\\sqrt{8}"
+   ],
+   "expected": "2*sqrt(2)",
+   "expected_latex": "2 \\sqrt{2}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); the value is exact; SymPy's canonical form pulls out the square",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-060"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "2\\sqrt{3}"
+   ],
+   "expected": "2*sqrt(3)",
+   "expected_latex": "2 \\sqrt{3}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); coefficient times a root",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-061"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "\\frac{1}{\\sqrt{2}}"
+   ],
+   "expected": "sqrt(2)/2",
+   "expected_latex": "\\frac{\\sqrt{2}}{2}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); SymPy's canonical form rationalises the denominator",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-062"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "\\sqrt[3]{2}"
+   ],
+   "expected": "2**(1/3)",
+   "expected_latex": "\\sqrt[3]{2}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); cube root",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-063"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "\\sqrt{-4}"
+   ],
+   "expected": "invalid:not_real",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); a numeric answer is a real number",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-064"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "2\\pi"
+   ],
+   "expected": "2*pi",
+   "expected_latex": "2 \\pi",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); LaTeX pi with a coefficient",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-065"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "\\frac{3\\pi}{4}"
+   ],
+   "expected": "3*pi/4",
+   "expected_latex": "\\frac{3 \\pi}{4}",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); pi inside a fraction",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-066"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "2π"
+   ],
+   "expected": "2*pi",
+   "expected_latex": "2 \\pi",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); unicode pi U+03C0",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-067"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "2pi"
+   ],
+   "expected": "2*pi",
+   "expected_latex": "2 \\pi",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); plain-text pi",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-068"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    ""
+   ],
+   "expected": "invalid:empty",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); nothing typed",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-069"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "   "
+   ],
+   "expected": "invalid:empty",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); only whitespace",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-070"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "abc"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); letters; sympify makes a Symbol",
+   "sympy_gives": "abc",
+   "id": "numeric_input-071"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1.2.3"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); two decimal points",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-072"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "--5"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); double sign; sympify silently gives 5",
+   "sympy_gives": "5",
+   "id": "numeric_input-073"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "4 2"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); two numbers separated by a space are neither 42 nor 4*2",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-074"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "2+3"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); a numeric answer is one number, not arithmetic (sympify evaluates it to 5)",
+   "sympy_gives": "5",
+   "id": "numeric_input-075"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "2 x 3"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); x is a times sign only before a power of ten; 2 x 3 is arithmetic, never silently 6",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-076"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "1_000"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); Python digit grouping; sympify silently gives 1000",
+   "sympy_gives": "1000",
+   "id": "numeric_input-077"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "0x1F"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); hexadecimal; sympify silently gives 31",
+   "sympy_gives": "31",
+   "id": "numeric_input-078"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "inf"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); Python float spelling of infinity",
+   "sympy_gives": "inf",
+   "id": "numeric_input-079"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "nan"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); Python float spelling of not-a-number; sympify gives nan",
+   "sympy_gives": "nan",
+   "id": "numeric_input-080"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "\\infty"
+   ],
+   "expected": "refused:\\infty",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); infinity is not a numeric answer; refused by name",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-081"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "\\ln 2"
+   ],
+   "expected": "refused:\\ln",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); functions belong to expression answers; refused by name",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-082"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "0.\\overline{3}"
+   ],
+   "expected": "refused:\\overline",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); repeating-decimal bar is not supported; refused by name, never read as conjugate",
+   "sympy_gives": "error: SympifyError (TokenError)",
+   "id": "numeric_input-083"
+  },
+  {
+   "op": "parse_number",
+   "args": [
+    "12 m/s"
+   ],
+   "expected": "invalid:unit_not_allowed",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); decided: a unit after the number is refused by the numeric grader, never dropped; quantity items use parse_quantity",
+   "sympy_gives": "error: SympifyError (SyntaxError)",
+   "id": "numeric_input-084"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "0.00450"
+   ],
+   "expected": "3",
+   "expected_latex": "3",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); leading zeros never count; the trailing zero after the point does",
+   "id": "numeric_input-085"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "1200"
+   ],
+   "expected": "2",
+   "expected_latex": "2",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); trailing zeros without a decimal point do not count",
+   "id": "numeric_input-086"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "1200."
+   ],
+   "expected": "4",
+   "expected_latex": "4",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); a trailing decimal point makes the trailing zeros significant",
+   "id": "numeric_input-087"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "1.200e3"
+   ],
+   "expected": "4",
+   "expected_latex": "4",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); count the mantissa of e notation",
+   "id": "numeric_input-088"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "1.2\\times10^{3}"
+   ],
+   "expected": "2",
+   "expected_latex": "2",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); count the mantissa of \\times notation",
+   "id": "numeric_input-089"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "3.20×10^4"
+   ],
+   "expected": "3",
+   "expected_latex": "3",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); trailing zero in the mantissa counts",
+   "id": "numeric_input-090"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "101"
+   ],
+   "expected": "3",
+   "expected_latex": "3",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); a zero between nonzero digits counts",
+   "id": "numeric_input-091"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "5.0e-3"
+   ],
+   "expected": "2",
+   "expected_latex": "2",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); negative exponent; the trailing zero of the mantissa counts",
+   "id": "numeric_input-092"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "10.0"
+   ],
+   "expected": "3",
+   "expected_latex": "3",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); zeros after the point count, and so the zero before it",
+   "id": "numeric_input-093"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "0.10"
+   ],
+   "expected": "2",
+   "expected_latex": "2",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); leading zero no, trailing zero yes",
+   "id": "numeric_input-094"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    ".5"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); leading-point decimal",
+   "id": "numeric_input-095"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "-0.0450"
+   ],
+   "expected": "3",
+   "expected_latex": "3",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); the sign is ignored",
+   "id": "numeric_input-096"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "1,200"
+   ],
+   "expected": "2",
+   "expected_latex": "2",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); thousands commas are ignored",
+   "id": "numeric_input-097"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "12.5%"
+   ],
+   "expected": "3",
+   "expected_latex": "3",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); count the digits before the percent sign",
+   "id": "numeric_input-098"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "0"
+   ],
+   "expected": "1",
+   "expected_latex": "1",
+   "compare": "exact",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); decided: a lone zero has one significant figure",
+   "id": "numeric_input-099"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "3/4"
+   ],
+   "expected": "invalid:not_a_decimal",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); a fraction is exact and has no significant figures",
+   "id": "numeric_input-100"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "\\sqrt{2}"
+   ],
+   "expected": "invalid:not_a_decimal",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); an exact root has no significant figures",
+   "id": "numeric_input-101"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "2\\pi"
+   ],
+   "expected": "invalid:not_a_decimal",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); an exact multiple of pi has no significant figures",
+   "id": "numeric_input-102"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "1,2"
+   ],
+   "expected": "invalid:ambiguous_comma",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); same refusal as parse_number",
+   "id": "numeric_input-103"
+  },
+  {
+   "op": "sig_figs",
+   "args": [
+    "abc"
+   ],
+   "expected": "invalid:not_a_number",
+   "compare": "error",
+   "source": "spec",
+   "note": "numeric grader (not SymPy); same refusal as parse_number",
+   "id": "numeric_input-104"
+  }
+ ]
+}

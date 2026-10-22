@@ -9,13 +9,18 @@ Writes one JSON file per topic into oracle/cases/. The Rust conformance
 runner (crates/rsympy/tests/oracle.rs) reads those files; Rust CI never needs
 Python. Do not edit the JSON by hand -- change this script and regenerate.
 
-Compare modes:
-  exact          our canonical str() must equal SymPy's
+The case format is documented in caselib.py. Compare modes:
+  exact          our canonical str() must equal the expected one
   equivalent     same value (numeric spot checks + simplify(a - b) == 0)
   set            same solution set, any order
   antiderivative d/dx(ours) must be equivalent to the integrand
+  error          we must refuse the input with the expected error kind
+
+Topics live in two places: the general ones below, and one module per topic
+in oracle/topics/ (each defines TOPIC and generate()).
 """
 
+import importlib
 import json
 import pathlib
 
@@ -26,6 +31,8 @@ from sympy import (
     simplify, sin, solveset, sqrt, symbols, tan, together, trigsimp,
 )
 
+from caselib import case
+
 PINNED = "1.14.0"
 assert sp.__version__ == PINNED, f"need sympy=={PINNED}, have {sp.__version__}"
 
@@ -33,28 +40,7 @@ x, y, z, t = symbols("x y z t")
 n = symbols("n", integer=True)
 a = symbols("a", positive=True)
 
-# Assumptions of every non-plain symbol used above. Argument strings lose
-# assumptions, so each case records the ones its symbols carry.
-DECLARED = {"n": {"integer": True}, "a": {"positive": True}}
-
 OUT = pathlib.Path(__file__).parent / "cases"
-
-
-def case(op, args, result, compare="exact", **extra):
-    names = set()
-    for e in args:
-        if isinstance(e, sp.Basic):
-            names |= {str(s) for s in e.free_symbols}
-    assumptions = {k: v for k, v in DECLARED.items() if k in names}
-    return {
-        "op": op,
-        "args": [sp.sstr(e) if isinstance(e, sp.Basic) else str(e) for e in args],
-        "expected": sp.sstr(result),
-        "expected_latex": sp.latex(result),
-        "compare": compare,
-        **({"assumptions": assumptions} if assumptions else {}),
-        **extra,
-    }
 
 
 def numbers():
@@ -281,18 +267,32 @@ TOPICS = {
 }
 
 
+def topic_modules():
+    """Topic modules in oracle/topics/, sorted by file name."""
+    here = pathlib.Path(__file__).parent / "topics"
+    for path in sorted(here.glob("[!_]*.py")):
+        mod = importlib.import_module(f"topics.{path.stem}")
+        yield mod.TOPIC, mod.generate
+
+
 def main():
     OUT.mkdir(exist_ok=True)
+    generators = dict(TOPICS)
+    for topic, gen in topic_modules():
+        assert topic not in generators, f"duplicate topic {topic}"
+        generators[topic] = gen
+    stale = {p.stem for p in OUT.glob("*.json")} - set(generators)
+    assert not stale, f"cases with no generator: {sorted(stale)}"
     total = 0
-    for topic, gen in TOPICS.items():
+    for topic, gen in generators.items():
         cases = gen()
         for i, c in enumerate(cases):
             c["id"] = f"{topic}-{i:03d}"
         doc = {"sympy_version": PINNED, "topic": topic, "cases": cases}
         (OUT / f"{topic}.json").write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
         total += len(cases)
-        print(f"{topic:10s} {len(cases):4d}")
-    print(f"{'total':10s} {total:4d}")
+        print(f"{topic:16s} {len(cases):4d}")
+    print(f"{'total':16s} {total:4d}")
 
 
 if __name__ == "__main__":

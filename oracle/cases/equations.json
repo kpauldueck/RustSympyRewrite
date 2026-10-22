@@ -12,6 +12,7 @@
    "expected": "{4}",
    "expected_latex": "\\left\\{4\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-000"
   },
   {
@@ -24,6 +25,7 @@
    "expected": "{2, 3}",
    "expected_latex": "\\left\\{2, 3\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-001"
   },
   {
@@ -36,6 +38,7 @@
    "expected": "EmptySet",
    "expected_latex": "\\emptyset",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-002"
   },
   {
@@ -48,6 +51,7 @@
    "expected": "{-sqrt(2), sqrt(2)}",
    "expected_latex": "\\left\\{- \\sqrt{2}, \\sqrt{2}\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-003"
   },
   {
@@ -60,6 +64,7 @@
    "expected": "{1, 2, 3}",
    "expected_latex": "\\left\\{1, 2, 3\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-004"
   },
   {
@@ -72,6 +77,7 @@
    "expected": "{-2, -1, 1, 2}",
    "expected_latex": "\\left\\{-2, -1, 1, 2\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-005"
   },
   {
@@ -84,6 +90,7 @@
    "expected": "{7/2}",
    "expected_latex": "\\left\\{\\frac{7}{2}\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-006"
   },
   {
@@ -96,6 +103,7 @@
    "expected": "{6}",
    "expected_latex": "\\left\\{6\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-007"
   },
   {
@@ -108,6 +116,7 @@
    "expected": "{log(5)/2}",
    "expected_latex": "\\left\\{\\frac{\\log{\\left(5 \\right)}}{2}\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-008"
   },
   {
@@ -120,6 +129,7 @@
    "expected": "{8}",
    "expected_latex": "\\left\\{8\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-009"
   },
   {
@@ -132,6 +142,7 @@
    "expected": "{-2, 8}",
    "expected_latex": "\\left\\{-2, 8\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-010"
   },
   {
@@ -144,6 +155,7 @@
    "expected": "Union(ImageSet(Lambda(_n, 2*_n*pi + pi/6), Integers), ImageSet(Lambda(_n, 2*_n*pi + 5*pi/6), Integers))",
    "expected_latex": "\\left\\{2 n \\pi + \\frac{\\pi}{6}\\; \\middle|\\; n \\in \\mathbb{Z}\\right\\} \\cup \\left\\{2 n \\pi + \\frac{5 \\pi}{6}\\; \\middle|\\; n \\in \\mathbb{Z}\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-011"
   },
   {
@@ -156,6 +168,7 @@
    "expected": "Union(ImageSet(Lambda(_n, 2*_n*pi + 2*pi/3), Integers), ImageSet(Lambda(_n, 2*_n*pi + 4*pi/3), Integers))",
    "expected_latex": "\\left\\{2 n \\pi + \\frac{2 \\pi}{3}\\; \\middle|\\; n \\in \\mathbb{Z}\\right\\} \\cup \\left\\{2 n \\pi + \\frac{4 \\pi}{3}\\; \\middle|\\; n \\in \\mathbb{Z}\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-012"
   },
   {
@@ -168,6 +181,7 @@
    "expected": "{-I, I}",
    "expected_latex": "\\left\\{- i, i\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-013"
   },
   {
@@ -180,6 +194,7 @@
    "expected": "{-1 - 2*I, -1 + 2*I}",
    "expected_latex": "\\left\\{-1 - 2 i, -1 + 2 i\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-014"
   },
   {
@@ -192,6 +207,7 @@
    "expected": "Interval.open(4, oo)",
    "expected_latex": "\\left(4, \\infty\\right)",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-015"
   },
   {
@@ -204,6 +220,7 @@
    "expected": "Interval.open(-2, 2)",
    "expected_latex": "\\left(-2, 2\\right)",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-016"
   },
   {
@@ -216,6 +233,7 @@
    "expected": "Union(Interval.open(-oo, -2), Interval(1, oo))",
    "expected_latex": "\\left(-\\infty, -2\\right) \\cup \\left[1, \\infty\\right)",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-017"
   },
   {
@@ -228,6 +246,7 @@
    "expected": "Interval(-2, 4)",
    "expected_latex": "\\left[-2, 4\\right]",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-018"
   },
   {
@@ -239,6 +258,7 @@
    "expected": "{(2, 3)}",
    "expected_latex": "\\left\\{\\left( 2, \\  3\\right)\\right\\}",
    "compare": "set",
+   "source": "sympy",
    "id": "equations-019"
   }
  ]

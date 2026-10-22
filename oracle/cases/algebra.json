@@ -10,6 +10,7 @@
    "expected": "x**2 + 2*x + 1",
    "expected_latex": "x^{2} + 2 x + 1",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-000"
   },
   {
@@ -20,6 +21,7 @@
    "expected": "x**3 - 3*x**2*y + 3*x*y**2 - y**3",
    "expected_latex": "x^{3} - 3 x^{2} y + 3 x y^{2} - y^{3}",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-001"
   },
   {
@@ -30,6 +32,7 @@
    "expected": "2*x**2 - 7*x - 15",
    "expected_latex": "2 x^{2} - 7 x - 15",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-002"
   },
   {
@@ -40,6 +43,7 @@
    "expected": "x**2 + 2*x*y + 2*x*z + y**2 + 2*y*z + z**2",
    "expected_latex": "x^{2} + 2 x y + 2 x z + y^{2} + 2 y z + z^{2}",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-003"
   },
   {
@@ -50,6 +54,7 @@
    "expected": "x**4 + x**3 - x - 1",
    "expected_latex": "x^{4} + x^{3} - x - 1",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-004"
   },
   {
@@ -60,6 +65,7 @@
    "expected": "x**2 + 2*sqrt(2)*x + 2",
    "expected_latex": "x^{2} + 2 \\sqrt{2} x + 2",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-005"
   },
   {
@@ -70,6 +76,7 @@
    "expected": "(x - 3)*(x - 2)",
    "expected_latex": "\\left(x - 3\\right) \\left(x - 2\\right)",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-006"
   },
   {
@@ -80,6 +87,7 @@
    "expected": "(x - 1)*(x**2 + x + 1)",
    "expected_latex": "\\left(x - 1\\right) \\left(x^{2} + x + 1\\right)",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-007"
   },
   {
@@ -90,6 +98,7 @@
    "expected": "(2*x - 3*y)*(2*x + 3*y)",
    "expected_latex": "\\left(2 x - 3 y\\right) \\left(2 x + 3 y\\right)",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-008"
   },
   {
@@ -100,6 +109,7 @@
    "expected": "(x - 2)*(x + 2)*(x**2 + 4)",
    "expected_latex": "\\left(x - 2\\right) \\left(x + 2\\right) \\left(x^{2} + 4\\right)",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-009"
   },
   {
@@ -110,6 +120,7 @@
    "expected": "(2*x + 7)*(3*x - 5)",
    "expected_latex": "\\left(2 x + 7\\right) \\left(3 x - 5\\right)",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-010"
   },
   {
@@ -120,6 +131,7 @@
    "expected": "(x + y)**3",
    "expected_latex": "\\left(x + y\\right)^{3}",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-011"
   },
   {
@@ -130,6 +142,7 @@
    "expected": "2*x*(x - 1)*(x + 1)",
    "expected_latex": "2 x \\left(x - 1\\right) \\left(x + 1\\right)",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-012"
   },
   {
@@ -140,6 +153,7 @@
    "expected": "x**2 + 1",
    "expected_latex": "x^{2} + 1",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-013"
   },
   {
@@ -150,6 +164,7 @@
    "expected": "x + 1",
    "expected_latex": "x + 1",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-014"
   },
   {
@@ -160,6 +175,7 @@
    "expected": "(x + 2)/(x - 2)",
    "expected_latex": "\\frac{x + 2}{x - 2}",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-015"
   },
   {
@@ -170,6 +186,7 @@
    "expected": "(x**2 + 2*x + 4)/(x + 2)",
    "expected_latex": "\\frac{x^{2} + 2 x + 4}{x + 2}",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-016"
   },
   {
@@ -180,6 +197,7 @@
    "expected": "(x + y)/(x*y)",
    "expected_latex": "\\frac{x + y}{x y}",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-017"
   },
   {
@@ -190,6 +208,7 @@
    "expected": "-2/((x - 1)*(x + 1))",
    "expected_latex": "- \\frac{2}{\\left(x - 1\\right) \\left(x + 1\\right)}",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-018"
   },
   {
@@ -201,6 +220,7 @@
    "expected": "-1/(2*(x + 1)) + 1/(2*(x - 1))",
    "expected_latex": "- \\frac{1}{2 \\left(x + 1\\right)} + \\frac{1}{2 \\left(x - 1\\right)}",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-019"
   },
   {
@@ -212,6 +232,7 @@
    "expected": "1/(x + 2) + 2/(x + 1)",
    "expected_latex": "\\frac{1}{x + 2} + \\frac{2}{x + 1}",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-020"
   },
   {
@@ -223,6 +244,7 @@
    "expected": "2/(x - 1)**2 + 1/x",
    "expected_latex": "\\frac{2}{\\left(x - 1\\right)^{2}} + \\frac{1}{x}",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-021"
   },
   {
@@ -234,6 +256,7 @@
    "expected": "x - 1",
    "expected_latex": "x - 1",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-022"
   },
   {
@@ -246,6 +269,7 @@
    "expected": "10",
    "expected_latex": "10",
    "compare": "exact",
+   "source": "sympy",
    "id": "algebra-023"
   }
  ]

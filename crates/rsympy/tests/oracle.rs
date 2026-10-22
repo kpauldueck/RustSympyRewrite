@@ -27,12 +27,18 @@ enum Outcome {
     Unsupported,
 }
 
+/// What rsympy did with a case's input.
+type Answer = Result<String, String>;
+
 /// Runs `op` on `args` and returns rsympy's answer in SymPy's `str()` form,
+/// `Err(kind)` if rsympy refused the input (kinds look like
+/// `refused:\overline` or `invalid:missing_unit`; see `oracle/caselib.py`),
 /// or `None` if the operation isn't implemented yet.
 ///
-/// Every new rsympy feature gets wired in here.
-fn dispatch(op: &str, args: &[&str], _assumptions: Option<&Value>) -> Option<String> {
-    let _ = (op, args);
+/// `case` gives access to `options` and `assumptions`. Every new rsympy
+/// feature gets wired in here.
+fn dispatch(op: &str, args: &[&str], case: &Value) -> Option<Answer> {
+    let _ = (op, args, case);
     None
 }
 
@@ -45,12 +51,16 @@ fn run_case(case: &Value) -> Outcome {
         .map(|a| a.as_str().expect("case.args[i]"))
         .collect();
     let expected = case["expected"].as_str().expect("case.expected");
-    let Some(got) = dispatch(op, &args, case.get("assumptions")) else {
+    let Some(answer) = dispatch(op, &args, case) else {
         return Outcome::Unsupported;
     };
-    match case["compare"].as_str().expect("case.compare") {
-        "exact" if got == expected => Outcome::Pass,
-        "exact" => Outcome::Fail(got),
+    match (case["compare"].as_str().expect("case.compare"), answer) {
+        ("error", Err(kind)) if kind == expected => Outcome::Pass,
+        ("error", Err(kind)) => Outcome::Fail(format!("refused with {kind}")),
+        ("error", Ok(got)) => Outcome::Fail(format!("accepted, gave {got}")),
+        (_, Err(kind)) => Outcome::Fail(format!("refused with {kind}")),
+        ("exact", Ok(got)) if got == expected => Outcome::Pass,
+        ("exact", Ok(got)) => Outcome::Fail(got),
         // `equivalent`, `set` and `antiderivative` need rsympy itself to do
         // the comparison; they light up once the core exists.
         _ => Outcome::Unsupported,
@@ -98,7 +108,7 @@ fn sympy_conformance() {
                 Outcome::Unsupported => {}
                 Outcome::Fail(_) if divergences.get(id).is_some() => {}
                 Outcome::Fail(got) => problems.push(format!(
-                    "{id}: {}({}) gave {got:?}, SymPy gives {:?}",
+                    "{id}: {}({}) gave {got:?}, expected {:?}",
                     case["op"].as_str().unwrap_or_default(),
                     case["args"],
                     case["expected"].as_str().unwrap_or_default(),
@@ -108,10 +118,10 @@ fn sympy_conformance() {
         scores.insert(topic, (passed, cases.len()));
     }
 
-    println!("\n{:<12} {:>6} {:>6}", "topic", "pass", "total");
+    println!("\n{:<16} {:>6} {:>6}", "topic", "pass", "total");
     let (mut all_pass, mut all_total) = (0, 0);
     for (topic, &(pass, total)) in &scores {
-        println!("{topic:<12} {pass:>6} {total:>6}");
+        println!("{topic:<16} {pass:>6} {total:>6}");
         all_pass += pass;
         all_total += total;
         let floor = baseline.get(topic).and_then(Value::as_u64).unwrap_or(0) as usize;
@@ -121,7 +131,7 @@ fn sympy_conformance() {
             println!("  note: {topic} beats baseline ({floor}); raise it in oracle/baseline.json");
         }
     }
-    println!("{:<12} {all_pass:>6} {all_total:>6}", "all");
+    println!("{:<16} {all_pass:>6} {all_total:>6}", "all");
 
     assert!(
         problems.is_empty(),

@@ -1,0 +1,908 @@
+{
+ "sympy_version": "1.14.0",
+ "topic": "forms",
+ "cases": [
+  {
+   "op": "is_factored",
+   "args": [
+    "(x - 2)*(x - 3)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A product of irreducible linear factors; confirm against the app's form_checker tests.",
+   "id": "forms-000"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "x**2 - 5*x + 6"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A reducible quadratic left as a sum is not factored; confirm against the app's form_checker tests.",
+   "id": "forms-001"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "2*x + 4"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The common factor 2 is not pulled out, and over the integers every non-constant factor must be primitive; confirm against the app's form_checker tests.",
+   "id": "forms-002"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "2*x + 3"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A primitive linear polynomial is a single irreducible factor (contrast 2*x + 4); confirm against the app's form_checker tests.",
+   "id": "forms-003"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "6*(x + 1)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A constant factor times a primitive irreducible factor is factored; confirm against the app's form_checker tests.",
+   "id": "forms-004"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "(x + 1)**2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A power of an irreducible factor is factored; confirm against the app's form_checker tests.",
+   "id": "forms-005"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "(x + 1)*(x + 1)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A repeated factor written out twice is still a product of irreducible factors; confirm against the app's form_checker tests.",
+   "id": "forms-006"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "x*(x**2 - 1)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "x**2 - 1 still factors as (x - 1)*(x + 1), so this is not fully factored; confirm against the app's form_checker tests.",
+   "id": "forms-007"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "x**2 + 1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Irreducible over the rationals, so it counts as factored; confirm against the app's form_checker tests.",
+   "id": "forms-008"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "x**2 - 2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Irreducible over the rationals (splitting it with sqrt(2) is factoring over the reals), so it counts as factored; confirm against the app's form_checker tests.",
+   "id": "forms-009"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "(2*x + 2)*(x - 1)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The factor 2*x + 2 still has the common factor 2; confirm against the app's form_checker tests.",
+   "id": "forms-010"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "x*(x + 1) + 2*(x + 1)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A sum of products (a factor-by-grouping step left unfinished) is not factored; confirm against the app's form_checker tests.",
+   "id": "forms-011"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "-(x - 2)*(x + 3)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A leading -1 is an allowed constant factor (sympify with evaluate=False reads this as (2 - x)*(x + 3), also factored); confirm against the app's form_checker tests.",
+   "id": "forms-012"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "x**3 - 8"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A difference of cubes left unfactored; confirm against the app's form_checker tests.",
+   "id": "forms-013"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "(x - 2)*(x**2 + 2*x + 4)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The quadratic factor is irreducible over the rationals; confirm against the app's form_checker tests.",
+   "id": "forms-014"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "(x**2 - 4)*(x**2 + 4)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "x**2 - 4 still factors; confirm against the app's form_checker tests.",
+   "id": "forms-015"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "x**2 + 2*x*y + y**2"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A multi-variable perfect square left unfactored; confirm against the app's form_checker tests.",
+   "id": "forms-016"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "(x + 2)/2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A rational constant factor (1/2) is allowed; confirm against the app's form_checker tests.",
+   "id": "forms-017"
+  },
+  {
+   "op": "is_factored",
+   "args": [
+    "3*x**2*y"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A monomial is a constant times powers of irreducible factors; confirm against the app's form_checker tests.",
+   "id": "forms-018"
+  },
+  {
+   "op": "is_expanded",
+   "args": [
+    "x**2 + 2*x + 1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A sum of monomials; confirm against the app's form_checker tests.",
+   "id": "forms-019"
+  },
+  {
+   "op": "is_expanded",
+   "args": [
+    "(x + 1)**2"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A power of a sum is not expanded; confirm against the app's form_checker tests.",
+   "id": "forms-020"
+  },
+  {
+   "op": "is_expanded",
+   "args": [
+    "(x + 1)*(x - 1)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A product of sums is not expanded; confirm against the app's form_checker tests.",
+   "id": "forms-021"
+  },
+  {
+   "op": "is_expanded",
+   "args": [
+    "2*(x + 3)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A number times a sum has not been distributed; confirm against the app's form_checker tests.",
+   "id": "forms-022"
+  },
+  {
+   "op": "is_expanded",
+   "args": [
+    "x*y + x*z"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A multi-variable sum of monomials; confirm against the app's form_checker tests.",
+   "id": "forms-023"
+  },
+  {
+   "op": "is_expanded",
+   "args": [
+    "3*x**2 - 4*x*y + y**2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A multi-variable sum of monomials with negative coefficients; confirm against the app's form_checker tests.",
+   "id": "forms-024"
+  },
+  {
+   "op": "is_expanded",
+   "args": [
+    "x**2 + x + x + 1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Decided: expansion only forbids products and powers of sums, so uncombined like terms still count as expanded; confirm against the app's form_checker tests.",
+   "id": "forms-025"
+  },
+  {
+   "op": "is_expanded",
+   "args": [
+    "(2*x)**2 + 4*x + 1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Decided: a power of a monomial is a monomial, so no sum is multiplied or raised to a power; confirm against the app's form_checker tests.",
+   "id": "forms-026"
+  },
+  {
+   "op": "is_expanded",
+   "args": [
+    "-2*(x - 1)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The -2 has not been distributed over the sum; confirm against the app's form_checker tests.",
+   "id": "forms-027"
+  },
+  {
+   "op": "is_expanded",
+   "args": [
+    "(x + 1)**2 - 2*x"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A power of a sum inside a larger sum is still not expanded; confirm against the app's form_checker tests.",
+   "id": "forms-028"
+  },
+  {
+   "op": "is_expanded",
+   "args": [
+    "(x + 1)/2"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Dividing a sum by 2 multiplies it by 1/2, which has not been distributed; confirm against the app's form_checker tests.",
+   "id": "forms-029"
+  },
+  {
+   "op": "is_expanded",
+   "args": [
+    "x/2 + 1/2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A sum of monomials with rational coefficients; confirm against the app's form_checker tests.",
+   "id": "forms-030"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "(x + 1)/(x - 1)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Numerator and denominator share no factor; confirm against the app's form_checker tests.",
+   "id": "forms-031"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "(x**2 - 1)/(x - 1)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Numerator and denominator share the factor x - 1; confirm against the app's form_checker tests.",
+   "id": "forms-032"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "(x**2 + 5*x + 6)/(x**2 + x - 6)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Numerator and denominator share the factor x + 3; confirm against the app's form_checker tests.",
+   "id": "forms-033"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "(x + 2)/(x - 2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The fully reduced form of (x**2 + 5*x + 6)/(x**2 + x - 6); confirm against the app's form_checker tests.",
+   "id": "forms-034"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "(2*x + 4)/6"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Numerator and denominator share the integer factor 2; confirm against the app's form_checker tests.",
+   "id": "forms-035"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "(x + 2)/3"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The fully reduced form of (2*x + 4)/6; confirm against the app's form_checker tests.",
+   "id": "forms-036"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "6/8"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A numeric fraction whose numerator and denominator share the factor 2 (3/4 is the reduced form); confirm against the app's form_checker tests.",
+   "id": "forms-037"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "(1/x)/(1 + 1/x)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A complex fraction (fractions nested inside the denominator) is not simplified; confirm against the app's form_checker tests.",
+   "id": "forms-038"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "x/(x**2 + x)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Numerator and denominator share the factor x; confirm against the app's form_checker tests.",
+   "id": "forms-039"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "(x - 1)/(1 - x)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Numerator and denominator share a factor up to sign (the fraction is -1); confirm against the app's form_checker tests.",
+   "id": "forms-040"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "(x**2 + 1)/(x + 1)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "An improper fraction whose numerator and denominator share no factor is simplified; confirm against the app's form_checker tests.",
+   "id": "forms-041"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "x**2/x"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Read unevaluated, numerator and denominator share the factor x; confirm against the app's form_checker tests.",
+   "id": "forms-042"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "x + 1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A polynomial is a fraction with denominator 1; confirm against the app's form_checker tests.",
+   "id": "forms-043"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "1/x + 1/y"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Decided: a sum of fractions is not a single simplified fraction; confirm against the app's form_checker tests.",
+   "id": "forms-044"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "(2*x + 1)/(4*x + 2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Numerator and denominator share the factor 2*x + 1; confirm against the app's form_checker tests.",
+   "id": "forms-045"
+  },
+  {
+   "op": "is_simplified_fraction",
+   "args": [
+    "(x + 1)/(2*(x - 1))"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A factored denominator with no factor in common with the numerator is fine; confirm against the app's form_checker tests.",
+   "id": "forms-046"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y, 2*x + 1)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "y = m*x + b; confirm against the app's form_checker tests.",
+   "id": "forms-047"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y, x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "m*x may be just x and b = 0 may be omitted; confirm against the app's form_checker tests.",
+   "id": "forms-048"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y, -x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "m = -1 written as -x; confirm against the app's form_checker tests.",
+   "id": "forms-049"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y, 5)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Decided: a horizontal line y = b is slope-intercept form with the 0*x term omitted; confirm against the app's form_checker tests.",
+   "id": "forms-050"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y, 3 - 2*x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Decided: term order is not part of the form, so y = b + m*x counts; confirm against the app's form_checker tests.",
+   "id": "forms-051"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(2*x + 1, y)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Decided: which side y is on does not matter; confirm against the app's form_checker tests.",
+   "id": "forms-052"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y, x/2 + 3)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A fractional slope written x/2 is m*x with m = 1/2; confirm against the app's form_checker tests.",
+   "id": "forms-053"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y, 0.5*x + 2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A typed decimal slope is an exact number; confirm against the app's form_checker tests.",
+   "id": "forms-054"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y, sqrt(2)*x + 1)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "m may be any exact number, including an irrational one; confirm against the app's form_checker tests.",
+   "id": "forms-055"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(2*y, 4*x + 2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "y is not isolated; confirm against the app's form_checker tests.",
+   "id": "forms-056"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y - 1, 2*(x - 3))"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Point-slope form, not slope-intercept form; confirm against the app's form_checker tests.",
+   "id": "forms-057"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(2*x - y + 1, 0)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "General (standard) form, not slope-intercept form; confirm against the app's form_checker tests.",
+   "id": "forms-058"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y, 2*(x + 1))"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The right side m*(x + c) has not been distributed into m*x + b; confirm against the app's form_checker tests.",
+   "id": "forms-059"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y, 2*x + 3*x - 1)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Like terms are not combined: exactly one x term is allowed; confirm against the app's form_checker tests.",
+   "id": "forms-060"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y, (4*x + 2)/2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A fraction of a sum is not m*x + b; confirm against the app's form_checker tests.",
+   "id": "forms-061"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(y, x**2 + 1)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Not a line; confirm against the app's form_checker tests.",
+   "id": "forms-062"
+  },
+  {
+   "op": "is_slope_intercept",
+   "args": [
+    "Eq(x, 3)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A vertical line has no slope-intercept form; confirm against the app's form_checker tests.",
+   "id": "forms-063"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "sqrt(8)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "8 has the perfect-square factor 4; confirm against the app's form_checker tests.",
+   "id": "forms-064"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "2*sqrt(2)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The simplified form of sqrt(8); confirm against the app's form_checker tests.",
+   "id": "forms-065"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "sqrt(4)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The radicand is a perfect square; confirm against the app's form_checker tests.",
+   "id": "forms-066"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "sqrt(7)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "7 is square-free; confirm against the app's form_checker tests.",
+   "id": "forms-067"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "1/sqrt(2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A radical in the denominator; confirm against the app's form_checker tests.",
+   "id": "forms-068"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "sqrt(2)/2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The rationalised form of 1/sqrt(2); confirm against the app's form_checker tests.",
+   "id": "forms-069"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "sqrt(1/2)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A fraction under the radical; confirm against the app's form_checker tests.",
+   "id": "forms-070"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "3*sqrt(2)/2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A rational coefficient times a square-free radical with an integer denominator; confirm against the app's form_checker tests.",
+   "id": "forms-071"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "sqrt(3/4)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A fraction under the radical; confirm against the app's form_checker tests.",
+   "id": "forms-072"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "sqrt(3)/2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The simplified form of sqrt(3/4); confirm against the app's form_checker tests.",
+   "id": "forms-073"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "sqrt(50)/5"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "50 has the perfect-square factor 25; confirm against the app's form_checker tests.",
+   "id": "forms-074"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "2/(1 + sqrt(3))"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A radical in a binomial denominator must be rationalised; confirm against the app's form_checker tests.",
+   "id": "forms-075"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "sqrt(3) - 1"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The rationalised form of 2/(1 + sqrt(3)); confirm against the app's form_checker tests.",
+   "id": "forms-076"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "(1 + sqrt(2))/2"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "A sum with a square-free radical over an integer; confirm against the app's form_checker tests.",
+   "id": "forms-077"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "sqrt(x**3)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "x**3 has the perfect-square factor x**2; confirm against the app's form_checker tests.",
+   "id": "forms-078"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "x*sqrt(x)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "The simplified form of sqrt(x**3); confirm against the app's form_checker tests.",
+   "id": "forms-079"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "16**(1/3)"
+   ],
+   "expected": "False",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Decided: the rule extends to n-th roots, and 16 has the perfect-cube factor 8; confirm against the app's form_checker tests.",
+   "id": "forms-080"
+  },
+  {
+   "op": "is_simplified_radical",
+   "args": [
+    "2*2**(1/3)"
+   ],
+   "expected": "True",
+   "compare": "exact",
+   "source": "spec",
+   "note": "Decided: the rule extends to n-th roots, and 2 is cube-free; confirm against the app's form_checker tests.",
+   "id": "forms-081"
+  }
+ ]
+}

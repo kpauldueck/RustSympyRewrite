@@ -8,7 +8,7 @@ Status: Phase 0 (test harness). Nothing is implemented yet. See [`docs/PLAN.md`]
 
 - `crates/rsympy-num`: exact numbers.
 - `crates/rsympy`: expressions and the math itself.
-- `oracle/`: a Python script that asks a pinned SymPy for the right answers and saves them as golden test cases.
+- `oracle/`: Python scripts (`gen_cases.py` plus one module per topic in `oracle/topics/`) that ask a pinned SymPy for the right answers and save them as golden test cases. Cases marked `spec` are answers we chose on purpose where SymPy is wrong for students; `oracle/caselib.py` documents the format.
 
 ## Checking against SymPy
 

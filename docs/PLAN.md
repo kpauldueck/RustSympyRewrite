@@ -1,146 +1,203 @@
-# Plan: a Rust CAS for high-school to early-college math
+# Plan: a Rust CAS to replace SymPy in Paul's homework app
 
-**Goal.** A pure-Rust computer algebra library that a Rust app (Paul's homework app first) can use directly, with no Python at runtime. It should be as accurate as SymPy on its scope, faster, lighter and safer. The evidence behind these choices is in [research/rust-rewrites.md](research/rust-rewrites.md).
+**Goal.** A pure-Rust computer algebra library that can replace SymPy in Paul's homework app, so the app can move to Rust. On the app's workload it must be as accurate as SymPy, faster, lighter, and safer. Research behind the approach is in [research/rust-rewrites.md](research/rust-rewrites.md).
 
-## Decisions (settled 2026-10-22)
+**What sets the scope.** The app's own SymPy usage, from an audit Paul ran on 2026-10-22, not SymPy's module list. That audit splits the work into two paths with different requirements:
 
-1. **Standalone Rust library, not a SymPy accelerator.** The Rust API is the product. SymPy is only used at development time, as the answer key.
-2. **Permissive licences only.** The project is MIT OR Apache-2.0. Dependencies must be permissive, so no GMP or FLINT and nothing LGPL. Homework-sized numbers don't need GMP.
-3. **Independent of upstream SymPy.** We borrow SymPy's algorithms and test cases (SymPy is BSD-licensed, so keep its copyright notice wherever we port code), but we don't coordinate releases with it.
-4. **Scope is high school to early college.** See below. Anything outside it gets ported only when the app needs it.
+- **Serve path.** This runs inside every student submit, so latency and robustness matter most.
+  - Parse student LaTeX.
+  - Decide whether it's equivalent to the key.
+  - Check the required form (factored, expanded, simplified fraction, slope-intercept, simplified radical).
+  - Check exact interval endpoints.
+  - Evaluate at lattice points.
+  - Print keys as LaTeX.
+  - Parse numbers and physical quantities.
+- **Compile path.** This runs once per content variant in CI, so breadth and exactness matter most.
+  - Figure lint: roots, singularities, end behaviour, exact points on curves.
+  - Interval and solveset checks of keys.
+  - Sequence sums.
+  - Matrix keys.
+  - Geometry figure construction.
+  - Probability keys.
 
-## Scope
+## Decisions
 
-**In scope**
+**Settled 2026-10-22:**
+1. **A standalone Rust library.** SymPy is only the development-time answer key.
+2. **Permissive licences only.** MIT OR Apache-2.0, with no GMP, FLINT or other LGPL dependencies.
+3. **Independent of upstream SymPy.** We borrow its algorithms and test cases and keep its BSD notice where we port code.
+4. **Scope is high school to early college,** prioritised by the app.
 
-| Area | Concretely |
-|---|---|
-| Numbers | exact integers and rationals, radicals (`sqrt(8)` becomes `2*sqrt(2)`), π, e, i, complex arithmetic, decimals at any precision |
-| Algebra | expand, factor over ℚ, gcd/lcm, cancel, together, partial fractions (`apart`), collect, substitution |
-| Equations | linear, quadratic, polynomial roots (rational roots, quadratic and cubic formulas, numeric fallback), rational and radical equations, simple exp/log/trig equations with general solutions, inequalities and intervals, linear systems |
-| Functions | trig and inverse trig, exp/log, abs, floor/ceil, piecewise, with their textbook identities |
-| Simplify | `simplify` plus the targeted tools: trigsimp, radsimp/rationalize, logcombine and expand_log, powsimp |
-| Calculus | limits (including at ∞ and one-sided), derivatives (chain, product, implicit), integrals (the textbook methods: substitution, parts, partial fractions, trig substitution; definite and improper), Taylor series, finite sums and common infinite series |
-| Linear algebra | matrices over ℚ and symbolic entries, det, inverse, rref, rank, solving systems, eigenvalues for small matrices |
-| I/O | parse plain text (`x^2 + 2x`) and LaTeX input; print plain text and LaTeX |
+**New, from the audit** (these are encoded as `spec` golden cases; see `oracle/caselib.py`):
 
-**Stretch goals for early college:** first-order and linear constant-coefficient ODEs, basic probability and statistics, sequences and recurrences.
+5. **Never silently misread input.** The LaTeX parser maps each construct it knows to a named meaning and refuses everything else by name: `refused:\overline`, `refused:derivative`, and so on. Today SymPy reads `\frac{dy}{dx}` as `y/x`, `\Delta x` as `Delta*x`, and `\overline{AB}` as `conjugate(A)*conjugate(B)`.
+6. **Vocabularies are opt-in per item.**
+   - Geometry: `\overline{AB}` → `seg_AB`, `\angle ABC` → `angle_ABC`.
+   - Vectors: `\vec{v}` → `vec_v`.
+   - Sequences: `a_{n-1}` → `a(n - 1)`.
 
-**Out of scope:** physics, tensors, Gröbner bases, the Risch algorithm, Meijer-G integration, special functions beyond the basics, code generation, plotting.
-
-The cut is roughly 15–20% of SymPy. That is months of work, not years.
-
-**Steps** (showing work like a textbook) are likely what a homework app wants. SymPy's `manualintegrate` already works as textbook rules, so we port integration that way from the start. That leaves the door open to step-by-step output without committing to it yet.
+   Some readings are always on:
+   - `\Delta x` → `Delta_x`.
+   - Letter and digit subscripts become part of the name (`v_{0x}` → `v_0x`).
+   - `30^\circ` → `pi/6`.
+7. **Typed decimals are exact.** `0.75` is `3/4`, not a float. This removes the app's Float→Rational workarounds and makes `400e^{\ln(0.75)t}` ≡ `400(0.75)^t` decidable. How many significant figures were typed is reported separately (`sig_figs`).
+8. **Raw trees vs canonical trees.**
+   - The parser can return the tree exactly as typed. Form checks need that: `sqrt(50)` must not quietly become `5*sqrt(2)` before we check whether the radical is simplified.
+   - `canonical()` applies SymPy's automatic rules.
+9. **Equivalence is a decision procedure, not `simplify(a - b) == 0`.** See "Equivalence engine" below. Item options control it:
+   - per-item assumptions (`x > 0`);
+   - function equivalence, where removable holes count;
+   - equations equivalent up to a constant factor;
+   - inequalities equivalent by solution set.
+10. **Every call has a budget.** Every operation is bounded in expression size, recursion depth, bigint size and step count, and returns an error instead of hanging. That replaces the app's 5-second SIGKILL pool, which is off by default.
 
 ## Architecture
 
 ```
 crates/
-  rsympy-num/    Integer (i64 fast path, big fallback), Rational, exact gcd/factorint, arbitrary-precision Float
-  rsympy/        Expr, canonicalisation, assumptions, parse, print, and the math modules (later split as it grows)
-oracle/          Python dev tool: runs SymPy, writes golden test cases (JSON)
+  rsympy-num/    Integer (inline i64, big fallback), Rational, exact decimals, intervals/balls for numeric probing
+  rsympy/        expressions, parser, printer, equivalence, forms, polys, solvers, matrices, units, geometry
+  rsympy-py/     (planned, optional) PyO3 bindings so the Python app can migrate one call site at a time
+oracle/          dev-only: SymPy 1.14.0 + Lark generate golden cases; topics in oracle/topics/
 ```
 
-- **Expressions.** Immutable, hash-consed nodes behind `Arc`. Identical subexpressions are stored once and compare in O(1). Expression trees have no cycles, so Rust's ownership rules aren't a fight here.
-  - Small integers and rationals are stored inline.
-  - `Add` and `Mul` hold flat, sorted terms.
-- **Construction vs. canonicalisation.**
-  - Raw constructors build exactly the tree you asked for. This matters for showing steps (`x + x` must be displayable before it becomes `2*x`).
-  - `canonical()` applies SymPy's automatic rules. The friendly API (`x + x` via operator overloading) is canonical by default.
-  - This keeps SymPy's familiar results while avoiding the design flaw that made SymEngine too rigid.
-- **Assumptions.** Symbols carry flags such as real, positive, integer and nonzero, and a small inference engine combines them. SymPy's homework answers depend on these, e.g. `sqrt(x**2)` becomes `|x|` unless `x` is positive.
-- **Big numbers.** A pure-Rust bigint, `dashu` or `ibig`, chosen by benchmark, behind our own `Integer` type. Never `num-bigint`, which is very slow on large values.
-- **Safety.**
-  - `#![forbid(unsafe_code)]` everywhere.
-  - Real parsers with no `eval`, unlike SymPy's `sympify`.
-  - Limits on expression size, recursion depth and bigint size, so a malicious or typo'd input can't hang the app.
-  - Fuzz the parsers.
+- **Expressions.**
+  - Immutable, hash-consed nodes behind `Arc`. Identical subexpressions are stored once and compare in O(1).
+  - Small numbers are stored inline. `Add` and `Mul` are flat and sorted.
+  - Symbols carry assumptions: real, positive, integer, nonzero.
+- **Parser.**
+  - A hand-written recursive-descent LaTeX parser over a closed grammar, plus a plain-text number and quantity parser.
+  - No `eval`, no fall-through to implicit multiplication of unknown commands, and every refusal names what it refused.
+- **Equivalence engine** (the serve path's hot spot), in four steps:
+  1. **Canonical match.** If the canonical forms match, the answer is true.
+  2. **Rational normal form.** Expressions in ℚ(symbols) are reduced to a normal form: cancelled numerator/denominator, expanded, with ℚ coefficients. This decides equivalence exactly for every polynomial or rational-function answer.
+  3. **Numeric probing.** For radicals, exp, log and trig, evaluate both sides at several random points inside the shared domain, using interval/ball arithmetic at increasing precision.
+     - A certified difference anywhere means **not equivalent**, with certainty.
+     - Agreement everywhere means **equivalent**, with a stated confidence.
 
-## The oracle: how we know answers are right
+     WeBWorK grades formulas the same way, by random-point evaluation.
+  4. **Targeted rewriting** (log/exp rules under assumptions, trig rewritten as exponentials) upgrades a probed "equivalent" to a proof where it can.
 
-- **Golden cases.** `oracle/gen_cases.py` runs a pinned SymPy (1.14.0) on a corpus of problems and writes `oracle/cases/*.json`. Each case holds the operation, the input, SymPy's answer as text, and how to compare. Rust tests load these files, so Rust CI never needs Python.
-- **Comparison modes.**
-  - `exact`: canonical text must match. Use it where the answer form is the point, as with expand, factor and diff.
-  - `equivalent`: same value at random points plus simplification to zero. Use it for simplify, where several forms are correct.
-  - `set`: the solution set matches, in any order.
-  - `antiderivative`: the derivative of our answer equals the integrand. Integrals may differ by a constant.
-- **Sources of cases.**
-  1. Hand-picked textbook problems by topic.
-  2. The relevant tests extracted from SymPy's own test suite (`core`, `polys`, `simplify`, `solvers`, `calculus`, `integrals/manualintegrate`, `series`, `matrices`, `printing`).
-  3. Randomly generated expressions (differential fuzzing).
-  4. Problems from Paul's app.
-- **Conformance score.** `cargo test` reports pass counts per topic. **Rule:** no change may lower a topic's score.
+  Two options sit on top:
+  - With `function: true`, the domains (singularities) must also match.
+  - Non-finite values (`oo`, `zoo`, `nan`) are compared structurally.
+- **Python bridge (optional, planned).** The app is Python today. A thin PyO3 crate lets it swap SymPy calls for rsympy one at a time, parser first, while still in Python. It's the same ship-of-Theseus approach that worked for fish and pydantic. The final Rust app doesn't need it.
+
+## The oracle
+
+- **Golden cases.** `oracle/gen_cases.py` plus the topic modules in `oracle/topics/` write `oracle/cases/<topic>.json`, and `crates/rsympy/tests/oracle.rs` scores rsympy per topic.
+  - CI regenerates the cases and fails on any diff, so nobody hand-edits the answer key.
+  - Any drop in a topic's score fails the build (`oracle/baseline.json`).
+  - Wrong answers fail unless the case is listed in `oracle/divergences.json`.
+- **Two kinds of expected answer.**
+  - `source: sympy`: SymPy computed the answer.
+  - `source: spec`: we chose the answer on purpose, because SymPy is wrong for students, lacks the operation, or the app needs different behaviour. Every spec case records why (`note`) and what SymPy does instead (`sympy_gives`).
+- **Compare modes:** `exact`, `equivalent`, `set`, `antiderivative`, `error`.
+- **Still to add:**
+  - Cases harvested from the app's own grader tests and content keys.
+  - Random-expression differential fuzzing for the equivalence engine.
 
 ## Phases
 
-Each phase ends with something usable, plus an exit test.
+The order follows the app: serve path first, compile path second, everything else later. Each phase has an exit test in the oracle.
 
-### Phase 0: Harness (this PR)
-- Cargo workspace and CI (fmt, clippy, tests).
-- `forbid(unsafe)` on every crate.
-- Oracle generator and first ~100 golden cases.
-- A Rust conformance runner that reports the score.
+### Phase 0: Harness (PR #1)
+- Workspace, CI and the oracle.
+- General topics, plus app-driven topics: `latex_parse`, `latex_print`, `equivalence`, `forms`, `numeric_input`, `units`, `toolkit`, `matrix_keys`, `geometry`, `probability`.
 
-**Exit:** CI is green and the runner reports 0/N.
-
-### Phase 1: Numbers
+### Phase 1: Numbers and number input
 - `Integer` and `Rational` with an i64 fast path.
-- gcd, lcm and integer factoring.
-- Exact rational arithmetic.
-- Arbitrary-precision decimal evaluation.
+- gcd, lcm, factorint.
+- Exact decimals and significant figures.
+- `parse_number`: scientific notation in every spelling, percent, thousands separators, `\frac`, `\sqrt`, `2\pi`.
 
-**Exit:** numbers cases pass, and small-int operations don't allocate.
+This is enough to port the app's `numeric` grader right away.
 
-### Phase 2: Core expressions and I/O
-- Symbols with assumptions, `Add`/`Mul`/`Pow`, constants, and elementary functions as nodes.
-- `canonical()`, `subs`, numeric `evalf`.
-- Plain-text and LaTeX parsing and printing.
+**Exit:** `numbers` and `numeric_input` pass.
 
-**Exit:** arithmetic, printing and parsing cases pass, and `expand` beats SymPy by at least 10×.
+### Phase 2: Expressions, parser and printer
+- Raw and canonical trees, assumptions, `subs`, `free_symbols`, `N`.
+- The LaTeX parser with vocabularies.
+- The LaTeX printer with the course conventions (`\ln`, `\log_b a`).
 
-### Phase 3: Polynomials
-- Univariate and small multivariate polynomials over ℚ.
-- expand, factor, gcd, cancel, apart.
-- Roots, porting SymPy's real algorithms: subresultant PRS, Zassenhaus factoring.
+**Exit:** `latex_parse`, `latex_print` and `printing` pass. Parse throughput is at least 10× SymPy+Lark.
 
-**Exit:** algebra cases pass.
+### Phase 3: Polynomials, equivalence and forms (completes the serve path)
+- Multivariate polynomials and rational functions over ℚ: gcd, cancel, factor, expand. Port SymPy's real algorithms (subresultant PRS, Zassenhaus); a naive GCD made one earlier Rust port slower than SymPy.
+- The equivalence engine.
+- Form checks.
+- Exact-endpoint vocabulary.
 
-### Phase 4: Calculus
-- diff.
-- Limits: series plus a ported Gruntz algorithm.
-- `manualintegrate`-style rule-based integration.
-- Taylor series and sums.
+**Exit:** `algebra`, `equivalence` and `forms` pass. The 99th-percentile equivalence check stays under 10 ms on app-sized inputs.
 
-**Exit:** calculus cases pass.
+**Milestone A:** the app's `expression`, `expression_factors`, `inequality_1d/2d`, `graph_plot` and `free_response` deterministic graders can run on rsympy.
 
-### Phase 5: Solving and matrices
-- `solveset`-style solvers for the equation classes in scope, plus inequalities and intervals.
-- Matrices.
+### Phase 4: Units and quantities
+- A closed unit vocabulary.
+- Dimensions and conversions.
+- `parse_quantity`.
+- Tolerance and instrument-resolution comparisons.
 
-**Exit:** equations and linear-algebra cases pass.
+Phase 4 is small and independent, so it can run alongside Phase 3 once Phase 2 lands.
 
-### Phase 6: Simplify
-- trigsimp, radsimp, logcombine and `simplify` heuristics.
-- This comes last because SymPy's simplify depends on everything else.
+**Exit:** `units` passes.
 
-**Exit:** simplify cases pass, judged by `equivalent` and "not longer than SymPy's answer".
+### Phase 5: Compile-path toolkit
+- Real roots (exact isolation plus `nroots`), singularities, continuous domain.
+- `solveset` over intervals, including trig equations and inequalities on [0, 2π), plus interval algebra.
+- Sums and `rsolve` for arithmetic and geometric sequences.
+- Limits for end behaviour.
+- `diff`.
+- Trig identity rewriting (the `fu`/TR rules).
+- Matrices: det, inv, powers, eigenvectors and Markov steady states.
 
-### Milestone: port Paul's app
-After Phase 3 at the latest, start moving the app over, using whatever exists. The app's real calls become oracle cases and set the priorities.
+**Exit:** `toolkit`, `matrix_keys`, `equations` and `matrices` pass.
 
-## Working rules (for humans and agents)
+### Phase 6: Geometry and probability
+- Exact `Point`, `Line`, `Segment`, `Ray`, `Circle`, `Triangle`, `Polygon`.
+- Intersections, distances, angles, triangle centres, transformations, similarity.
+- Finite probability (`P`, `given`, `E`) and counting.
 
-- **Port faithfully first and improve later.** When a result differs from SymPy, classify it as one of:
+**Exit:** `geometry` and `probability` pass.
+
+**Milestone B:** the content gate's figure lint and key checks run on rsympy.
+
+### Later, when content needs it
+Integration (rule-based, in the style of `manualintegrate`, which also yields steps), Taylor series, general `simplify`, first-order ODEs. The `calculus` and `simplify` topics already track these.
+
+## Working rules (humans and agents)
+
+- **Port SymPy's algorithms faithfully;** improve them only behind a passing oracle.
+- **Classify every disagreement with SymPy** as one of:
   - our bug, so fix it;
-  - intentional, so record it in `DIVERGENCES.md`;
+  - intentional, so make it a spec case or add it to `divergences.json`;
   - a SymPy bug, so record it.
-- **Port SymPy's actual algorithms**, not textbook ones. A naive GCD made one earlier Rust port slower than SymPy.
-- **Agents must not edit golden cases** to make tests pass. Only the generator writes them.
-- **Review numeric code adversarially.** Passing tests is not proof.
+- **Agents never edit golden JSON.** Only the generators write it.
+- **Numeric and parser code gets adversarial review,** plus fuzzing. Passing tests is not proof.
+- **No `unsafe`** (it is forbidden workspace-wide).
 
 ## Metrics
-- Conformance per topic (target 100% in scope, with every divergence documented).
-- Speed versus SymPy on the same cases.
-- Peak memory.
-- Fuzz crashes (target 0).
-- `unsafe` count (target 0).
+- **Conformance:** per-topic oracle scores (target 100% in scope, with every divergence documented).
+- **Speed:** p50 and p99 serve-path latency versus SymPy on the app's own cases.
+- **Memory:** peak memory.
+- **Fuzzing:** crash count (target 0).
+
+## Open questions for Paul
+
+The golden cases already take a position on each of these. Where a case pins the current choice, it is marked `spec`; flipping a choice means flipping its cases.
+
+1. **`\log x` means base 10.** That's the AP Precalculus convention, and it is what the cases assume today. The app currently reads it as natural log, so existing keys written with `\log` would change meaning.
+2. **Function notation.** `x(x+1)` is read as multiplication, so `f(x)` would become `f*x`, which is a silent misread. Options:
+   - treat `f`, `g` and `h` before parentheses as functions;
+   - add a `functions` vocabulary;
+   - refuse it.
+
+   No case is pinned yet.
+3. **Cube roots of negatives.** `\sqrt[3]{-8}` is `2*(-1)**(1/3)` in SymPy (the principal root), but students expect `-2`. We need a real-root rule. No case is pinned.
+4. **Equations up to a constant factor.** Should `2x + 4 = 0` match `x + 2 = 0`? The cases currently say yes; the app accepts sign changes only today.
+5. **Units.**
+   - A bare number against a unit key is `invalid:missing_unit` (a free retry), per the audit.
+   - `20 C` reads as coulombs, not Celsius.
+   - Is `J/kg·°C` refused as ambiguous?
+6. **Chained inequalities** (`-1 < x < 3`): parse them to `And(...)`, or refuse? `inequality_1d` keys need an answer.
+7. **Python bridge.** Would you use it to migrate the app gradually, or port the app in one go after Milestone A?
