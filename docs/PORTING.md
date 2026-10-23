@@ -75,10 +75,12 @@ reasoning about it.
 - **Work only in the files your task names.** Additive changes to shared
   files (a new `pub fn`, a new variant, a module declaration) are fine;
   list them in your report so they can be merged.
-- **Never edit by hand:** `crates/rsympy-core/src/generated.rs` (run
-  `oracle/gen_core_tables.py`), anything under `oracle/cases/`,
-  `oracle/diff/` (run the generator), `oracle/baseline.json`,
-  `oracle/divergences.json`, `ci.sh`.
+- **Never edit by hand:** any `generated*.rs` (each has a generator:
+  `oracle/gen_core_tables.py`, or an `oracle/gen_tables_<area>.py` writing
+  `generated_<area>.rs`), anything under `oracle/cases/` or `oracle/diff/`
+  (run the generator), `oracle/baseline.json`, `oracle/divergences.json`,
+  `ci.sh`. Tables that come from SymPy (names, class lists, constants) are
+  generated, never typed in.
 - No `unsafe`. No new dependencies without saying why; they must be pure
   Rust and MIT/Apache/BSD licensed (no GMP, FLINT, malachite).
 - `cargo fmt`, and `cargo clippy --workspace --all-targets -- -D warnings`
