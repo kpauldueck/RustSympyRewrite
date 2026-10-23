@@ -4,7 +4,7 @@
 mod common;
 
 use common::{Value, run_partial};
-use rsympy_core::{Expr, add, ctx, mul, power};
+use rsympy_core::{Expr, add, ctx, mul, ops, power};
 
 fn pair((a, b): (Expr, Expr)) -> Value {
     Value::Tuple(vec![Value::Expr(a), Value::Expr(b)])
@@ -33,6 +33,11 @@ fn arith_matches_sympy() {
             "Mul" => Value::Expr(mul::mul(args())),
             "Pow" => Value::Expr(power::pow(&v.expr(0), &v.expr(1))),
             "neg" => Value::Expr(-e()),
+            "op_add" => Value::Expr(ops::add(&v.expr(0), &v.expr(1))),
+            "op_sub" => Value::Expr(ops::sub(&v.expr(0), &v.expr(1))),
+            "op_mul" => Value::Expr(ops::mul(&v.expr(0), &v.expr(1))),
+            "op_div" => Value::Expr(ops::div(&v.expr(0), &v.expr(1))),
+            "op_pow" => Value::Expr(ops::pow(&v.expr(0), &v.expr(1))),
             "as_numer_denom" => pair(e().as_numer_denom()),
             "could_extract_minus_sign" => Value::Bool(e().could_extract_minus_sign()),
             "as_coeff_Mul" => pair(e().as_coeff_Mul(false)),

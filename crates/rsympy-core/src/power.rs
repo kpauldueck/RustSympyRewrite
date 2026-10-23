@@ -408,7 +408,9 @@ pub fn expand_power_base_with(p: &Expr, force: bool) -> Expr {
         // this is just like what is happening automatically, except
         // that now we are doing it for an arbitrary exponent for which
         // no automatic expansion is done
-        assert!(!e.is_Integer());
+        if e.is_Integer() {
+            raise(ErrorKind::AssertionError, "assert not e.is_Integer");
+        }
 
         // handle negatives by making them all positive and putting
         // the residual -1 in other

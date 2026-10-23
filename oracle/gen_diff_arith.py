@@ -14,8 +14,11 @@ the unevaluated builders (`_unevaluated_Add`, `_unevaluated_Mul`,
 
 import itertools
 
-from sympy import (Add, E, Float, Function, I, Integer, Mul, Pow, Rational, S,
-                   Symbol, pi, sqrt, symbols)
+import operator
+import warnings
+
+from sympy import (Add, And, E, Eq, Float, Function, I, Integer, Mul, Pow,
+                   Rational, S, Symbol, pi, sqrt, symbols)
 from sympy.core.add import _unevaluated_Add
 from sympy.core.mul import _keep_coeff, _unevaluated_Mul
 from sympy.core.parameters import distribute
@@ -58,6 +61,13 @@ EXPONENTS = [S.Zero, S.One, S.NegativeOne, Integer(2), Integer(-2), Integer(3),
              Float("2.0"), Float("0.5"), I]
 COEFFS = [S.One, S.NegativeOne, Integer(2), Integer(-3), half, Rational(-2, 3),
           Float("1.5"), S.Zero, S.Infinity, x]
+# Booleans are not Exprs: the operators raise TypeError, the constructors
+# AttributeError (with a deprecation warning) or build odd objects.
+BOOLEANS = [S.true, S.false, Eq(x, 1), And(x < 1, y > 2)]
+OPERANDS = [Integer(2), half, Float("1.5"), x, pi, S.Infinity, 2 * x] + BOOLEANS
+OPERATORS = {"op_add": operator.add, "op_sub": operator.sub,
+             "op_mul": operator.mul, "op_div": operator.truediv,
+             "op_pow": operator.pow}
 
 
 def no_distribute(fn):
@@ -80,6 +90,16 @@ def main():
                               distribute=False))
     for b, e in itertools.product(POOL, EXPONENTS):
         vectors.append(vector("Pow", [b, e], Pow))
+    for name, op in OPERATORS.items():
+        for a, b in itertools.product(OPERANDS, OPERANDS):
+            if a in BOOLEANS or b in BOOLEANS:
+                vectors.append(vector(name, [a, b], op))
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        for a, b in itertools.product(BOOLEANS[:2], [Integer(2), x]):
+            for cls in (Add, Mul, Pow):
+                vectors.append(vector(cls.__name__, [a, b], cls))
+                vectors.append(vector(cls.__name__, [b, a], cls))
 
     # results of the constructors are the inputs of the structural methods
     exprs = list(POOL)

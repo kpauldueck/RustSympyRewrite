@@ -25,11 +25,12 @@ import itertools
 import random
 import sys
 
-from sympy import Add, I, Integer, Mul, Pow, Rational, S, Symbol, sqrt
+from sympy import (Add, Derivative, I, Integer, Integral, Mul, Pow, Rational, S,
+                   Symbol, sqrt)
 from sympy.core.assumptions import _assume_defined
 
 from exprenc import dec, enc, fresh_state, value, vector, write
-from gen_diff_arith import A, B, POOL, k, m, nn, o, p, q, r, x, y
+from gen_diff_arith import A, B, POOL, f, k, m, nn, o, p, q, r, x, y
 
 pos2 = Symbol("pos2", positive=True)
 npos = Symbol("npos", nonpositive=True)
@@ -102,7 +103,16 @@ def main():
                   Mul(2, k, Pow(2, -1), evaluate=False), k / 2, m / 2, o / 2,
                   Mul(m, Pow(4, -1), evaluate=False), 3 * x, -p, -k, A * B,
                   Pow(p, 0, evaluate=False), Pow(0, p, evaluate=False),
-                  Pow(S.Exp1, x, evaluate=False), Pow(S.Exp1, I * p, evaluate=False)])
+                  Pow(S.Exp1, x, evaluate=False), Pow(S.Exp1, I * p, evaluate=False),
+                  # TypeError from 2*exp in Pow._eval_is_imaginary
+                  Pow(S.Exp1, S.true, evaluate=False),
+                  # the asserts in Mul._eval_is_integer
+                  Mul(Pow(half, Mul(-1, 2, evaluate=False), evaluate=False), 3,
+                      evaluate=False),
+                  Mul(Pow(Rational(1, 3), Mul(-1, 0, evaluate=False), evaluate=False),
+                      3, evaluate=False),
+                  # classes whose own handlers are not ported
+                  Derivative(f(x), x), Integral(x, (x, 0, 1))])
     seen = set()
     exprs = [e for e in exprs if not (e in seen or seen.add(e))]
 

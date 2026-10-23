@@ -36,6 +36,8 @@ pub enum ErrorKind {
     OverflowError,
     IndexError,
     KeyError,
+    /// An `assert` in SymPy's code failing.
+    AssertionError,
     /// `sympy.core.function.BadSignatureError` (a `TypeError` subclass).
     BadSignatureError,
     /// `sympy.core.function.BadArgumentsError` (a `TypeError` subclass).
@@ -66,6 +68,7 @@ impl ErrorKind {
             ErrorKind::OverflowError => "OverflowError",
             ErrorKind::IndexError => "IndexError",
             ErrorKind::KeyError => "KeyError",
+            ErrorKind::AssertionError => "AssertionError",
             ErrorKind::BadSignatureError => "BadSignatureError",
             ErrorKind::BadArgumentsError => "BadArgumentsError",
             ErrorKind::ArgumentIndexError => "ArgumentIndexError",

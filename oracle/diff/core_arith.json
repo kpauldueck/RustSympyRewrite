@@ -180379,6 +180379,5382 @@
    }
   },
   {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_add",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_sub",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_mul",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_div",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Rational(1, 2)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "pi"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "oo"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Rational(1, 2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "pi"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Mul(Integer(2), Symbol('x'))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "op_pow",
+   "args": [
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    },
+    {
+     "expr": "And(StrictGreaterThan(Symbol('y'), Integer(2)), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "Add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "expr": "Add(Integer(2), true)"
+   }
+  },
+  {
+   "op": "Add",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "expr": "Add(Integer(2), true)"
+   }
+  },
+  {
+   "op": "Mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "AttributeError"
+   }
+  },
+  {
+   "op": "Mul",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "error": "AttributeError"
+   }
+  },
+  {
+   "op": "Pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "Pow",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "expr": "Pow(Integer(2), true)"
+   }
+  },
+  {
+   "op": "Add",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "expr": "Add(Symbol('x'), true)"
+   }
+  },
+  {
+   "op": "Add",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "expr": "Add(Symbol('x'), true)"
+   }
+  },
+  {
+   "op": "Mul",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "expr": "Mul(Symbol('x'), true)"
+   }
+  },
+  {
+   "op": "Mul",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "expr": "Mul(Symbol('x'), true)"
+   }
+  },
+  {
+   "op": "Pow",
+   "args": [
+    {
+     "expr": "true"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "Pow",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "out": {
+    "expr": "Pow(Symbol('x'), true)"
+   }
+  },
+  {
+   "op": "Add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "expr": "Add(Integer(2), false)"
+   }
+  },
+  {
+   "op": "Add",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "expr": "Add(Integer(2), false)"
+   }
+  },
+  {
+   "op": "Mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "AttributeError"
+   }
+  },
+  {
+   "op": "Mul",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "error": "AttributeError"
+   }
+  },
+  {
+   "op": "Pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Integer(2)"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "Pow",
+   "args": [
+    {
+     "expr": "Integer(2)"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "expr": "Pow(Integer(2), false)"
+   }
+  },
+  {
+   "op": "Add",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "expr": "Add(Symbol('x'), false)"
+   }
+  },
+  {
+   "op": "Add",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "expr": "Add(Symbol('x'), false)"
+   }
+  },
+  {
+   "op": "Mul",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "expr": "Mul(Symbol('x'), false)"
+   }
+  },
+  {
+   "op": "Mul",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "expr": "Mul(Symbol('x'), false)"
+   }
+  },
+  {
+   "op": "Pow",
+   "args": [
+    {
+     "expr": "false"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "Pow",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "false"
+    }
+   ],
+   "out": {
+    "expr": "Pow(Symbol('x'), false)"
+   }
+  },
+  {
    "op": "neg",
    "args": [
     {
