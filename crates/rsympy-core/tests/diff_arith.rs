@@ -17,9 +17,12 @@ fn coeff_and_args((c, args): (Expr, Vec<Expr>)) -> Value {
     ])
 }
 
+// Unported: factor_terms (Pow.__new__ of a symbolic exponent),
+// Function.__new__ (f(x)), Float powers with a non-integer exponent
+// (mpf_pow), is_comparable (evalf) and _monotonic_sign of an Add (polys).
 #[test]
 fn arith_matches_sympy() {
-    run_partial("arith", 12571, |v| {
+    run_partial("arith", 692, |v| {
         let args = || (0..v.args.len()).map(|i| v.expr(i)).collect::<Vec<_>>();
         let e = || v.expr(0);
         match v.op.as_str() {
