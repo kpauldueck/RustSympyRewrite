@@ -245,6 +245,60 @@ pub fn as_base_exp(e: &Expr) -> (Expr, Expr) {
     (b.clone(), x.clone())
 }
 
+/// `Pow.as_content_primitive(radical, clear)`.
+pub fn as_content_primitive(p: &Expr, radical: bool, clear: bool) -> (Expr, Expr) {
+    use crate::mul::keep_coeff;
+    let (b, e) = p.as_base_exp();
+    let (bc, bp) = b.as_content_primitive(radical, clear);
+    let b = keep_coeff(&bc, &bp, true, false);
+    let (ce, pe) = e.as_content_primitive(radical, clear);
+    if b.is_Rational() {
+        //e
+        //= ce*pe
+        //= ce*(h + t)
+        //= ce*h + ce*t
+        //=> self
+        //= b**(ce*h)*b**(ce*t)
+        //= b**(cehp/cehq)*b**(ce*t)
+        //= b**(iceh + r/cehq)*b**(ce*t)
+        //= b**(iceh)*b**(r/cehq)*b**(ce*t)
+        //= b**(iceh)*b**(ce*t + r/cehq)
+        let (h, t) = pe.as_coeff_Add(false);
+        if h.is_Rational() && !b.is_cls(C::Zero) {
+            let ceh = ops::mul(&ce, &h);
+            let mut c = pow(&b, &ceh);
+            let mut r = s::zero();
+            if !c.is_Rational() {
+                let (iceh, rr) = ceh.p().div_mod(&ceh.q()).expect("q != 0");
+                c = pow(&b, &Expr::integer(iceh));
+                r = Expr::integer(rr);
+            }
+            let rest = ops::div(&ops::div(&r, &ce), &Expr::integer(ceh.q()));
+            return (
+                c,
+                pow(&b, &keep_coeff(&ce, &ops::add(&t, &rest), true, false)),
+            );
+        }
+    }
+    let e = keep_coeff(&ce, &pe, true, false);
+    // b**e = (h*t)**e = h**e*t**e = c*m*t**e
+    if e.is_Rational() && b.is_Mul() {
+        let (h, t) = b.as_content_primitive(radical, clear); // h is positive
+        let (c, m) = pow(&h, &e).as_coeff_Mul(false); // so c is positive
+        let (m, me) = m.as_base_exp();
+        if m.is_cls(C::One) || me == e {
+            // probably always true
+            // return the following, not return c, m*Pow(t, e)
+            // which would change Pow into Mul; we let SymPy
+            // decide what to do by using the unevaluated Mul, e.g
+            // should it stay as sqrt(2 + 2*sqrt(5)) or become
+            // sqrt(2)*sqrt(1 + sqrt(5))
+            return (c, pow(&keep_coeff(&m, &t, true, false), &e));
+        }
+    }
+    (s::one(), pow(&b, &e))
+}
+
 /// `Pow.as_numer_denom()`.
 pub fn as_numer_denom(p: &Expr) -> (Expr, Expr) {
     if p.is_commutative() != Some(true) {

@@ -7,8 +7,10 @@ use std::collections::HashSet;
 
 use crate::error::{ErrorKind, not_ported, raise};
 use crate::expr::Expr;
+use crate::exprtools::Exponent;
 use crate::generated::{ClassId as C, Method, Tag};
 use crate::numbers::s;
+use crate::py::PyDict;
 
 impl Expr {
     /// `bool(self)`: Python's truthiness of a SymPy object. `Basic` has no
@@ -266,6 +268,293 @@ impl Expr {
                 stack.push(a.clone());
             }
             out.push(e);
+        }
+        out
+    }
+}
+
+#[allow(non_snake_case)]
+impl Expr {
+    /// `self.as_content_primitive(radical, clear)`: `(content, primitive)`
+    /// with a positive Rational content and `content*primitive == self`.
+    pub fn as_content_primitive(&self, radical: bool, clear: bool) -> (Expr, Expr) {
+        match self.method_owner(Method::AsContentPrimitive) {
+            // Basic's stub and Expr's default
+            "Basic" | "Expr" => (s::one(), self.clone()),
+            "Rational" => crate::numbers::rational_as_content_primitive(self),
+            "Add" => crate::add::as_content_primitive(self, radical, clear),
+            "Mul" => crate::mul::as_content_primitive(self, radical, clear),
+            "Pow" => crate::power::as_content_primitive(self, radical, clear),
+            o => not_ported(format!("{o}.as_content_primitive")),
+        }
+    }
+
+    /// `self.primitive()`: the positive Rational that can be taken out of
+    /// every term of `self` (treated as an Add), and the rest.
+    pub fn primitive(&self) -> (Expr, Expr) {
+        match self.method_owner(Method::Primitive) {
+            "Add" => crate::add::primitive(self),
+            "Expr" => {
+                // Expr.primitive
+                if !self.truthy() {
+                    return (s::one(), s::zero());
+                }
+                let (c, r) = self.as_coeff_Mul(true);
+                if c.is_negative() == Some(true) {
+                    return (crate::ops::neg(&c), crate::ops::neg(&r));
+                }
+                (c, r)
+            }
+            "" => raise(
+                ErrorKind::AttributeError,
+                format!(
+                    "'{}' object has no attribute 'primitive'",
+                    self.class_name()
+                ),
+            ),
+            o => not_ported(format!("{o}.primitive")),
+        }
+    }
+
+    /// `self.as_powers_dict()`: `{base: exponent}` for the factors of
+    /// `self` (a `defaultdict(int)` in SymPy; its values can be Python
+    /// ints).
+    pub fn as_powers_dict(&self) -> PyDict<Expr, Exponent> {
+        match self.method_owner(Method::AsPowersDict) {
+            "Expr" => {
+                let (b, e) = self.as_base_exp();
+                let mut d = PyDict::new();
+                d.insert(b, Exponent::Expr(e));
+                d
+            }
+            "Mul" => crate::mul::as_powers_dict(self),
+            "NegativeInfinity" => {
+                // {S.NegativeOne: 1, S.Infinity: 1}
+                let mut d = PyDict::new();
+                d.insert(s::negative_one(), Exponent::Int(rsympy_num::Int::ONE));
+                d.insert(s::infinity(), Exponent::Int(rsympy_num::Int::ONE));
+                d
+            }
+            "" => raise(
+                ErrorKind::AttributeError,
+                format!(
+                    "'{}' object has no attribute 'as_powers_dict'",
+                    self.class_name()
+                ),
+            ),
+            o => not_ported(format!("{o}.as_powers_dict")),
+        }
+    }
+
+    /// `self.extract_multiplicatively(c)`: `self/c` when that keeps the
+    /// properties of the arguments of `self`, else `None`.
+    pub fn extract_multiplicatively(&self, c: &Expr) -> Option<Expr> {
+        match self.method_owner(Method::ExtractMultiplicatively) {
+            "Expr" => {}
+            "" => raise(
+                ErrorKind::AttributeError,
+                format!(
+                    "'{}' object has no attribute 'extract_multiplicatively'",
+                    self.class_name()
+                ),
+            ),
+            o => not_ported(format!("{o}.extract_multiplicatively")),
+        }
+        use crate::ops;
+        let mut c = c.clone();
+        if self.is_cls(C::NaN) {
+            return None;
+        }
+        if c.is_cls(C::One) {
+            return Some(self.clone());
+        } else if c == *self {
+            return Some(s::one());
+        }
+
+        if c.is_Add() {
+            let (cc, pc) = c.primitive();
+            if !cc.is_cls(C::One) {
+                c = crate::mul::mul_with(vec![cc, pc], false);
+            }
+        }
+
+        if c.is_Mul() {
+            let (a, b) = crate::mul::as_two_terms(&c);
+            let x = self.extract_multiplicatively(&a);
+            return match x {
+                Some(x) => x.extract_multiplicatively(&b),
+                None => None,
+            };
+        }
+
+        let quotient = ops::div(self, &c);
+        if self.is_Number() {
+            if self.is_cls(C::Infinity) {
+                if c.is_positive() == Some(true) {
+                    return Some(s::infinity());
+                }
+            } else if self.is_cls(C::NegativeInfinity) {
+                if c.is_negative() == Some(true) {
+                    return Some(s::infinity());
+                } else if c.is_positive() == Some(true) {
+                    return Some(s::negative_infinity());
+                }
+            } else if self.is_cls(C::ComplexInfinity) {
+                if c.is_zero() != Some(true) {
+                    return Some(s::complex_infinity());
+                }
+            } else if self.is_Integer() {
+                if !quotient.is_Integer() {
+                    return None;
+                } else if self.is_positive() == Some(true) && quotient.is_negative() == Some(true) {
+                    return None;
+                } else {
+                    return Some(quotient);
+                }
+            } else if self.is_Rational() {
+                if !quotient.is_Rational() {
+                    return None;
+                } else if self.is_positive() == Some(true) && quotient.is_negative() == Some(true) {
+                    return None;
+                } else {
+                    return Some(quotient);
+                }
+            } else if self.is_Float() {
+                if !quotient.is_Float() {
+                    return None;
+                } else if self.is_positive() == Some(true) && quotient.is_negative() == Some(true) {
+                    return None;
+                } else {
+                    return Some(quotient);
+                }
+            }
+        } else if self.is_NumberSymbol() || self.is_Symbol() || self.is_cls(C::ImaginaryUnit) {
+            if quotient.is_Mul() && quotient.args().len() == 2 {
+                if quotient.arg(0).is_Integer()
+                    && quotient.arg(0).is_positive() == Some(true)
+                    && quotient.arg(1) == self
+                {
+                    return Some(quotient);
+                }
+            } else if quotient.is_Integer() && c.is_Number() {
+                return Some(quotient);
+            }
+        } else if self.is_Add() {
+            let (cs, ps) = self.primitive();
+            // assert cs >= 1
+            if c.is_Number() && !c.is_cls(C::NegativeOne) {
+                // assert c != 1 (handled at top)
+                if !cs.is_cls(C::One) {
+                    let xc = if c.is_negative() == Some(true) {
+                        cs.extract_multiplicatively(&ops::neg(&c))
+                            .map(|xc| ops::neg(&xc))
+                    } else {
+                        cs.extract_multiplicatively(&c)
+                    };
+                    if let Some(xc) = xc {
+                        return Some(ops::mul(&xc, &ps)); // rely on 2-arg Mul to restore Add
+                    }
+                }
+                return None; // |c| != 1 can only be extracted from cs
+            }
+            if c == ps {
+                return Some(cs);
+            }
+            // check args of ps
+            let mut newargs = Vec::new();
+            for arg in ps.args() {
+                // all or nothing
+                newargs.push(arg.extract_multiplicatively(&c)?);
+            }
+            if !cs.is_cls(C::One) {
+                let args = newargs.iter().map(|t| ops::mul(&cs, t)).collect();
+                // args may be in different order
+                return Some(crate::add::unevaluated_add(args));
+            } else {
+                return Some(crate::add::from_args(newargs, None));
+            }
+        } else if self.is_Mul() {
+            let mut args = self.args().to_vec();
+            for i in 0..args.len() {
+                if let Some(newarg) = args[i].extract_multiplicatively(&c) {
+                    args[i] = newarg;
+                    return Some(crate::mul::mul(args));
+                }
+            }
+        } else if self.is_Pow() || self.is_cls(C::Exp) {
+            let (sb, se) = self.as_base_exp();
+            let (cb, ce) = c.as_base_exp();
+            if cb == sb {
+                if let Some(new_exp) = se.extract_additively(&ce) {
+                    return Some(crate::power::pow(&sb, &new_exp));
+                }
+            } else if c == sb
+                && let Some(new_exp) = se.extract_additively(&s::one())
+            {
+                return Some(crate::power::pow(&sb, &new_exp));
+            }
+        }
+
+        None
+    }
+
+    /// `self.extract_additively(c)`: `self - c` when that moves all matching
+    /// coefficients towards zero, else `None`.
+    pub fn extract_additively(&self, c: &Expr) -> Option<Expr> {
+        use crate::exprtools::{py_ge, py_gt, py_le, py_lt};
+        use crate::ops;
+        if self.is_cls(C::NaN) {
+            return None;
+        }
+        if c.is_zero() == Some(true) {
+            return Some(self.clone());
+        } else if c == self {
+            return Some(s::zero());
+        } else if self.is_cls(C::Zero) {
+            return None;
+        }
+
+        if self.is_Number() {
+            if !c.is_Number() {
+                return None;
+            }
+            let co = self;
+            let diff = ops::sub(co, c);
+            // XXX should we match types? i.e should 3 - .1 succeed?
+            let zero = s::zero();
+            if (py_gt(co, &zero) && py_ge(&diff, &zero) && py_lt(&diff, co))
+                || (py_lt(co, &zero) && py_le(&diff, &zero) && py_gt(&diff, co))
+            {
+                return Some(diff);
+            }
+            return None;
+        }
+
+        if c.is_Number() {
+            let (co, t) = self.as_coeff_Add(false);
+            let xa = co.extract_additively(c)?;
+            return Some(ops::add(&xa, &t));
+        }
+
+        // handle the args[0].is_Number case separately
+        // since we will have trouble looking for the coeff of
+        // a number.
+        //     co = self.coeff(c); xa0 = (co.extract_additively(1) or 0)*c
+        // and otherwise
+        //     co, diff = _corem(self, c)  # whole term as a term factor
+        // both start from self.coeff(c), which belongs to the subs unit.
+        not_ported("Expr.extract_additively of a non-Number (needs Expr.coeff)")
+    }
+
+    /// `self.atoms(*types)` for the nodes `is_type` picks: a set in SymPy,
+    /// here in preorder (callers do not depend on the order).
+    pub fn atoms_where(&self, is_type: impl Fn(&Expr) -> bool) -> Vec<Expr> {
+        let mut out: Vec<Expr> = Vec::new();
+        let mut seen = HashSet::new();
+        for node in self.preorder() {
+            if is_type(&node) && seen.insert(node.clone()) {
+                out.push(node);
+            }
         }
         out
     }

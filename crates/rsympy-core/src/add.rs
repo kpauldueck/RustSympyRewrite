@@ -417,6 +417,123 @@ pub fn primitive(e: &Expr) -> (Expr, Expr) {
     (Expr::rational(ngcd, dlcm), new_rawargs(e, terms))
 }
 
+/// `Add.as_content_primitive(radical, clear)`: `(R, self/R)` with `R` the
+/// positive Rational taken out of `self`; with `radical`, common radicals
+/// of the terms are also pulled out of the primitive part.
+pub fn as_content_primitive(e: &Expr, radical: bool, clear: bool) -> (Expr, Expr) {
+    use crate::mul::keep_coeff;
+    use crate::py::PyIntSet;
+    use rsympy_num::Int;
+    let terms = e
+        .args()
+        .iter()
+        .map(|a| {
+            let (c, p) = a.as_content_primitive(radical, clear);
+            keep_coeff(&c, &p, true, false)
+        })
+        .collect();
+    let (mut con, mut prim) = e.func(terms).primitive();
+    if !clear && !con.is_Integer() && prim.is_Add() {
+        let (n, d) = con.as_numer_denom();
+        con = n;
+        let p_ = ops::div(&prim, &d);
+        if p_
+            .args()
+            .iter()
+            .any(|a| a.as_coeff_Mul(false).0.is_Integer())
+        {
+            prim = p_;
+        } else {
+            con = ops::div(&con, &d);
+        }
+    }
+    if radical && prim.is_Add() {
+        // look for common radicals that can be removed
+        let args = prim.args().to_vec();
+        let mut rads: Vec<PyDict<Int, Vec<Int>>> = Vec::new();
+        let mut common_q: Option<PyIntSet> = None;
+        let mut broke = false;
+        for m in &args {
+            let mut term_rads: PyDict<Int, Vec<Int>> = PyDict::new();
+            for ai in m.mul_args() {
+                if ai.is_Pow() {
+                    let (b, x) = ai.as_base_exp();
+                    if x.is_Rational() && b.is_Integer() {
+                        // abs(int(b))**e.p
+                        let Some(xp) = x.p().as_u64() else {
+                            not_ported(
+                                "Add.as_content_primitive: a radical with a negative \
+                                 exponent (abs(int(b))**e.p is a Python float)",
+                            )
+                        };
+                        term_rads
+                            .setdefault_with(x.q(), Vec::new)
+                            .push(b.p().abs().pow(xp));
+                    }
+                }
+            }
+            if term_rads.is_empty() {
+                broke = true;
+                break;
+            }
+            let keys: PyIntSet = term_rads.keys().cloned().collect();
+            match common_q.take() {
+                None => common_q = Some(keys),
+                Some(cq) => {
+                    let cq = cq.intersection(&keys);
+                    let empty = cq.is_empty();
+                    common_q = Some(cq);
+                    if empty {
+                        broke = true;
+                        break;
+                    }
+                }
+            }
+            rads.push(term_rads);
+        }
+        if !broke {
+            // process rads
+            // keep only those in common_q
+            let common_q = common_q.expect("an Add has args");
+            let rads: Vec<PyDict<Int, Int>> = rads
+                .into_iter()
+                .map(|r| {
+                    r.into_iter()
+                        .filter(|(q, _)| common_q.contains(q))
+                        .map(|(q, v)| {
+                            // Mul(*r[q]) of Python ints
+                            let m = crate::mul::mul(v.into_iter().map(Expr::integer).collect());
+                            if !m.is_Integer() {
+                                not_ported("Add.as_content_primitive: igcd of an unevaluated Mul");
+                            }
+                            (q, m.p())
+                        })
+                        .collect()
+                })
+                .collect();
+            // find the gcd of bases for each q
+            let mut g_list = Vec::new();
+            for q in common_q.iter() {
+                let g = rads
+                    .iter()
+                    .fold(Int::ZERO, |g, r| g.gcd(r.get(q).expect("q in common_q")));
+                if !g.is_one() {
+                    g_list.push(crate::power::pow(
+                        &Expr::integer(g),
+                        &Expr::rational(Int::ONE, q.clone()),
+                    ));
+                }
+            }
+            if !g_list.is_empty() {
+                let g = crate::mul::mul(g_list);
+                let args = args.iter().map(|ai| ops::div(ai, &g)).collect();
+                prim = ops::mul(&g, &prim.func(args));
+            }
+        }
+    }
+    (con, prim)
+}
+
 /// `Add.could_extract_minus_sign()`: `_could_extract_minus_sign(self)`.
 pub fn could_extract_minus_sign(e: &Expr) -> bool {
     // We choose the one with less arguments with minus signs

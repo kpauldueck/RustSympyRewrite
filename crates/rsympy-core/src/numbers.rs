@@ -1496,3 +1496,103 @@ pub fn number_float(n: &Expr) -> f64 {
     debug_assert!(n.is_Number());
     mlib::to_float(&as_mpf_val(n, 53), false, mlib::ROUND_FAST).expect("not strict")
 }
+
+// ---------------------------------------------------------------------------
+// content and gcd (used by `core.exprtools`)
+
+/// `Rational.as_content_primitive(radical, clear)` (also Integer's and the
+/// rational singletons'): `(abs(self), sign)`, or `(1, 0)` for zero.
+pub fn rational_as_content_primitive(e: &Expr) -> (Expr, Expr) {
+    if e.truthy() {
+        if e.is_positive() == Some(true) {
+            return (e.clone(), s::one());
+        }
+        return (neg(e), s::negative_one());
+    }
+    (s::one(), e.clone())
+}
+
+/// `self.gcd(other)` for a Number `self`: `Rational.gcd`, or `Number.gcd`
+/// (the polys `gcd`) for anything else.
+pub fn number_gcd(a: &Expr, b: &Expr) -> Expr {
+    if a.is_Rational() && b.is_Rational() {
+        if b.is_cls(C::Zero) {
+            return b.clone();
+        }
+        return Expr::rational(igcd(&a.p(), &b.p()), a.q().lcm(&b.q()));
+    }
+    not_ported(format!(
+        "Number.gcd (the polys gcd) of {} and {}",
+        a.class_name(),
+        b.class_name()
+    ))
+}
+
+/// `self.lcm(other)` for a Number `self`: `Rational.lcm`, or `Number.lcm`
+/// (the polys `lcm`) for anything else.
+pub fn number_lcm(a: &Expr, b: &Expr) -> Expr {
+    if a.is_Rational() && b.is_Rational() {
+        let g = igcd(&a.p(), &b.p());
+        let p = a.p().floor_div(&g).unwrap_or_else(|_| {
+            raise(
+                ErrorKind::ZeroDivisionError,
+                "integer division or modulo by zero",
+            )
+        });
+        return Expr::rational(&p * &b.p(), igcd(&a.q(), &b.q()));
+    }
+    not_ported(format!(
+        "Number.lcm (the polys lcm) of {} and {}",
+        a.class_name(),
+        b.class_name()
+    ))
+}
+
+/// `equal_valued(x, y)`: `x == y`, except that a Float equals a Rational
+/// of the same value and Floats compare without regard to precision.
+pub fn equal_valued(x: &Expr, y: &Expr) -> bool {
+    // Handle everything except Float/Rational first
+    if !x.is_Float() && !y.is_Float() {
+        return x == y;
+    } else if x.is_Float() && y.is_Float() {
+        // Compare values without regard for precision
+        return x.as_float().expect("Float").0 == y.as_float().expect("Float").0;
+    }
+    let (x, y) = if x.is_Float() { (y, x) } else { (x, y) };
+    if !x.is_Rational() {
+        return false;
+    }
+
+    // Now y is Float and x is Rational.
+    let m = y.as_float().expect("Float").0;
+    let (p, q) = (x.p(), x.q());
+    let man = if m.sign != 0 {
+        -m.man.clone()
+    } else {
+        m.man.clone()
+    };
+    let exp = m.exp;
+    if exp == 0 {
+        // y odd integer
+        q.is_one() && man == p
+    } else if exp > 0 {
+        // y even integer
+        if !q.is_one() {
+            return false;
+        }
+        if p.bit_length() != man.bit_length() + exp as u64 {
+            return false;
+        }
+        (&man << exp as u64) == p
+    } else {
+        // y non-integer. Need p == man and q == 2**-exp
+        if p != man {
+            return false;
+        }
+        let neg_exp = exp.unsigned_abs();
+        if q.bit_length() - 1 != neg_exp {
+            return false;
+        }
+        (Int::ONE << neg_exp) == q
+    }
+}

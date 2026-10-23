@@ -38,6 +38,8 @@ pub enum ErrorKind {
     KeyError,
     /// An `assert` in SymPy's code failing.
     AssertionError,
+    /// `sympy.core.coreerrors.NonCommutativeExpression`.
+    NonCommutativeExpression,
     NotPortedYet,
 }
 
@@ -63,6 +65,7 @@ impl ErrorKind {
             ErrorKind::IndexError => "IndexError",
             ErrorKind::KeyError => "KeyError",
             ErrorKind::AssertionError => "AssertionError",
+            ErrorKind::NonCommutativeExpression => "NonCommutativeExpression",
             ErrorKind::NotPortedYet => "NotPortedYet",
         }
     }
