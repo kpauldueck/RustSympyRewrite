@@ -5,9 +5,63 @@
 
 use std::collections::HashSet;
 
+use crate::error::{ErrorKind, not_ported, raise};
 use crate::expr::Expr;
-use crate::generated::{ClassId as C, Tag};
+use crate::generated::{ClassId as C, Method, Tag};
 use crate::numbers::s;
+
+impl Expr {
+    /// `bool(self)`: Python's truthiness of a SymPy object. `Basic` has no
+    /// `__bool__`, so most objects are true.
+    pub fn truthy(&self) -> bool {
+        match self.method_owner(Method::Bool) {
+            "Zero" | "BooleanFalse" => false,
+            "BooleanTrue" => true,
+            "Float" => *self.as_float().expect("Float").0 != rsympy_mpf::FZERO,
+            "Relational" => raise(
+                ErrorKind::TypeError,
+                "cannot determine truth value of Relational",
+            ),
+            "" => match self.method_owner(Method::Len) {
+                "" => true,
+                "Tuple" | "FiniteSet" => !self.args().is_empty(),
+                "EmptySet" => false,
+                o => not_ported(format!("{o}.__len__ for truthiness")),
+            },
+            o => not_ported(format!("{o}.__bool__")),
+        }
+    }
+
+    /// `self.is_comparable`.
+    pub fn is_comparable(&self) -> bool {
+        match self.method_owner(Method::IsComparable) {
+            "Zero" | "Infinity" | "NegativeInfinity" => true,
+            "NaN" => false,
+            "Basic" => {
+                if self.is_extended_real() == Some(false) {
+                    return false;
+                }
+                if !self.is_number() {
+                    return false;
+                }
+                // n, i = self.as_real_imag(), evaluated to 2 digits
+                if self.is_Rational() {
+                    return true;
+                }
+                if let Some((_, prec)) = self.as_float() {
+                    return prec != 1;
+                }
+                if self.is_NumberSymbol() {
+                    // re(c) = c and im(c) = 0 for the real constants, and c
+                    // evaluates to a Float with 2 digits.
+                    return true;
+                }
+                not_ported(format!("{}.is_comparable (needs evalf)", self.class_name()))
+            }
+            o => not_ported(format!("{o}.is_comparable")),
+        }
+    }
+}
 
 #[allow(non_snake_case)]
 impl Expr {

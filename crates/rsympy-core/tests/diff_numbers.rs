@@ -10,7 +10,7 @@ use rsympy_core::{Fact, ops};
 fn numbers_match_sympy() {
     // Unported: Pow.__new__ (division and powers that leave numbers) and
     // Function.__new__ (Mod, Abs of non-numbers).
-    run_partial("numbers", 347, |v| {
+    run_partial("numbers", 108, |v| {
         let e = || Value::Expr;
         match v.op.as_str() {
             "add" => e()(ops::add(&v.expr(0), &v.expr(1))),

@@ -14,7 +14,7 @@ use rsympy_mpf::Mpf;
 use rsympy_num::{Int, Rational};
 
 use crate::facts::{Fact, FactCell, Kb};
-use crate::generated::{CLASSES, ClassId, ClassInfo, Flag, NUM_CLASSES, Tag};
+use crate::generated::{CLASSES, ClassId, ClassInfo, Flag, Method, NUM_CLASSES, Tag};
 
 /// A SymPy expression (any `Basic`).
 #[derive(Clone)]
@@ -139,6 +139,12 @@ impl Expr {
             Data::Undef(u) if self.0.cls == ClassId::AppliedUndef => &u.name,
             _ => self.info().name,
         }
+    }
+
+    /// The class that defines `method` for this node's class (`""` when
+    /// no class in the MRO has it, so calling it raises `AttributeError`).
+    pub fn method_owner(&self, method: Method) -> &'static str {
+        self.info().method_owners[method as usize]
     }
 
     /// `isinstance(self, tag)`.

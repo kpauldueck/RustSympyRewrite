@@ -18,6 +18,7 @@
 //! | [`evalf`] | `core.evalf` |
 //! | [`printing`] | `printing.str`, `printing.repr`, `printing.precedence` |
 //! | [`parsing`], [`sympify`] | `parsing.sympy_parser`, `core.sympify` |
+//! | [`relational`] | `core.relational`'s fuzzy comparisons (`is_ge`, `is_eq`, ...) |
 //! | [`py`] | Python built-ins results depend on (`dict` order, `repr(str)`) |
 //! | [`testing`] | the oracle's expression encoding, for differential tests |
 //!
@@ -48,6 +49,7 @@ pub mod parsing;
 pub mod power;
 pub mod printing;
 pub mod py;
+pub mod relational;
 pub mod symbol;
 pub mod sympify;
 pub mod testing;
@@ -55,5 +57,5 @@ pub mod testing;
 pub use error::{ErrorKind, SympyError, SympyResult, catch};
 pub use expr::Expr;
 pub use facts::Fact;
-pub use generated::{ClassId, Flag, Tag};
+pub use generated::{ClassId, Flag, Method, Tag};
 pub use numbers::s;

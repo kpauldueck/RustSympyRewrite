@@ -70,6 +70,13 @@ pub fn exp_as_numer_denom(e: &Expr) -> (Expr, Expr) {
     not_ported("exp.as_numer_denom")
 }
 
+/// `base._eval_power(exp)` for a class outside `core` that defines it
+/// (`owner` is that class: `ExpBase`, `Abs`, `sign`, `Piecewise`, ...).
+pub fn eval_power(owner: &str, base: &Expr, exp: &Expr) -> Option<Expr> {
+    let _ = (base, exp);
+    not_ported(format!("{owner}._eval_power"))
+}
+
 /// The `_eval_is_<fact>` handlers of function classes (and of numeric
 /// singletons, which only have `Expr`'s).
 pub(crate) fn handler(e: &Expr, fact: Fact) -> Option<bool> {
