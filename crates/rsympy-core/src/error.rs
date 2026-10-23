@@ -47,6 +47,8 @@ pub enum ErrorKind {
     /// `sympy.polys.polyerrors.PolynomialError` (`PolificationFailed`'s
     /// base class).
     PolynomialError,
+    /// `sympy.core.coreerrors.NonCommutativeExpression`.
+    NonCommutativeExpression,
     NotPortedYet,
 }
 
@@ -76,6 +78,7 @@ impl ErrorKind {
             ErrorKind::BadArgumentsError => "BadArgumentsError",
             ErrorKind::ArgumentIndexError => "ArgumentIndexError",
             ErrorKind::PolynomialError => "PolynomialError",
+            ErrorKind::NonCommutativeExpression => "NonCommutativeExpression",
             ErrorKind::NotPortedYet => "NotPortedYet",
         }
     }

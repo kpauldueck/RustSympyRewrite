@@ -830,6 +830,47 @@ pub fn as_base_exp(e: &Expr) -> (Expr, Expr) {
     (e.func(bases), e1.expect("a Mul has args"))
 }
 
+/// `Mul.as_content_primitive(radical, clear)`.
+pub fn as_content_primitive(e: &Expr, radical: bool, clear: bool) -> (Expr, Expr) {
+    let mut coef = s::one();
+    let mut args = Vec::new();
+    for a in e.args() {
+        let (c, p) = a.as_content_primitive(radical, clear);
+        coef = ops::mul(&coef, &c);
+        if !p.is_cls(C::One) {
+            args.push(p);
+        }
+    }
+    // don't use self._from_args here to reconstruct args
+    // since there may be identical args now that should be combined
+    // e.g. (2+2*x)*(3+3*x) should be (6, (1 + x)**2) not (6, (1+x)*(1+x))
+    (coef, e.func(args))
+}
+
+/// `Mul.as_powers_dict()`: the factors' `as_powers_dict`s summed into a
+/// `defaultdict(int)`.
+pub fn as_powers_dict(e: &Expr) -> PyDict<Expr, crate::exprtools::Exponent> {
+    use crate::exprtools::Exponent;
+    let mut d: PyDict<Expr, Exponent> = PyDict::new();
+    for term in e.args() {
+        for (b, x) in term.as_powers_dict() {
+            let v = d.setdefault_with(b, || Exponent::Int(Int::ZERO));
+            *v = v.add(&x);
+        }
+    }
+    d
+}
+
+/// `Mul.as_two_terms()`: the head and the tail of `self` as a product.
+pub fn as_two_terms(e: &Expr) -> (Expr, Expr) {
+    let args = e.args();
+    match args.len() {
+        1 => (s::one(), e.clone()),
+        2 => (args[0].clone(), args[1].clone()),
+        _ => (args[0].clone(), new_rawargs(e, args[1..].to_vec())),
+    }
+}
+
 /// `Mul.could_extract_minus_sign()`.
 pub fn could_extract_minus_sign(e: &Expr) -> bool {
     if *e == ops::neg(e) {

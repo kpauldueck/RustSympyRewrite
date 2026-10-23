@@ -375,5 +375,5 @@ fn float_repr_matches_python() {
 ///   `Catalan._as_mpf_val` (one each).
 #[test]
 fn compare_matches_sympy() {
-    run_partial("compare", 167, dispatch);
+    run_partial("compare", 155, dispatch);
 }

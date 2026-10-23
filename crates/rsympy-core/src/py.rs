@@ -4,6 +4,8 @@
 //!   many results by iterating dicts (`Add.flatten`'s `terms`,
 //!   `Mul.flatten`'s `c_powers`, `factor_terms`), so a Rust `HashMap`
 //!   would scramble argument order.
+//! - [`PyIntSet`]: a `set` of ints, which iterates in hash-table slot
+//!   order (`Add.as_content_primitive` loops over one).
 //! - [`repr_str`]: `str.__repr__`, used by `srepr` and the oracle's
 //!   expression encoding.
 //!
@@ -174,6 +176,178 @@ impl<K: Hash + Eq + Clone, V> FromIterator<(K, V)> for PyDict<K, V> {
     }
 }
 
+/// A Python `set` of non-negative `int`s, iterating in CPython 3.13's
+/// order: by slot in the open-addressing table `setobject.c` builds
+/// (`PySet_MINSIZE` 8, `LINEAR_PROBES` 9, `PERTURB_SHIFT` 5, resizing to
+/// `used*4` once `fill*5 >= mask*3`). Entries are never removed, so there
+/// are no dummy slots.
+#[derive(Clone, Debug)]
+pub struct PyIntSet {
+    table: Vec<Option<(rsympy_num::Int, u64)>>,
+    fill: usize,
+    used: usize,
+}
+
+const SET_MINSIZE: usize = 8;
+const SET_LINEAR_PROBES: usize = 9;
+const SET_PERTURB_SHIFT: u32 = 5;
+
+/// `hash(k)` for a non-negative Python int: `k mod (2**61 - 1)`.
+fn py_int_hash(k: &rsympy_num::Int) -> u64 {
+    assert!(!k.is_negative(), "PyIntSet holds non-negative ints");
+    let modulus = rsympy_num::Int::from((1u64 << 61) - 1);
+    k.py_mod(&modulus)
+        .expect("nonzero modulus")
+        .as_u64()
+        .expect("reduced hash fits")
+}
+
+/// The next slot of the probe sequence: `i = (i*5 + 1 + perturb) & mask`.
+fn set_next_slot(i: usize, perturb: &mut u64, mask: usize) -> usize {
+    *perturb >>= SET_PERTURB_SHIFT;
+    (i.wrapping_mul(5)
+        .wrapping_add(1)
+        .wrapping_add(*perturb as usize))
+        & mask
+}
+
+impl Default for PyIntSet {
+    fn default() -> Self {
+        PyIntSet::new()
+    }
+}
+
+impl PyIntSet {
+    /// `set()`.
+    pub fn new() -> Self {
+        PyIntSet {
+            table: vec![None; SET_MINSIZE],
+            fill: 0,
+            used: 0,
+        }
+    }
+
+    pub fn len(&self) -> usize {
+        self.used
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.used == 0
+    }
+
+    /// The slot holding `k`, or the first free slot of its probe sequence
+    /// (`set_add_entry`'s search; the table always has a free slot).
+    fn find(&self, k: &rsympy_num::Int, hash: u64) -> (usize, bool) {
+        let mask = self.table.len() - 1;
+        let mut i = (hash as usize) & mask;
+        let mut perturb = hash;
+        loop {
+            let probes = if i + SET_LINEAR_PROBES <= mask {
+                SET_LINEAR_PROBES
+            } else {
+                0
+            };
+            for j in i..=i + probes {
+                match &self.table[j] {
+                    None => return (j, false),
+                    Some((key, h)) if *h == hash && key == k => return (j, true),
+                    Some(_) => {}
+                }
+            }
+            i = set_next_slot(i, &mut perturb, mask);
+        }
+    }
+
+    /// `k in s`.
+    pub fn contains(&self, k: &rsympy_num::Int) -> bool {
+        self.find(k, py_int_hash(k)).1
+    }
+
+    /// `s.add(k)` (`set_add_entry`).
+    pub fn add(&mut self, k: rsympy_num::Int) {
+        let hash = py_int_hash(&k);
+        let (j, found) = self.find(&k, hash);
+        if found {
+            return;
+        }
+        self.table[j] = Some((k, hash));
+        self.fill += 1;
+        self.used += 1;
+        let mask = self.table.len() - 1;
+        if self.fill * 5 >= mask * 3 {
+            let minused = if self.used > 50000 {
+                self.used * 2
+            } else {
+                self.used * 4
+            };
+            self.resize(minused);
+        }
+    }
+
+    /// `set_table_resize`: the smallest power-of-two table `> minused`,
+    /// refilled in old slot order with `set_insert_clean`.
+    fn resize(&mut self, minused: usize) {
+        let mut newsize = SET_MINSIZE;
+        while newsize <= minused {
+            newsize <<= 1;
+        }
+        let old = std::mem::replace(&mut self.table, vec![None; newsize]);
+        let mask = newsize - 1;
+        for (k, hash) in old.into_iter().flatten() {
+            let mut perturb = hash;
+            let mut i = (hash as usize) & mask;
+            let slot = loop {
+                if self.table[i].is_none() {
+                    break i;
+                }
+                if i + SET_LINEAR_PROBES <= mask
+                    && let Some(j) =
+                        (i + 1..=i + SET_LINEAR_PROBES).find(|&j| self.table[j].is_none())
+                {
+                    break j;
+                }
+                i = set_next_slot(i, &mut perturb, mask);
+            };
+            self.table[slot] = Some((k, hash));
+        }
+        self.fill = self.used;
+    }
+
+    /// Iteration order (`set_next`: by slot).
+    pub fn iter(&self) -> impl Iterator<Item = &rsympy_num::Int> {
+        self.table.iter().flatten().map(|(k, _)| k)
+    }
+
+    /// `self & other` (`set_intersection`): iterates the smaller set
+    /// (`other`, unless it is the larger one) and adds its members that the
+    /// other set has.
+    pub fn intersection(&self, other: &PyIntSet) -> PyIntSet {
+        let (so, other) = if other.len() > self.len() {
+            (other, self)
+        } else {
+            (self, other)
+        };
+        let mut result = PyIntSet::new();
+        for k in other.iter() {
+            if so.contains(k) {
+                result.add(k.clone());
+            }
+        }
+        result
+    }
+}
+
+impl FromIterator<rsympy_num::Int> for PyIntSet {
+    /// `set(iterable)`: `set_add_key` for each item, in order.
+    fn from_iter<I: IntoIterator<Item = rsympy_num::Int>>(iter: I) -> Self {
+        let mut s = PyIntSet::new();
+        for k in iter {
+            s.add(k);
+        }
+        s
+    }
+}
+
 /// `repr(s)` for a Python `str`.
 ///
 /// Exact for ASCII, letters, digits, whitespace and control characters.
@@ -233,6 +407,37 @@ mod tests {
         d.insert("b", 4);
         assert_eq!(d.keys().copied().collect::<Vec<_>>(), ["a", "b"]);
         assert_eq!(d.popitem(), Some(("b", 4)));
+    }
+
+    #[test]
+    fn int_set_iterates_like_cpython() {
+        let mk = |v: &[i64]| -> PyIntSet { v.iter().map(|&k| rsympy_num::Int::small(k)).collect() };
+        let order = |s: &PyIntSet| s.iter().map(|k| k.as_i64().unwrap()).collect::<Vec<_>>();
+        // list(set([...])) and list(set(a) & set(b)) in CPython 3.13
+        assert_eq!(order(&mk(&[3, 2, 1])), [1, 2, 3]);
+        assert_eq!(order(&mk(&[11, 3])), [3, 11]);
+        assert_eq!(order(&mk(&[3, 11])), [11, 3]);
+        assert_eq!(order(&mk(&[9, 1, 17])), [9, 1, 17]);
+        assert_eq!(order(&mk(&[5, 4, 3, 2, 1, 8])), [1, 2, 3, 4, 5, 8]);
+        assert_eq!(order(&mk(&[16, 32, 8, 24])), [16, 8, 32, 24]);
+        assert_eq!(order(&mk(&[48, 78, 72, 13, 3, 3])), [3, 72, 13, 78, 48]);
+        assert_eq!(
+            order(&mk(&[91, 5, 13, 15, 25, 44])),
+            [5, 44, 13, 15, 25, 91]
+        );
+        assert_eq!(
+            order(&mk(&[38, 11, 2, 14, 63, 77, 12])),
+            [2, 38, 11, 12, 77, 14, 63]
+        );
+        assert_eq!(order(&mk(&[24, 13, 73, 0, 13, 52])), [0, 73, 13, 52, 24]);
+        assert_eq!(
+            order(&mk(&[17, 13, 1, 33, 1, 15, 66, 7, 20, 10])),
+            [1, 33, 66, 7, 10, 13, 15, 17, 20]
+        );
+        let (a, b) = (mk(&[5, 13, 21, 2]), mk(&[21, 13, 40, 5, 7, 2, 29]));
+        assert_eq!(order(&a.intersection(&b)), [5, 2, 21, 13]);
+        assert_eq!(order(&b.intersection(&a)), [5, 2, 21, 13]);
+        assert!(a.contains(&rsympy_num::Int::small(21)) && !a.contains(&rsympy_num::Int::small(3)));
     }
 
     #[test]

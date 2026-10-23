@@ -12,7 +12,7 @@ use rsympy_core::Fact;
 // handlers of Derivative and Integral.
 #[test]
 fn arith_facts_match_sympy() {
-    run_partial("arith_facts", 4151, |v| match v.op.as_str() {
+    run_partial("arith_facts", 3976, |v| match v.op.as_str() {
         "is" => {
             let fact = Fact::from_name(v.str(1)).expect("a fact name");
             Value::fuzzy(v.expr(0).is(fact))

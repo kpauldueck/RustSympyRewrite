@@ -1422,6 +1422,57 @@ pub(crate) fn py_eq(x: &Expr, y: &Expr) -> bool {
     }
 }
 
+// ---------------------------------------------------------------------------
+// content and gcd (used by `core.exprtools`)
+
+/// `Rational.as_content_primitive(radical, clear)` (also Integer's and the
+/// rational singletons'): `(abs(self), sign)`, or `(1, 0)` for zero.
+pub fn rational_as_content_primitive(e: &Expr) -> (Expr, Expr) {
+    if e.truthy() {
+        if e.is_positive() == Some(true) {
+            return (e.clone(), s::one());
+        }
+        return (neg(e), s::negative_one());
+    }
+    (s::one(), e.clone())
+}
+
+/// `self.gcd(other)` for a Number `self`: `Rational.gcd`, or `Number.gcd`
+/// (the polys `gcd`) for anything else.
+pub fn number_gcd(a: &Expr, b: &Expr) -> Expr {
+    if a.is_Rational() && b.is_Rational() {
+        if b.is_cls(C::Zero) {
+            return b.clone();
+        }
+        return Expr::rational(igcd(&a.p(), &b.p()), a.q().lcm(&b.q()));
+    }
+    not_ported(format!(
+        "Number.gcd (the polys gcd) of {} and {}",
+        a.class_name(),
+        b.class_name()
+    ))
+}
+
+/// `self.lcm(other)` for a Number `self`: `Rational.lcm`, or `Number.lcm`
+/// (the polys `lcm`) for anything else.
+pub fn number_lcm(a: &Expr, b: &Expr) -> Expr {
+    if a.is_Rational() && b.is_Rational() {
+        let g = igcd(&a.p(), &b.p());
+        let p = a.p().floor_div(&g).unwrap_or_else(|_| {
+            raise(
+                ErrorKind::ZeroDivisionError,
+                "integer division or modulo by zero",
+            )
+        });
+        return Expr::rational(&p * &b.p(), igcd(&a.q(), &b.q()));
+    }
+    not_ported(format!(
+        "Number.lcm (the polys lcm) of {} and {}",
+        a.class_name(),
+        b.class_name()
+    ))
+}
+
 /// `equal_valued(x, y)`: `x == y`, except that a Float equals a Rational
 /// (or another Float) of the same value whatever its precision.
 pub fn equal_valued(x: &Expr, y: &Expr) -> bool {
@@ -1465,7 +1516,7 @@ pub fn equal_valued(x: &Expr, y: &Expr) -> bool {
         if p != man {
             return false;
         }
-        let neg_exp = (-exp) as u64;
+        let neg_exp = exp.unsigned_abs();
         if q.bit_length() - 1 != neg_exp {
             return false;
         }
