@@ -87,9 +87,11 @@ def _namespace():
                                        Unequality)
     from sympy.functions.elementary.miscellaneous import IdentityFunction
     from sympy.functions.elementary.piecewise import ExprCondPair
+    from sympy.logic.boolalg import Exclusive, Xnor
 
     ns.update(Str=Str, Equality=Equality, Unequality=Unequality,
               IdentityFunction=IdentityFunction,
+              Xnor=Xnor, Exclusive=Exclusive,
               StrictLessThan=StrictLessThan, LessThan=LessThan,
               StrictGreaterThan=StrictGreaterThan, GreaterThan=GreaterThan,
               ExprCondPair=ExprCondPair, true=sp.true, false=sp.false,
@@ -108,7 +110,23 @@ def _raw(cls):
         return lambda *args: cls._from_args(args)
     if cls is sp.Pow:
         return lambda b, e: sp.Pow(b, e, evaluate=False)
+    if cls in (sp.Xor, sp.Equivalent):
+        return _raw_argset(cls)
     return lambda *args: sp.Basic.__new__(cls, *args)
+
+
+def _raw_argset(cls):
+    """Xor and Equivalent answer `.args` from the `_argset` frozenset their
+    `__new__` sets (`ordered(_argset)`, which is how `enc` prints them), and
+    Equivalent stores `(FiniteSet(*argset),)` as its `_args`."""
+    def build(*args):
+        if cls is sp.Equivalent:
+            obj = sp.Basic.__new__(cls, sp.FiniteSet(*args))
+        else:
+            obj = sp.Basic.__new__(cls, *args)
+        obj._argset = frozenset(args)
+        return obj
+    return build
 
 
 _RAW_NS = {

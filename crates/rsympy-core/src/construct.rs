@@ -61,6 +61,15 @@ pub fn rebuild(e: &Expr, args: Vec<Expr>) -> Expr {
             });
             crate::power::pow(&b, &x)
         }
+        C::Equality
+        | C::Unequality
+        | C::StrictLessThan
+        | C::LessThan
+        | C::StrictGreaterThan
+        | C::GreaterThan => crate::relational::new_rel_args(e.cls(), &args, None),
+        _ if e.is_a(Tag::BooleanFunction) => {
+            crate::logic::boolalg::new_boolfunc(e.cls(), args, None)
+        }
         _ if e.args().is_empty() && args.is_empty() => e.clone(),
         // Tuple.__new__: Basic.__new__ of the (sympified) args
         C::Tuple => raw(C::Tuple, args),

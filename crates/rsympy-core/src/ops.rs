@@ -66,6 +66,22 @@ fn check_operands(a: &Expr, b: &Expr, op: &str) {
     )
 }
 
+/// Python's unary operators (`-a`, `abs(a)`) on a non-`Expr`: `Expr`
+/// defines `__neg__` and `__abs__`, `Boolean` (BooleanAtom, Relational,
+/// And, ...) and `Tuple` do not, so Python raises TypeError.
+fn check_unary(a: &Expr, op: &str) {
+    if a.is_a(Tag::Expr) {
+        return;
+    }
+    if !a.is_a(Tag::Boolean) && !a.is_cls(C::Tuple) {
+        not_ported(format!("{}.__{op}__", a.class_name()));
+    }
+    raise(
+        ErrorKind::TypeError,
+        format!("bad operand type for {op}: '{}'", a.class_name()),
+    )
+}
+
 /// The classes whose `__add__` etc. are defined in `core.numbers` (Number
 /// subclasses). `ComplexInfinity` and the NumberSymbols are not Numbers.
 fn numeric(a: &Expr) -> bool {
@@ -120,6 +136,7 @@ pub fn pow(a: &Expr, b: &Expr) -> Expr {
 
 /// `-a`.
 pub fn neg(a: &Expr) -> Expr {
+    check_unary(a, "neg");
     match a.cls() {
         C::Integer
         | C::Zero
@@ -141,6 +158,7 @@ pub fn neg(a: &Expr) -> Expr {
 
 /// `abs(a)`.
 pub fn abs(a: &Expr) -> Expr {
+    check_unary(a, "abs");
     if let Some(r) = numbers::abs(a) {
         return r;
     }
@@ -160,6 +178,7 @@ pub fn rem(a: &Expr, b: &Expr) -> Expr {
 
 /// `a // b`: `floor(a / b)`, or Python's `//` for two Integers.
 pub fn floordiv(a: &Expr, b: &Expr) -> Expr {
+    check_operands(a, b, "floordiv");
     if let (Some(x), Some(y)) = (a.as_int(), b.as_int()) {
         let q = x.floor_div(y).unwrap_or_else(|_| {
             crate::error::raise(
@@ -218,6 +237,76 @@ binop!(Sub, sub, sub);
 binop!(Mul, mul, mul);
 binop!(Div, div, div);
 binop!(Rem, rem, rem);
+
+/// `a < b`.
+pub fn lt(a: &Expr, b: &Expr) -> Expr {
+    crate::relational::lt(a, b)
+}
+
+/// `a <= b`.
+pub fn le(a: &Expr, b: &Expr) -> Expr {
+    crate::relational::le(a, b)
+}
+
+/// `a > b`.
+pub fn gt(a: &Expr, b: &Expr) -> Expr {
+    crate::relational::gt(a, b)
+}
+
+/// `a >= b`.
+pub fn ge(a: &Expr, b: &Expr) -> Expr {
+    crate::relational::ge(a, b)
+}
+
+/// `a & b`.
+pub fn bitand(a: &Expr, b: &Expr) -> Expr {
+    crate::logic::boolalg::bit_op(a, b, crate::logic::boolalg::BitOp::And)
+}
+
+/// `a | b`.
+pub fn bitor(a: &Expr, b: &Expr) -> Expr {
+    crate::logic::boolalg::bit_op(a, b, crate::logic::boolalg::BitOp::Or)
+}
+
+/// `a ^ b`.
+pub fn bitxor(a: &Expr, b: &Expr) -> Expr {
+    crate::logic::boolalg::bit_op(a, b, crate::logic::boolalg::BitOp::Xor)
+}
+
+/// `a >> b`.
+pub fn shr(a: &Expr, b: &Expr) -> Expr {
+    crate::logic::boolalg::bit_op(a, b, crate::logic::boolalg::BitOp::Rshift)
+}
+
+/// `a << b`.
+pub fn shl(a: &Expr, b: &Expr) -> Expr {
+    crate::logic::boolalg::bit_op(a, b, crate::logic::boolalg::BitOp::Lshift)
+}
+
+/// `~a`.
+pub fn invert(a: &Expr) -> Expr {
+    crate::logic::boolalg::invert(a)
+}
+
+binop!(BitAnd, bitand, bitand);
+binop!(BitOr, bitor, bitor);
+binop!(BitXor, bitxor, bitxor);
+binop!(Shr, shr, shr);
+binop!(Shl, shl, shl);
+
+impl std::ops::Not for &Expr {
+    type Output = Expr;
+    fn not(self) -> Expr {
+        invert(self)
+    }
+}
+
+impl std::ops::Not for Expr {
+    type Output = Expr;
+    fn not(self) -> Expr {
+        invert(&self)
+    }
+}
 
 impl std::ops::Neg for &Expr {
     type Output = Expr;

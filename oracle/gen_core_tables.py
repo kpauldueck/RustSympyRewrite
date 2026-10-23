@@ -135,6 +135,14 @@ CLASSES = [
     ("AccumulationBounds", sp.AccumBounds),
     ("IdentityFunction", sp.functions.elementary.miscellaneous.IdentityFunction),
     ("WildFunction", sp.core.function.WildFunction),
+    ("Xor", sp.Xor),
+    ("Nand", sp.Nand),
+    ("Nor", sp.Nor),
+    ("Xnor", sp.logic.boolalg.Xnor),
+    ("Implies", sp.Implies),
+    ("Equivalent", sp.Equivalent),
+    ("ITE", sp.ITE),
+    ("Exclusive", sp.logic.boolalg.Exclusive),
 ]
 
 # Abstract classes code asks `isinstance` about. Each class row gets a bit
@@ -167,6 +175,7 @@ TAGS = [
     ("RoundFunction", sp.functions.elementary.integers.RoundFunction),
     ("CombinatorialFunction", sp.functions.combinatorial.factorials.CombinatorialFunction),
     ("ReciprocalTrigonometricFunction", sp.functions.elementary.trigonometric.ReciprocalTrigonometricFunction),
+    ("BooleanFunction", sp.logic.boolalg.BooleanFunction),
 ]
 
 # SymPy's facts plus `polar`, which has a property but no inference rules.
@@ -208,7 +217,10 @@ METHODS = [
     "__eq__", "__hash__", "__lt__", "__gt__", "__le__", "__ge__", "__bool__",
     "_eval_Eq", "is_comparable", "is_number", "free_symbols", "args",
     "func", "__new__", "eval", "fdiff", "_eval_is_ge", "__len__",
-    "_eval_is_extended_real",
+    "_eval_is_extended_real", "__and__", "__rand__", "__or__", "__ror__",
+    "__xor__", "__rxor__", "__invert__", "__rshift__", "__rrshift__",
+    "__lshift__", "__rlshift__", "to_nnf", "binary_symbols", "canonical",
+    "negated", "to_anf",
 ]
 
 
