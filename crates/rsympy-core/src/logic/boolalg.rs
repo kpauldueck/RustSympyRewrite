@@ -60,9 +60,7 @@ fn eq_py_int(e: &Expr, n: i64) -> bool {
         // `BooleanTrue.__eq__(1)` -> Basic.__eq__ -> NotImplemented, and
         // `int.__eq__` -> NotImplemented, so identity decides.
         "Rational" | "Float" | "Infinity" | "NegativeInfinity" | "NaN" | "Basic"
-        | "NumberSymbol" | "Tuple" | "Subs" | "FiniteSet" | "BooleanTrue" | "BooleanFalse" => {
-            false
-        }
+        | "NumberSymbol" | "Tuple" | "Subs" | "FiniteSet" | "BooleanTrue" | "BooleanFalse" => false,
         o => not_ported(format!("{o}.__eq__ with a Python int")),
     }
 }
@@ -884,7 +882,9 @@ fn call_bit_method(slf: &Expr, other: &Expr, method: Method) -> Option<Expr> {
                 Method::And | Method::Rand => &p & &o,
                 // two's-complement identities
                 Method::Or | Method::Ror => &(&p + &o) - &(&p & &o),
-                Method::Xor | Method::Rxor => &(&p + &o) - &(&(&p & &o) * &rsympy_num::Int::from(2)),
+                Method::Xor | Method::Rxor => {
+                    &(&p + &o) - &(&(&p & &o) * &rsympy_num::Int::from(2))
+                }
                 Method::Lshift => shift(&p, &o, true),
                 Method::Rshift => shift(&p, &o, false),
                 Method::Rlshift => shift(&o, &p, true),
@@ -896,15 +896,48 @@ fn call_bit_method(slf: &Expr, other: &Expr, method: Method) -> Option<Expr> {
     }
 }
 
-/// Python's `a << n` / `a >> n` on ints.
+/// Python's `a << n` / `a >> n` on ints (CPython's `long_lshift` and
+/// `long_rshift`).
 fn shift(a: &rsympy_num::Int, n: &rsympy_num::Int, left: bool) -> rsympy_num::Int {
+    use rsympy_num::Int;
     if n.is_negative() {
         raise(ErrorKind::ValueError, "negative shift count");
     }
+    if a.is_zero() {
+        return Int::from(0);
+    }
     if left {
+        // `divmod_shift` splits the count into 30-bit digits, clipping a
+        // word count of `PY_SSIZE_T_MAX / sizeof(digit)` or more to that,
+        // and `_PyLong_New` refuses more than `MAX_LONG_DIGITS` digits.
+        const SHIFT: u64 = 30;
+        let clip = Int::from((i64::MAX / 4) as i64);
+        let max_long_digits = Int::from((i64::MAX - 24) / 4);
+        let (wordshift, remshift) = if n.as_i64().is_some() {
+            let k = n.as_u64().expect("a non-negative i64");
+            (Int::from((k / SHIFT) as i64), k % SHIFT)
+        } else {
+            let shift = Int::from(SHIFT as i64);
+            let (w, r) = n.div_mod(&shift).expect("nonzero divisor");
+            if w < clip {
+                (w, r.as_u64().expect("a digit"))
+            } else {
+                (clip, 0)
+            }
+        };
+        let oldsize = Int::from(a.bit_length().div_ceil(SHIFT) as i64);
+        let mut newsize = &oldsize + &wordshift;
+        if remshift != 0 {
+            newsize = &newsize + &Int::from(1);
+        }
+        if newsize > max_long_digits {
+            raise(ErrorKind::OverflowError, "too many digits in integer");
+        }
         match n.as_u64() {
-            Some(k) if k <= 1 << 20 => a << k,
-            _ => not_ported("int << with a huge shift count"),
+            Some(k) if k <= 1 << 24 => a << k,
+            // Python allocates the result or raises MemoryError, which
+            // depends on the machine
+            _ => not_ported("int << with a shift count beyond 2**24"),
         }
     } else {
         match n.as_u64() {
@@ -1117,11 +1150,7 @@ fn to_nnf_method(e: &Expr, simplify: bool) -> Expr {
         }
         "ITE" => {
             let [a, b, c] = unpack::<3>(e.args());
-            bf_to_nnf(
-                C::And,
-                vec![or(vec![not(&a), b]), or(vec![a, c])],
-                simplify,
-            )
+            bf_to_nnf(C::And, vec![or(vec![not(&a), b]), or(vec![a, c])], simplify)
         }
         "" => raise(
             ErrorKind::AttributeError,
@@ -1273,7 +1302,13 @@ fn distribute(expr: &Expr, f1: C, f2: C) -> Expr {
         let parts = conj
             .args()
             .iter()
-            .map(|c| distribute(&new_boolfunc(f2, vec![c.clone(), rest.clone()], None), f1, f2))
+            .map(|c| {
+                distribute(
+                    &new_boolfunc(f2, vec![c.clone(), rest.clone()], None),
+                    f1,
+                    f2,
+                )
+            })
             .collect();
         new_keep_true(f1, parts)
     } else if expr.cls() == f1 {

@@ -363,15 +363,11 @@ fn float_repr_matches_python() {
     }
 }
 
-/// 440 vectors reach code that is not ported yet:
-/// - 253 `StrictLessThan` / `StrictGreaterThan._eval_relation` (is_lt,
-///   is_gt): `<` or `>` between a Number and `oo` / `-oo` goes through
-///   `Expr.__lt__` (the `number_lt` / `number_gt` vectors, and sort keys
-///   that tie up to such a Number);
+/// 189 vectors reach code that is not ported yet:
 /// - 50 `exp.as_base_exp`, 22 `AppliedUndef.__new__`: the sort key of
 ///   `E**x` builds `exp(x)` with `Function("exp")`;
 /// - 36 `evalf`: `complex()` of a non-atom (`sqrt(2)`, `sin(1)`, ...);
-/// - 30 `as_real_imag` of a Mul (`complex()` of e.g. `2*I`);
+/// - 32 `as_real_imag` of a Mul (`complex()` of e.g. `2*I`);
 /// - 19 `StrPrinter._print_<Class>` of non-atoms (Function, Relational,
 ///   Pow, Mul, Add);
 /// - 14 `_nodes of a Derivative`, 12 `factor_terms`, 2 `decompose_power`
@@ -379,5 +375,5 @@ fn float_repr_matches_python() {
 ///   `Catalan._as_mpf_val` (one each).
 #[test]
 fn compare_matches_sympy() {
-    run_partial("compare", 440, dispatch);
+    run_partial("compare", 189, dispatch);
 }

@@ -291,8 +291,7 @@ fn frel(f: &Expr, other: &Expr, op: CmpOp) -> Option<Expr> {
     if let Some((o, _)) = other.as_float() {
         return Some(boolean(op.mpf(m, o)));
     }
-    if other.is_comparable() && !other.is_cls(C::Infinity) && !other.is_cls(C::NegativeInfinity)
-    {
+    if other.is_comparable() && !other.is_cls(C::Infinity) && !other.is_cls(C::NegativeInfinity) {
         not_ported("Float._Frel against a comparable non-Number (needs evalf)");
     }
     None
@@ -652,9 +651,7 @@ fn py_neg(a: &Expr) -> Expr {
             format!("bad operand type for unary -: '{}'", a.class_name()),
         ),
         "Integer" | "Zero" | "One" | "NegativeOne" | "Rational" | "Float" | "Infinity"
-        | "NegativeInfinity" | "NaN" | "ComplexInfinity" | "Expr" | "Add" | "Mul" => {
-            ops::neg(a)
-        }
+        | "NegativeInfinity" | "NaN" | "ComplexInfinity" | "Expr" | "Add" | "Mul" => ops::neg(a),
         o => not_ported(format!("{o}.__neg__")),
     }
 }
@@ -791,7 +788,10 @@ pub fn binary_symbols(e: &Expr) -> Vec<Expr> {
         "Relational" => vec![],
         "Equality" | "Unequality" => {
             let args = e.args();
-            if args.iter().any(|a| a.is_cls(C::BooleanTrue) || a.is_cls(C::BooleanFalse)) {
+            if args
+                .iter()
+                .any(|a| a.is_cls(C::BooleanTrue) || a.is_cls(C::BooleanFalse))
+            {
                 if args[0].is_Symbol() {
                     return vec![args[0].clone()];
                 } else if args[1].is_Symbol() {
@@ -804,9 +804,7 @@ pub fn binary_symbols(e: &Expr) -> Vec<Expr> {
         "Boolean" => {
             let mut out: Vec<Expr> = Vec::new();
             for i in e.args() {
-                if i.is_Boolean()
-                    || i.is_Symbol()
-                    || matches!(i.cls(), C::Equality | C::Unequality)
+                if i.is_Boolean() || i.is_Symbol() || matches!(i.cls(), C::Equality | C::Unequality)
                 {
                     for x in binary_symbols(i) {
                         if !out.contains(&x) {
@@ -828,10 +826,36 @@ pub fn binary_symbols(e: &Expr) -> Vec<Expr> {
     }
 }
 
-/// `self.equals(other)`.
+/// `Relational.equals(self, other)` (`failing_expression=False`): True if
+/// the sides are mathematically identical and the relation is the same,
+/// None if that cannot be decided (or `other` is not a Relational).
 pub fn equals(e: &Expr, other: &Expr) -> Option<bool> {
-    let _ = (e, other);
-    not_ported("Relational.equals (needs Expr.equals)")
+    if !e.is_a(Tag::Relational) {
+        // Expr.equals, Boolean.equals (satisfiable)
+        not_ported(format!("{}.equals", e.class_name()));
+    }
+    if !other.is_a(Tag::Relational) {
+        return None;
+    }
+    if other == e || *other == reversed(e) {
+        return Some(true);
+    }
+    let (a, mut b) = (e.clone(), other.clone());
+    let eq_ne = |c: C| matches!(c, C::Equality | C::Unequality);
+    if eq_ne(a.cls()) || eq_ne(b.cls()) {
+        if a.cls() != b.cls() {
+            return Some(false);
+        }
+        not_ported("Relational.equals: equals of the sides (Expr.equals)")
+    } else {
+        if b.cls() != a.cls() {
+            b = reversed(&b);
+        }
+        if a.cls() != b.cls() {
+            return Some(false);
+        }
+        not_ported("Relational.equals: equals of the sides (Expr.equals)")
+    }
 }
 
 /// `self._eval_simplify()` / `simplify(self)`.

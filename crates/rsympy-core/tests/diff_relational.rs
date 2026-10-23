@@ -162,7 +162,7 @@ fn form(op: &str, v: &Vector) -> Option<Value> {
 // simplify_logic.
 #[test]
 fn relational_matches_sympy() {
-    run_partial("relational", 0, |v| {
+    run_partial("relational", 2899, |v| {
         let p = || v.expr(0);
         let q = || v.expr(1);
         match v.op.as_str() {
