@@ -28,6 +28,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use rsympy::ntheory::{FactorOpts, NtCtx, factorint};
+use rsympy::num::Int;
 use serde_json::Value;
 
 const CATEGORIES: [&str; 3] = ["bug", "unstable", "unportable"];
@@ -48,14 +50,57 @@ type Answer = Result<String, String>;
 /// class SymPy raises, e.g. `ValueError`), or `None` if the operation isn't
 /// implemented yet.
 ///
-/// `case` gives access to `options` and `assumptions`. Every new rsympy
+/// `case` gives access to `options` and `assumptions`; `session` is the
+/// state SymPy carries from call to call within a topic. Every new rsympy
 /// feature gets wired in here.
-fn dispatch(op: &str, args: &[&str], case: &Value) -> Option<Answer> {
-    let _ = (op, args, case);
-    None
+fn dispatch(op: &str, args: &[&str], case: &Value, session: &mut Session) -> Option<Answer> {
+    let _ = case;
+    match (op, args) {
+        // Until the parser lands (Tier 2), only integer literals, for which
+        // `sympify` gives an `Integer`.
+        ("gcd", [a, b]) => Some(Ok(int_literal(a)?.gcd(&int_literal(b)?).to_string())),
+        ("lcm", [a, b]) => Some(Ok(int_literal(a)?.lcm(&int_literal(b)?).to_string())),
+        ("factorint", [n]) => {
+            let f = factorint(&mut session.nt, &int_literal(n)?, &FactorOpts::default());
+            // The generator prints `Dict(factorint(n))`, whose keys print
+            // sorted.
+            let items: Vec<String> = f
+                .sorted()
+                .iter()
+                .map(|(p, e)| format!("{p}: {e}"))
+                .collect();
+            Some(Ok(format!("{{{}}}", items.join(", "))))
+        }
+        _ => None,
+    }
 }
 
-fn run_case(case: &Value) -> Outcome {
+/// What SymPy's global state holds while a topic runs. The generator resets
+/// it before each topic (`fresh_state` in `oracle/gen_cases.py`), and so does
+/// the runner.
+struct Session {
+    nt: NtCtx,
+}
+
+impl Session {
+    fn fresh() -> Session {
+        Session {
+            nt: NtCtx::default(),
+        }
+    }
+}
+
+/// `s` as an integer, if it is a plain decimal literal.
+fn int_literal(s: &str) -> Option<Int> {
+    let t = s.trim();
+    let digits = t.strip_prefix('-').unwrap_or(t);
+    if digits.is_empty() || !digits.bytes().all(|c| c.is_ascii_digit()) {
+        return None;
+    }
+    t.parse().ok()
+}
+
+fn run_case(case: &Value, session: &mut Session) -> Outcome {
     let op = case["op"].as_str().expect("case.op");
     let args: Vec<&str> = case["args"]
         .as_array()
@@ -64,7 +109,7 @@ fn run_case(case: &Value) -> Outcome {
         .map(|a| a.as_str().expect("case.args[i]"))
         .collect();
     let expected = case["expected"].as_str().expect("case.expected");
-    let Some(answer) = dispatch(op, &args, case) else {
+    let Some(answer) = dispatch(op, &args, case, session) else {
         return Outcome::Unsupported;
     };
     // rsympy copies SymPy 1:1: the printed answer must match exactly, or the
@@ -143,10 +188,11 @@ fn sympy_conformance() {
         let topic = doc["topic"].as_str().expect("topic");
         let cases = doc["cases"].as_array().expect("cases");
         let mut passed = 0;
+        let mut session = Session::fresh();
         for case in cases {
             let id = case["id"].as_str().expect("case.id");
             let excused = divergences.get(id).is_some();
-            match run_case(case) {
+            match run_case(case, &mut session) {
                 Outcome::Pass if excused => problems.push(format!(
                     "{id} passes now; delete its divergences.json entry"
                 )),

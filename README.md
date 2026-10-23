@@ -2,13 +2,28 @@
 
 A rewrite of [SymPy](https://www.sympy.org) in Rust: the full library, behaving exactly like SymPy 1.14 (1:1), faster, lighter and memory-safe, and checked against SymPy itself. Work is ordered by what a real application, a homework-grading app, needs first.
 
-Status: Tier 0 (test harness). Nothing is implemented yet. See [`docs/PLAN.md`](docs/PLAN.md) for the roadmap. The research behind it is in [`docs/research/rust-rewrites.md`](docs/research/rust-rewrites.md) (lessons from other rewrites) and [`docs/research/sympy-module-survey.md`](docs/research/sympy-module-survey.md) (every SymPy module).
+Status: Tier 1 (numbers) in progress: exact integers and fractions, Python's random number generator, and SymPy's number-theory base (`isprime`, `factorint`, `perfect_power`, ...). See [`docs/PLAN.md`](docs/PLAN.md) for the roadmap. The research behind it is in [`docs/research/rust-rewrites.md`](docs/research/rust-rewrites.md) (lessons from other rewrites) and [`docs/research/sympy-module-survey.md`](docs/research/sympy-module-survey.md) (every SymPy module).
 
 ## Layout
 
-- `crates/rsympy-num`: exact numbers (integers, rationals, modular integers) and Python's RNG.
-- `crates/rsympy`: the facade that will re-export the public API. For now it holds the oracle runner (`tests/oracle.rs`). The other planned crates (`rsympy-core`, `rsympy-mpf`, the domain crates, `rsympy-py`) are described in the plan.
-- `oracle/`: Python that asks a pinned SymPy for the right answers and saves them as golden test cases. `gen_cases.py` runs everything and defines six general topics; the other topics are one module each in `oracle/topics/`. `inventory.py` measures SymPy itself (`sympy_inventory.json`). Every expected answer is what SymPy itself returns (or the exception it raises), computed live; nothing is hand-written. `oracle/caselib.py` documents the format.
+- `crates/rsympy-num`: exact numbers (`Int` with Python's semantics, `Rational`) and Python's RNG (`PyRandom`).
+- `crates/rsympy-mpf`: the port of mpmath, SymPy's float library. So far `libmpf` (float arithmetic with mpmath's exact rounding, string conversion) and the constants pi, e, ln 2, ln 10.
+- `crates/rsympy-ntheory`: SymPy's number-theory base: primality, `nextprime`, `perfect_power`, `multiplicity`, `factorint`.
+- `crates/rsympy`: the facade that will re-export the public API. For now it holds the oracle runner (`tests/oracle.rs`). The other planned crates (`rsympy-core`, the domain crates, `rsympy-py`) are described in the plan.
+- `oracle/`: Python that asks a pinned SymPy for the right answers and saves them as golden test cases. `gen_cases.py` runs everything and defines six general topics; the other topics are one module each in `oracle/topics/`. `inventory.py` measures SymPy itself (`sympy_inventory.json`). Every expected answer is what SymPy itself returns (or the exception it raises), computed live; nothing is hand-written. `oracle/caselib.py` documents the format. `gen_diff.py` writes differential test vectors (`oracle/diff/`) that the number crates' own tests replay against CPython and SymPy.
+
+## Running the checks
+
+CI runs locally, not on GitHub:
+
+```sh
+./ci.sh                # everything: fmt, clippy, tests, then the answer-key check
+./ci.sh rust           # just the Rust checks
+./ci.sh oracle         # just the answer-key check
+./ci.sh install-hook   # run ./ci.sh automatically before every git push
+```
+
+It needs Rust (with `rustfmt` and `clippy`) and Python 3.13; the first oracle run sets up `.venv/` with the pinned SymPy. The GitHub workflow in `.github/workflows/ci.yml` runs the same checks, but only when started by hand from the Actions tab.
 
 ## Checking against SymPy
 
@@ -21,6 +36,7 @@ To regenerate the golden cases after editing a generator in `oracle/`:
 ```sh
 python -m venv .venv && .venv/bin/pip install -r oracle/requirements.txt
 PYTHONHASHSEED=0 SYMPY_GROUND_TYPES=python .venv/bin/python oracle/gen_cases.py
+PYTHONHASHSEED=0 SYMPY_GROUND_TYPES=python .venv/bin/python oracle/gen_diff.py
 ```
 
 A failing case is either fixed or listed in `oracle/divergences.json` with a category and a reason; only a human reviewer may add an entry there or lower a number in `oracle/baseline.json`.

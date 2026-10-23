@@ -1,9 +1,9 @@
 name: CI
 
+# The checks run locally with ./ci.sh (see README). This workflow runs the
+# same checks on GitHub only when started by hand from the Actions tab.
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
@@ -36,10 +36,14 @@ jobs:
           python-version: "3.13"
       - run: pip install -r oracle/requirements.txt
       - run: python oracle/gen_cases.py
-      - run: git diff --exit-code oracle/cases
+      - run: python oracle/gen_diff.py
+      - run: git diff --exit-code oracle/cases oracle/diff
       # A case whose answer depends on hash order can't be copied 1:1; catch
       # it here (and classify it `unstable`) instead of in a flaky port.
       - run: python oracle/gen_cases.py
         env:
           PYTHONHASHSEED: "1"
-      - run: git diff --exit-code oracle/cases
+      - run: python oracle/gen_diff.py
+        env:
+          PYTHONHASHSEED: "1"
+      - run: git diff --exit-code oracle/cases oracle/diff

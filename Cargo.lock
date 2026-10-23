@@ -3,6 +3,34 @@
 version = 4
 
 [[package]]
+name = "cfg-if"
+version = "1.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4e7648175b45a9a48536d676f68d918270699102aa8dab5496df06904c914600"
+
+[[package]]
+name = "dashu-base"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "861a614e79388a4c72aa66b0bdabc91e3a4f30d53e0c8d962953e207d75884d0"
+dependencies = [
+ "num-modular",
+]
+
+[[package]]
+name = "dashu-int"
+version = "0.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "64a0490b40a6a3f6427970035f17f76fd59c01d3cd9f9140809672863a0d64c8"
+dependencies = [
+ "cfg-if",
+ "dashu-base",
+ "num-modular",
+ "num-order",
+ "static_assertions",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -13,6 +41,21 @@ name = "memchr"
 version = "2.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98"
+
+[[package]]
+name = "num-modular"
+version = "0.6.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bd8e500409e6cd603b03e477c26a6caecdc27ac58979a53e881c75eafc079f44"
+
+[[package]]
+name = "num-order"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "537b596b97c40fcf8056d153049eb22f481c17ebce72a513ec9286e4986d1bb6"
+dependencies = [
+ "num-modular",
+]
 
 [[package]]
 name = "proc-macro2"
@@ -36,6 +79,33 @@ dependencies = [
 name = "rsympy"
 version = "0.0.0"
 dependencies = [
+ "rsympy-ntheory",
+ "rsympy-num",
+ "serde_json",
+]
+
+[[package]]
+name = "rsympy-core"
+version = "0.0.0"
+dependencies = [
+ "rsympy-mpf",
+ "rsympy-ntheory",
+ "rsympy-num",
+ "serde_json",
+]
+
+[[package]]
+name = "rsympy-mpf"
+version = "0.0.0"
+dependencies = [
+ "rsympy-num",
+ "serde_json",
+]
+
+[[package]]
+name = "rsympy-ntheory"
+version = "0.0.0"
+dependencies = [
  "rsympy-num",
  "serde_json",
 ]
@@ -43,6 +113,10 @@ dependencies = [
 [[package]]
 name = "rsympy-num"
 version = "0.0.0"
+dependencies = [
+ "dashu-int",
+ "serde_json",
+]
 
 [[package]]
 name = "serde"
@@ -85,6 +159,12 @@ dependencies = [
  "serde_core",
  "zmij",
 ]
+
+[[package]]
+name = "static_assertions"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
 name = "syn"

@@ -9,6 +9,7 @@ publish.workspace = true
 
 [dependencies]
 rsympy-num = { path = "../rsympy-num" }
+rsympy-ntheory = { path = "../rsympy-ntheory" }
 
 [dev-dependencies]
 serde_json = "1"
