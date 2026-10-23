@@ -83,5 +83,26 @@ pub(crate) fn handler(e: &Expr, fact: Fact) -> Option<bool> {
     if !e.is_a(crate::generated::Tag::Application) {
         return crate::numbers::singleton_handler(e, fact);
     }
-    not_ported(format!("{} assumptions", e.class_name()))
+    match e.handler_owner(fact) {
+        Some("Function._eval_is_commutative") => {
+            crate::assume::fuzzy_and(e.args().iter().map(Expr::is_commutative))
+        }
+        Some("Expr._eval_is_extended_positive" | "Expr._eval_is_extended_negative") => {
+            expr_eval_is_extended_positive_negative(e)
+        }
+        Some(owner) => not_ported(owner),
+        None => unreachable!("{} has no handler for {fact:?}", e.class_name()),
+    }
+}
+
+/// `Expr._eval_is_extended_positive_negative(positive)`: only numbers
+/// (decided by evaluating them) get an answer.
+pub(crate) fn expr_eval_is_extended_positive_negative(e: &Expr) -> Option<bool> {
+    if !e.is_number() {
+        return None;
+    }
+    not_ported(format!(
+        "Expr._eval_is_extended_positive_negative for {} (needs evalf)",
+        e.class_name()
+    ))
 }

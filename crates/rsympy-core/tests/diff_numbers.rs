@@ -8,9 +8,9 @@ use rsympy_core::{Fact, ops};
 
 #[test]
 fn numbers_match_sympy() {
-    // Unported: Pow.__new__ (division and powers that leave numbers) and
+    // Unported: list.sort (results with several terms) and
     // Function.__new__ (Mod, Abs of non-numbers).
-    run_partial("numbers", 108, |v| {
+    run_partial("numbers", 90, |v| {
         let e = || Value::Expr;
         match v.op.as_str() {
             "add" => e()(ops::add(&v.expr(0), &v.expr(1))),

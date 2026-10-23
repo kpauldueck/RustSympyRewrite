@@ -133,6 +133,16 @@ impl Expr {
         crate::construct::rebuild(self, args)
     }
 
+    /// The `Class._eval_is_<fact>` that `type(self)._prop_handler[fact]`
+    /// calls, if the class has one.
+    pub fn handler_owner(&self, fact: Fact) -> Option<&'static str> {
+        self.info()
+            .handler_owners
+            .iter()
+            .find(|(f, _)| *f == fact)
+            .map(|(_, owner)| *owner)
+    }
+
     /// `type(self).__name__`.
     pub fn class_name(&self) -> &str {
         match &self.0.data {

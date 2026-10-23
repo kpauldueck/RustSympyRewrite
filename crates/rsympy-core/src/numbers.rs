@@ -676,7 +676,9 @@ pub(crate) fn truediv(a: &Expr, b: &Expr) -> Expr {
             number_truediv(a, b)
         }
         C::Float => {
-            if b.is_Number() && b.is_zero() != Some(true) && !is_zero_number(b) && ev {
+            // `other != 0`: Float equality is structural in SymPy 1.14, so
+            // only S.Zero (the one zero Rational) equals 0
+            if b.is_Number() && !b.is_cls(C::Zero) && ev {
                 let (m, p) = a.as_float().expect("Float");
                 let (rhs, prec) = as_mpf_op(b, p);
                 let q = mlib::mpf_div(m, &rhs, prec, RND)
@@ -702,14 +704,6 @@ pub(crate) fn truediv(a: &Expr, b: &Expr) -> Expr {
         }
         C::NaN => a.clone(),
         _ => unreachable!("numbers::truediv on {}", a.class_name()),
-    }
-}
-
-/// `other != 0` for a Number `other`, as `Float.__truediv__` tests it.
-fn is_zero_number(b: &Expr) -> bool {
-    match b.as_float() {
-        Some((m, _)) => *m == mlib::FZERO,
-        None => b.is_cls(C::Zero),
     }
 }
 
