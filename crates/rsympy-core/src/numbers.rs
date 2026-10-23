@@ -1308,3 +1308,197 @@ pub fn int_valued(x: &Expr) -> bool {
         None => false,
     }
 }
+
+// ---------------------------------------------------------------------------
+// comparisons and float(), as Python's operators call them on two Numbers
+
+/// `isinstance(b, type(a))` for a strict subclass: Python's `a == b` and
+/// `a < b` try `b`'s reflected method first when `type(b)` is a proper
+/// subclass of `type(a)` (Zero, One and NegativeOne under Integer; Integer
+/// and the constants under Rational).
+fn is_proper_subclass(b: &Expr, a: &Expr) -> bool {
+    b.cls() != a.cls()
+        && match a.cls() {
+            C::Integer => b.is_a(Tag::Integer),
+            C::Rational => b.is_a(Tag::Rational),
+            _ => false,
+        }
+}
+
+/// Python's `a == b` for two Numbers (`Integer.__eq__`, `Rational.__eq__`,
+/// `Float.__eq__`, `Infinity.__eq__`, ...).
+pub fn number_eq(a: &Expr, b: &Expr) -> bool {
+    debug_assert!(a.is_Number() && b.is_Number());
+    if is_proper_subclass(b, a) {
+        number_eq_method(b, a)
+    } else {
+        number_eq_method(a, b)
+    }
+}
+
+/// `a.__eq__(b)` for two Numbers.
+fn number_eq_method(a: &Expr, b: &Expr) -> bool {
+    match a.cls() {
+        // Integer.__eq__
+        C::Integer | C::Zero | C::One | C::NegativeOne if b.is_Integer() => int(a) == int(b),
+        // Rational.__eq__: `other` is a Number and never a NumberSymbol here.
+        C::Integer | C::Zero | C::One | C::NegativeOne | C::Rational | C::Half => {
+            b.is_Rational() && a.p() == b.p() && a.q() == b.q()
+        }
+        // Float.__eq__ -> Basic.__eq__: both are Numbers, so their
+        // `_hashable_content()`s decide: `(_mpf_, _prec)` against another
+        // Float's, a Rational's `(p, q)` or a singleton's `()`.
+        C::Float => {
+            a.ptr_eq(b)
+                || match (a.as_float(), b.as_float()) {
+                    (Some((m, p)), Some((n, q))) => m == n && p == q,
+                    _ => false,
+                }
+        }
+        // `other is S.Infinity or other == float('inf')`: no other Number
+        // equals float('inf') (it sympifies to S.Infinity, which only
+        // Infinity itself equals).
+        C::Infinity => b.is_cls(C::Infinity),
+        C::NegativeInfinity => b.is_cls(C::NegativeInfinity),
+        // `other is S.NaN`
+        C::NaN => b.is_cls(C::NaN),
+        _ => unreachable!("number_eq on {}", a.class_name()),
+    }
+}
+
+/// `bool(a < b)` for two Numbers, as Python's `<` dispatches it.
+pub fn number_lt(a: &Expr, b: &Expr) -> bool {
+    debug_assert!(a.is_Number() && b.is_Number());
+    if is_proper_subclass(b, a) {
+        number_rich(b, a, Rel::Gt)
+    } else {
+        number_rich(a, b, Rel::Lt)
+    }
+}
+
+/// `bool(a > b)` for two Numbers, as Python's `>` dispatches it.
+pub fn number_gt(a: &Expr, b: &Expr) -> bool {
+    debug_assert!(a.is_Number() && b.is_Number());
+    if is_proper_subclass(b, a) {
+        number_rich(b, a, Rel::Lt)
+    } else {
+        number_rich(a, b, Rel::Gt)
+    }
+}
+
+/// `__lt__` or `__gt__`.
+#[derive(Clone, Copy, PartialEq)]
+enum Rel {
+    Lt,
+    Gt,
+}
+
+impl Rel {
+    /// The reflected comparison (`__lt__` <-> `__gt__`).
+    fn reflected(self) -> Rel {
+        match self {
+            Rel::Lt => Rel::Gt,
+            Rel::Gt => Rel::Lt,
+        }
+    }
+
+    fn mpf(self, s: &Mpf, t: &Mpf) -> bool {
+        match self {
+            Rel::Lt => mlib::mpf_lt(s, t),
+            Rel::Gt => mlib::mpf_gt(s, t),
+        }
+    }
+}
+
+/// `bool(a.__lt__(b))` / `bool(a.__gt__(b))` for two Numbers: each class's
+/// method, falling back to `Expr.__lt__` / `Expr.__gt__`.
+fn number_rich(a: &Expr, b: &Expr, op: Rel) -> bool {
+    match a.cls() {
+        // Integer.__lt__ / __gt__
+        C::Integer | C::Zero | C::One | C::NegativeOne if b.is_Integer() => match op {
+            Rel::Lt => int(a) < int(b),
+            Rel::Gt => int(a) > int(b),
+        },
+        C::Integer | C::Zero | C::One | C::NegativeOne | C::Rational | C::Half => {
+            rational_rich(a, b, op)
+        }
+        // Float.__lt__ / __gt__ (`other` is never a NumberSymbol here)
+        C::Float => match float_frel(a, b, op) {
+            Some(v) => v,
+            None => expr_rich(a, b, op),
+        },
+        // Infinity, NegativeInfinity and NaN: `__lt__ = Expr.__lt__`, ...
+        C::Infinity | C::NegativeInfinity | C::NaN => expr_rich(a, b, op),
+        _ => unreachable!("number comparison on {}", a.class_name()),
+    }
+}
+
+/// `Rational.__lt__` / `__gt__`: `_Rrel(other, '__gt__')` (resp.
+/// `'__lt__'`), else `Expr.__lt__` / `Expr.__gt__`.
+fn rational_rich(s: &Expr, other: &Expr, op: Rel) -> bool {
+    // _Rrel; `other` is a Number and never a NumberSymbol.
+    let attr = op.reflected();
+    if other.is_Float() {
+        // op = getattr(o, attr); return op(s)
+        return number_rich(other, s, attr);
+    }
+    if other.is_Rational() {
+        let s2 = Expr::integer(&s.p() * &other.q());
+        let o2 = Expr::integer(&s.q() * &other.p());
+        return number_rich(&o2, &s2, attr);
+    }
+    if other.is_number() && other.is_extended_real() == Some(true) {
+        // return Integer(s.p), s.q*o: `o` is oo or -oo here and s.q > 0,
+        // so s.q*o is o.
+        return expr_rich(&Expr::integer(s.p()), other, op);
+    }
+    // rv is None: Expr.__lt__(self, other)
+    expr_rich(s, other, op)
+}
+
+/// `Float._Frel(other, op)` for a Number `other` (`None` where it returns
+/// None).
+fn float_frel(a: &Expr, other: &Expr, op: Rel) -> Option<bool> {
+    let (m, _) = a.as_float().expect("Float");
+    if other.is_Rational() {
+        let q = mlib::from_int(&other.q(), 0, mlib::ROUND_FAST);
+        let smpf = mlib::mpf_mul(m, &q, 0, mlib::ROUND_FAST);
+        let ompf = mlib::from_int(&other.p(), 0, mlib::ROUND_FAST);
+        return Some(op.mpf(&smpf, &ompf));
+    }
+    if let Some((n, _)) = other.as_float() {
+        return Some(op.mpf(m, n));
+    }
+    // `other.is_comparable and other not in (S.Infinity,
+    // S.NegativeInfinity)`: the Numbers left are oo and -oo (excluded) and
+    // nan (`is_comparable = False`).
+    None
+}
+
+/// `bool(Expr.__lt__(a, b))`: `bool(StrictLessThan(a, b))` (resp.
+/// `StrictGreaterThan`), whose `_Inequality.__new__` first rejects
+/// non-real arguments and NaN, then asks `is_lt` / `is_gt`.
+fn expr_rich(lhs: &Expr, rhs: &Expr, op: Rel) -> bool {
+    for me in [lhs, rhs] {
+        if me.is_extended_real() == Some(false) {
+            raise(
+                ErrorKind::TypeError,
+                format!("Invalid comparison of non-real {}", me.class_name()),
+            );
+        }
+        if me.is_cls(C::NaN) {
+            raise(ErrorKind::TypeError, "Invalid NaN comparison");
+        }
+    }
+    match op {
+        Rel::Lt => not_ported("StrictLessThan._eval_relation (is_lt) on numbers"),
+        Rel::Gt => not_ported("StrictGreaterThan._eval_relation (is_gt) on numbers"),
+    }
+}
+
+/// `float(n)` for a Number: `Number.__float__`,
+/// `mlib.to_float(self._as_mpf_val(53))`.
+pub fn number_float(n: &Expr) -> f64 {
+    debug_assert!(n.is_Number());
+    mlib::to_float(&as_mpf_val(n, 53), false, mlib::ROUND_FAST).expect("not strict")
+}

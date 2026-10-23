@@ -40,6 +40,7 @@ pub mod exprtools;
 pub mod facts;
 pub mod functions;
 mod generated;
+mod generated_compare;
 pub mod methods;
 pub mod mul;
 pub mod numbers;
