@@ -350,11 +350,12 @@ fn canon_renumbers_dummies() {
     );
 }
 
-// Unported: exp.as_base_exp and Function.__new__ (the functions unit),
-// xreplace, subs, as_independent, coeff and is_polynomial with free symbols
-// (the subs unit), Tuple and Interval rebuilding, the evalf sign of an Add,
-// real_roots for _monotonic_sign, the polys gcd of Floats, and factor_nc of
-// an Add (expand_power_exp, polys factor).
+// Unported: exp.as_base_exp; xreplace, subs, as_independent and
+// is_polynomial with free symbols (exprtools::pending still holds
+// stand-ins for the subs unit's ports); Expr.extract_additively of a
+// non-Number (Expr.coeff); evalf; the eval of exp, re and sin; Sum,
+// Integral and Interval rebuilding; and factor_nc of an Add
+// (expand_power_exp, polys factor).
 #[test]
 fn exprtools_matches_sympy() {
     run_partial("exprtools", 934, dispatch);

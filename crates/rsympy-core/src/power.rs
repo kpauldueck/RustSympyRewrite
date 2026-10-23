@@ -344,6 +344,258 @@ pub fn as_numer_denom(p: &Expr) -> (Expr, Expr) {
     (pow(&n, &exp), pow(&d, &exp))
 }
 
+/// `Pow._eval_subs(old, new)`: replaces the base, or a power of the same
+/// base whose exponent divides this one (`(x**(6*y)).subs(x**(3*y), z)`
+/// is `z**2`), or a power with the same exponent and a base that is a
+/// power of this one (`(4**x).subs(2**x, y)` is `y**2`).
+pub(crate) fn eval_subs(p: &Expr, old: &Expr, new: &Expr) -> Option<Expr> {
+    let (base, exp) = (p.arg(0), p.arg(1));
+    if exp.is_cls(C::AccumulationBounds) {
+        not_ported("Pow._eval_subs with an AccumulationBounds exponent");
+    }
+
+    // (`old == exp and self.base == S.Exp1` compares `old` with the class
+    // `exp`, which no SymPy object equals.)
+    if old == base {
+        // `new.is_Function and isinstance(new, Callable)`: only a Lambda
+        if new.is_Function() && new.is_cls(C::Lambda) {
+            not_ported("Pow._eval_subs: calling a Lambda");
+        }
+        return Some(ops::pow(new, &crate::basic::_subs(exp, old, new)));
+    }
+
+    // issue 10829: (4**x - 3*y + 2).subs(2**x, y) -> y**2 - 3*y + 2
+    if old.is_Pow()
+        && exp == old.arg(1)
+        && let Some(l) = log_with_base_if_number(base, old.arg(0))
+    {
+        return Some(pow(new, &l));
+    }
+
+    let symbol = [crate::basic::Pattern::Tag(Tag::Symbol)];
+    if old.is_Pow() && base == old.arg(0) {
+        if !exp.is_Add() {
+            let (c1, t1) = exp.as_independent(&symbol, Some(false));
+            let (c2, t2) = old.arg(1).as_independent(&symbol, Some(false));
+            let (ok, pw, remainder_pow) = subs_check((c1, vec![t1]), (c2, vec![t2]), old);
+            if ok {
+                // issue 5180: (x**(6*y)).subs(x**(3*y),z)->z**2
+                let mut result = pow(new, &pw.expect("a power when ok"));
+                if let Some(r) = remainder_pow {
+                    result = crate::mul::mul(vec![result, pow(old.arg(0), &r)]);
+                }
+                return Some(result);
+            }
+        } else {
+            // b**(6*x + a).subs(b**(3*x), y) -> y**2 * b**a
+            // exp(exp(x) + exp(x**2)).subs(exp(exp(x)), w) -> w * exp(exp(x**2))
+            let oarg = old.arg(1);
+            let mut new_l = Vec::new();
+            let mut o_al = Vec::new();
+            let ct2 = oarg.as_coeff_mul();
+            for a in exp.args() {
+                let newa = crate::basic::_subs(a, old, new);
+                let ct1 = newa.as_coeff_mul();
+                let (ok, pw, remainder_pow) = subs_check(ct1, ct2.clone(), old);
+                if ok {
+                    new_l.push(ops::pow(new, &pw.expect("a power when ok")));
+                    if let Some(r) = remainder_pow {
+                        o_al.push(r);
+                    }
+                    continue;
+                } else if old.is_commutative() != Some(true) && newa.is_integer() != Some(true) {
+                    // If any term in the exponent is non-integer,
+                    // we do not do any substitutions in the noncommutative case
+                    return None;
+                }
+                o_al.push(newa);
+            }
+            if !new_l.is_empty() {
+                let expo = crate::add::add(o_al);
+                new_l.push(if expo != s::one() {
+                    pow_with(base, &expo, false)
+                } else {
+                    base.clone()
+                });
+                return Some(crate::mul::mul(new_l));
+            }
+        }
+    }
+
+    if (old.is_cls(C::Exp) || (old.is_Pow() && old.arg(0).is_cls(C::Exp1)))
+        && exp.is_extended_real() == Some(true)
+        && base.is_positive() == Some(true)
+    {
+        // (old.exp: the argument of exp, or the exponent of E**...)
+        let old_exp = if old.is_Pow() { old.arg(1) } else { old.arg(0) };
+        let (c1, t1) = old_exp.as_independent(&symbol, Some(false));
+        let (c2, t2) = ops::mul(exp, &log(base)).as_independent(&symbol, Some(false));
+        let (ok, pw, remainder_pow) = subs_check((c1, vec![t1]), (c2, vec![t2]), old);
+        if ok {
+            // (2**x).subs(exp(x*log(2)), z) -> z
+            let mut result = pow(new, &pw.expect("a power when ok"));
+            if let Some(r) = remainder_pow {
+                let old_base = if old.is_Pow() {
+                    old.arg(0).clone()
+                } else {
+                    s::exp1()
+                };
+                result = crate::mul::mul(vec![result, pow(&old_base, &r)]);
+            }
+            return Some(result);
+        }
+    }
+    None
+}
+
+/// `Pow._eval_is_polynomial(syms)`: no symbol in the exponent, and a
+/// polynomial base raised to a nonnegative integer.
+pub(crate) fn eval_is_polynomial(p: &Expr, syms: &[Expr]) -> Option<bool> {
+    let (base, exp) = (p.arg(0), p.arg(1));
+    let patterns: Vec<crate::basic::Pattern> = syms
+        .iter()
+        .cloned()
+        .map(crate::basic::Pattern::Expr)
+        .collect();
+    if crate::basic::has(exp, &patterns) {
+        return Some(false);
+    }
+    if crate::basic::has(base, &patterns) {
+        return Some(
+            base.eval_is_polynomial(syms) == Some(true)
+                && exp.is_Integer()
+                && !exp.p().is_negative(),
+        );
+    }
+    Some(true)
+}
+
+/// `Pow._eval_is_rational_function(syms)`: no symbol in the exponent, and
+/// a rational function base raised to an integer. (`base_result and
+/// exp.is_Integer` keeps a None from the base.)
+pub(crate) fn eval_is_rational_function(p: &Expr, syms: &[Expr]) -> Option<bool> {
+    let (base, exp) = (p.arg(0), p.arg(1));
+    let patterns: Vec<crate::basic::Pattern> = syms
+        .iter()
+        .cloned()
+        .map(crate::basic::Pattern::Expr)
+        .collect();
+    if crate::basic::has(exp, &patterns) {
+        return Some(false);
+    }
+    if crate::basic::has(base, &patterns) {
+        return match base.eval_is_rational_function(syms) {
+            Some(true) => Some(exp.is_Integer()),
+            falsy => falsy,
+        };
+    }
+    Some(true)
+}
+
+/// `l = log(b, ob)` in `Pow._eval_subs`, when `l.is_Number`.
+///
+/// For two different symbols, neither known to be zero, `log.eval(b, ob)`
+/// finds no multiplicity (it raises ValueError for symbols) and returns
+/// `log(b)/log(ob)`, and `log.eval` leaves `log` of such a symbol alone:
+/// the quotient of two different `log`s is a Mul, never a Number. Every
+/// other case needs `log`.
+fn log_with_base_if_number(b: &Expr, ob: &Expr) -> Option<Expr> {
+    if b.is_Symbol()
+        && ob.is_Symbol()
+        && b != ob
+        && b.is_zero() != Some(true)
+        && ob.is_zero() != Some(true)
+    {
+        return None;
+    }
+    let l = crate::functions::call(C::Log, vec![b.clone(), ob.clone()]);
+    l.is_Number().then_some(l)
+}
+
+/// `_check(ct1, ct2, old)` in `Pow._eval_subs`: whether `b**(c1*t)` can be
+/// written as a power of `old = b**(c2*t)`, with the power and, for
+/// non-commutative `old`, the exponent left over. The terms are the
+/// tuple of `as_coeff_mul()` or the single term of `as_independent()`.
+#[allow(clippy::type_complexity)]
+fn subs_check(
+    ct1: (Expr, Vec<Expr>),
+    ct2: (Expr, Vec<Expr>),
+    old: &Expr,
+) -> (bool, Option<Expr>, Option<Expr>) {
+    let (coeff1, terms1) = ct1;
+    let (coeff2, terms2) = ct2;
+    if terms1 == terms2 {
+        if old.is_commutative() == Some(true) {
+            // Allow fractional powers for commutative objects
+            let pw = ops::div(&coeff1, &coeff2);
+            let combines = if as_int_nonstrict(&pw) {
+                true
+            } else {
+                let (b, e) = old.as_base_exp();
+                // These conditions ensure that (b**e)**f == b**(e*f) for any f
+                b.is_positive() == Some(true) && e.is_real() == Some(true)
+                    || b.is_nonnegative() == Some(true) && e.is_nonnegative() == Some(true)
+            };
+            return (combines, Some(pw), None);
+        } else {
+            // With noncommutative symbols, substitute only integer powers
+            if !terms1.iter().all(|term| term.is_integer() == Some(true)) {
+                return (false, None, None);
+            }
+            // as_int (strict) only takes Integers; anything else raises
+            // ValueError: Can't substitute
+            if coeff1.is_Integer() && coeff2.is_Integer() {
+                let c2 = coeff2.p();
+                let (mut pw, mut remainder) = coeff1.p().div_mod(&c2).unwrap_or_else(|_| {
+                    raise(
+                        ErrorKind::ZeroDivisionError,
+                        "integer division or modulo by zero",
+                    )
+                });
+                // Round pow toward zero
+                if pw.is_negative() && !remainder.is_zero() {
+                    pw = pw + 1;
+                    remainder = remainder - c2;
+                }
+                let remainder_pow = if remainder.is_zero() {
+                    None
+                } else {
+                    let mut f = vec![Expr::integer(remainder)];
+                    f.extend(terms1);
+                    Some(crate::mul::mul(f))
+                };
+                return (true, Some(Expr::integer(pw)), remainder_pow);
+            }
+        }
+    }
+    (false, None, None)
+}
+
+/// Whether `as_int(n, strict=False)` succeeds: `int(n)` works and equals
+/// `n`. `int()` of an expression that is not a number raises TypeError
+/// (so ValueError here); of a number expression it needs evalf.
+fn as_int_nonstrict(n: &Expr) -> bool {
+    if n.is_Integer() {
+        return true;
+    }
+    if n.is_Rational() {
+        return false;
+    }
+    if n.is_Float() {
+        return crate::numbers::int_valued(n);
+    }
+    if matches!(
+        n.cls(),
+        C::Infinity | C::NegativeInfinity | C::NaN | C::ComplexInfinity
+    ) {
+        return false;
+    }
+    if !n.is_number() {
+        return false;
+    }
+    not_ported(format!("int() of {} (needs evalf)", n.class_name()))
+}
+
 /// `Pow._eval_expand_power_base()` with default hints.
 pub fn expand_power_base(e: &Expr) -> Expr {
     expand_power_base_with(e, false)
@@ -825,7 +1077,21 @@ fn eval_is_extended_real(b: &Expr, x: &Expr) -> Option<bool> {
         if b.is_cls(C::NegativeOne) {
             return Some(true);
         }
-        not_ported("Pow._eval_is_extended_real: exp.coeff(I) (needs Expr.coeff)");
+        let c = x.coeff(&s::imaginary_unit(), 1, false);
+        if c.truthy() {
+            if b.is_rational() == Some(true)
+                && c.is_rational() == Some(true)
+                && b.is_nonzero() == Some(true)
+                && ops::sub(b, &s::one()).is_nonzero() == Some(true)
+                && c.is_nonzero() == Some(true)
+            {
+                return Some(false);
+            }
+            let ok = ops::div(&ops::mul(&c, &log(b)), &s::pi()).is_integer();
+            if ok.is_some() {
+                return ok;
+            }
+        }
     }
 
     if !real_b && real_e {

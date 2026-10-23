@@ -66,6 +66,17 @@ pub fn wild(name: &str, assumptions: &[(Fact, bool)]) -> Expr {
     make(C::Wild, name, assumptions, None)
 }
 
+/// `Symbol._eval_subs(old, new)`: a symbol is a power with exponent 1 when
+/// `old` is a power, so `x.subs(x**2, y)` can give `sqrt(y)` for a
+/// positive `x`.
+pub(crate) fn eval_subs(e: &Expr, old: &Expr, new: &Expr) -> Option<Expr> {
+    if old.is_Pow() {
+        let p = crate::power::pow_with(e, &crate::numbers::s::one(), false);
+        return crate::power::eval_subs(&p, old, new);
+    }
+    None
+}
+
 /// `Symbol._sanitize`: converts `(name, value)` keyword assumptions,
 /// rejecting unknown names the way `_filter_assumptions` would ignore them.
 pub fn parse_assumptions(kwargs: &[(&str, Option<bool>)]) -> Vec<(Fact, bool)> {

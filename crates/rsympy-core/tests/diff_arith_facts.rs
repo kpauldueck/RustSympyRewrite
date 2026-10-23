@@ -7,9 +7,9 @@ mod common;
 use common::{Value, run_partial};
 use rsympy_core::Fact;
 
-// Unported: Function.__new__ (functions of non-numbers), the polys behind
-// _monotonic_sign of an Add, Expr.coeff, factor_terms, evalf, and the
-// handlers of Derivative and Integral.
+// Unported: the eval of Abs, log, arg and exp; Expr.is_polynomial in
+// _monotonic_sign (exprtools' stand-in); evalf; and the handlers of
+// Derivative and Integral.
 #[test]
 fn arith_facts_match_sympy() {
     run_partial("arith_facts", 3976, |v| match v.op.as_str() {

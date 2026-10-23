@@ -6,6 +6,7 @@
 //! | module | SymPy source |
 //! |---|---|
 //! | [`expr`] | `Basic`/`Expr` nodes, equality, hashing |
+//! | [`basic`], [`traversal`] | `Basic.has`/`atoms`/`subs`/`xreplace`, `core.traversal` |
 //! | [`facts`], [`assume`] | `core.facts`, `core.assumptions` (`is_*`) |
 //! | [`numbers`] | `core.numbers` |
 //! | [`symbol`] | `core.symbol` |
@@ -35,6 +36,7 @@
 
 pub mod add;
 pub mod assume;
+pub mod basic;
 pub mod compare;
 pub mod construct;
 pub mod ctx;
@@ -61,6 +63,7 @@ pub mod relational;
 pub mod symbol;
 pub mod sympify;
 pub mod testing;
+pub mod traversal;
 
 pub use error::{ErrorKind, SympyError, SympyResult, catch};
 pub use expr::Expr;

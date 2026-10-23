@@ -251,16 +251,17 @@ fn qm(op: &str, v: &Vector) -> Option<Value> {
     })
 }
 
-// The 2924 vectors that reach unported code:
-//   1366 `_monotonic_sign` of an Add or of a symbolic denominator (polys),
-//        from comparisons of sums and products of symbols
+// The 2914 vectors that reach unported code:
+//   1366 `Expr.is_polynomial` in `_monotonic_sign` (exprtools still calls
+//        its stand-in, not the subs unit's port), from comparisons of
+//        sums and products of symbols
 //    774 the evalf of a non-Number difference in `_n2` (pi - 1, ...)
-//    518 `Function.__new__` (floor, ceiling, re, im of their arguments)
+//    508 `Abs.eval`, `arg.eval`, `RoundFunction.eval` (floor, ceiling)
 //    167 RoundFunction's `_eval_is_integer` and `_eval_is_finite`
 //     36 `And`, `Or`, `Xor` of Sets (sets)
 //     27 `simplify_logic` past its quick exits (`_get_truthtable` and the
 //        relational substitutions need Basic.xreplace)
-//     24 `Expr._eval_is_extended_positive_negative` of an Add (evalf)
+//     24 `_eval_evalf`
 //     10 `Relational._eval_simplify` (simplify)
 //      1 `Relational.equals` of sides that need `Expr.equals`
 //      1 `Expr.as_real_imag` under evaluate(False)

@@ -284,6 +284,96 @@ pub fn eval_power(base: &Expr, expt: &Expr) -> Option<Expr> {
     None
 }
 
+/// `Add._eval_subs(old, new)`: replaces a sum `old` that is part of this
+/// sum, up to the rational constant (`(a + b + 2).subs(a + b + 3, y)` is
+/// `y - 1`), or `-oo` when `old` is `oo`.
+pub(crate) fn eval_subs(e: &Expr, old: &Expr, new: &Expr) -> Option<Expr> {
+    if !old.is_Add() {
+        if old.is_cls(C::Infinity) && e.args().iter().any(|a| a.is_cls(C::NegativeInfinity)) {
+            // foo - oo is foo + (-oo) internally
+            let mut rule = PyDict::new();
+            rule.insert(ops::neg(old), ops::neg(new));
+            return Some(crate::basic::xreplace(e, &rule));
+        }
+        return None;
+    }
+
+    let (coeff_self, terms_self) = e.as_coeff_Add(false);
+    let (coeff_old, terms_old) = old.as_coeff_Add(false);
+
+    if coeff_self.is_Rational() && coeff_old.is_Rational() {
+        if terms_self == terms_old {
+            // (2 + a).subs( 3 + a, y) -> -1 + y
+            return Some(add(vec![new.clone(), coeff_self, ops::neg(&coeff_old)]));
+        }
+        if terms_self == ops::neg(&terms_old) {
+            // (2 + a).subs(-3 - a, y) -> -1 - y
+            return Some(add(vec![ops::neg(new), coeff_self, coeff_old]));
+        }
+    }
+
+    if coeff_self.is_Rational() && coeff_old.is_Rational()
+        || crate::numbers::number_eq(&coeff_self, &coeff_old)
+    {
+        let args_old = terms_old.add_args();
+        let args_self = terms_self.add_args();
+        if args_old.len() < args_self.len() {
+            // (a+b+c).subs(b+c,x) -> a+x
+            // (SymPy iterates over the set difference, in hash order; the
+            // terms are added up, so taking them in args order gives the
+            // same sum.)
+            let self_set: std::collections::HashSet<&Expr> = args_self.iter().collect();
+            let is_proper_subset = |old_args: &[Expr]| {
+                let old_set: std::collections::HashSet<&Expr> = old_args.iter().collect();
+                old_set.len() < self_set.len() && old_set.is_subset(&self_set)
+            };
+            let rest = |old_args: &[Expr]| -> Vec<Expr> {
+                let old_set: std::collections::HashSet<&Expr> = old_args.iter().collect();
+                let mut seen = std::collections::HashSet::new();
+                args_self
+                    .iter()
+                    .filter(|s| !old_set.contains(s) && seen.insert(*s))
+                    .map(|s| crate::basic::_subs(s, old, new))
+                    .collect()
+            };
+
+            if is_proper_subset(&args_old) {
+                let mut args = vec![new.clone(), coeff_self, ops::neg(&coeff_old)];
+                args.extend(rest(&args_old));
+                return Some(add(args));
+            }
+
+            // (a+b+c+d).subs(-b-c,x) -> a-x+d
+            let args_old = ops::neg(&terms_old).add_args();
+            if is_proper_subset(&args_old) {
+                let mut args = vec![ops::neg(new), coeff_self, coeff_old];
+                args.extend(rest(&args_old));
+                return Some(add(args));
+            }
+        }
+    }
+    None
+}
+
+/// `Add._eval_is_polynomial(syms)`: every term is (`all()`, so an
+/// unknown counts as not).
+pub(crate) fn eval_is_polynomial(e: &Expr, syms: &[Expr]) -> Option<bool> {
+    Some(
+        e.args()
+            .iter()
+            .all(|term| term.eval_is_polynomial(syms) == Some(true)),
+    )
+}
+
+/// `Add._eval_is_rational_function(syms)`.
+pub(crate) fn eval_is_rational_function(e: &Expr, syms: &[Expr]) -> Option<bool> {
+    Some(
+        e.args()
+            .iter()
+            .all(|term| term.eval_is_rational_function(syms) == Some(true)),
+    )
+}
+
 /// `Add.as_coeff_Add(rational)`.
 #[allow(non_snake_case)]
 pub fn as_coeff_Add(e: &Expr, rational: bool) -> (Expr, Expr) {

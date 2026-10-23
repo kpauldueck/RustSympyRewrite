@@ -8,7 +8,7 @@ use rsympy_core::{Fact, ops};
 
 #[test]
 fn numbers_match_sympy() {
-    // Unported: Function.__new__ (Mod, Abs of non-numbers).
+    // Unported: Abs.eval (abs of a non-number).
     run_partial("numbers", 1, |v| {
         let e = || Value::Expr;
         match v.op.as_str() {

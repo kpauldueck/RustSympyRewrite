@@ -363,16 +363,15 @@ fn float_repr_matches_python() {
     }
 }
 
-/// 189 vectors reach code that is not ported yet:
-/// - 50 `exp.as_base_exp`, 22 `AppliedUndef.__new__`: the sort key of
-///   `E**x` builds `exp(x)` with `Function("exp")`;
+/// 155 vectors reach code that is not ported yet:
+/// - 50 `exp.as_base_exp`: the sort key of `E**x` builds `exp(x)`;
 /// - 36 `evalf`: `complex()` of a non-atom (`sqrt(2)`, `sin(1)`, ...);
 /// - 32 `as_real_imag` of a Mul (`complex()` of e.g. `2*I`);
 /// - 19 `StrPrinter._print_<Class>` of non-atoms (Function, Relational,
 ///   Pow, Mul, Add);
-/// - 14 `_nodes of a Derivative`, 12 `factor_terms`, 2 `decompose_power`
-///   exponents beyond `i64`, and `EulerGamma._as_mpf_val` /
-///   `Catalan._as_mpf_val` (one each).
+/// - 14 `_nodes of a Derivative`, 2 `decompose_power` exponents beyond
+///   `i64`, and `EulerGamma._as_mpf_val` / `Catalan._as_mpf_val` (one
+///   each).
 #[test]
 fn compare_matches_sympy() {
     run_partial("compare", 155, dispatch);
