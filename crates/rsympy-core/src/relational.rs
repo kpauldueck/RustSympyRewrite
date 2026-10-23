@@ -250,7 +250,10 @@ fn rrel(s_: &Expr, other: &Expr, attr: CmpOp) -> Rrel {
             return Rrel::Value(rich_method(&o, &s, attr).expect("a Number answers"));
         }
         if o.is_number() && o.is_extended_real() == Some(true) {
-            return Rrel::Pair(Expr::integer(s.p()), ops::mul(&Expr::integer(s.q()), &o));
+            // `s.q*o`: `s.q` is a Python int, so this is `o.__rmul__(s.q)`;
+            // `o` is oo or -oo here, whose `__rmul__` is `__mul__`, giving
+            // `Mul(o, s.q)` when not evaluating.
+            return Rrel::Pair(Expr::integer(s.p()), ops::mul(&o, &Expr::integer(s.q())));
         }
     }
     Rrel::None
@@ -379,10 +382,11 @@ pub fn new_rel_with(cls: C, lhs: &Expr, rhs: &Expr, evaluate: bool) -> Expr {
     match cls {
         C::Equality => {
             if evaluate {
-                return match is_eq(lhs, rhs) {
-                    None => raw_rel(cls, lhs, rhs),
-                    Some(v) => boolean(v),
-                };
+                let val = is_eq_exact(lhs, rhs);
+                if val.is_none() {
+                    return raw_rel(cls, lhs, rhs);
+                }
+                return val.sympify();
             }
             raw_rel(cls, lhs, rhs)
         }
@@ -441,19 +445,20 @@ pub fn raw_rel(cls: C, lhs: &Expr, rhs: &Expr) -> Expr {
 /// `_Inequality._eval_relation(lhs, rhs)`: `_eval_fuzzy_relation`, or the
 /// unevaluated inequality.
 pub fn eval_relation(cls: C, lhs: &Expr, rhs: &Expr) -> Expr {
-    match eval_fuzzy_relation(cls, lhs, rhs) {
-        None => raw_rel(cls, lhs, rhs),
-        Some(v) => boolean(v),
+    let val = eval_fuzzy_relation(cls, lhs, rhs);
+    if val.is_none() {
+        return raw_rel(cls, lhs, rhs);
     }
+    val.sympify()
 }
 
 /// `cls._eval_fuzzy_relation(lhs, rhs)` for the inequalities.
-pub fn eval_fuzzy_relation(cls: C, lhs: &Expr, rhs: &Expr) -> Option<bool> {
+pub fn eval_fuzzy_relation(cls: C, lhs: &Expr, rhs: &Expr) -> Fuzzy {
     match cls {
-        C::GreaterThan => is_ge(lhs, rhs),
-        C::LessThan => is_le(lhs, rhs),
-        C::StrictGreaterThan => is_gt(lhs, rhs),
-        C::StrictLessThan => is_lt(lhs, rhs),
+        C::GreaterThan => is_ge_exact(lhs, rhs),
+        C::LessThan => is_le_exact(lhs, rhs),
+        C::StrictGreaterThan => Fuzzy::Py(is_gt(lhs, rhs)),
+        C::StrictLessThan => Fuzzy::Py(is_lt(lhs, rhs)),
         _ => unreachable!("{cls:?} is not an inequality"),
     }
 }
@@ -839,6 +844,74 @@ pub fn simplify(e: &Expr) -> Expr {
 // The fuzzy comparisons
 // ===========================================================================
 
+/// What SymPy's fuzzy comparisons return: Python's `True`, `False` or
+/// `None`, or a SymPy object where SymPy hands one back (`n2 >= 0` in
+/// `is_ge` and `_sympify(n2 == 0)` in `is_eq` give `S.true` or `S.false`,
+/// `Interval._eval_Eq` gives `S.false`, the `(Interval, Interval)`
+/// handler an `And`). Code that tests `is True` sees the difference.
+#[derive(Clone, Debug, PartialEq)]
+pub enum Fuzzy {
+    /// `True`, `False` or `None`.
+    Py(Option<bool>),
+    /// A SymPy object.
+    Sym(Expr),
+}
+
+impl Fuzzy {
+    /// `x is None`.
+    pub fn is_none(&self) -> bool {
+        matches!(self, Fuzzy::Py(None))
+    }
+
+    /// `fuzzy_bool(x)`: `None` for None and for anything not equal to
+    /// `True` or `False`, else `bool(x)`.
+    pub fn fuzzy_bool(&self) -> Option<bool> {
+        match self {
+            Fuzzy::Py(v) => *v,
+            Fuzzy::Sym(e) => {
+                if crate::logic::boolalg::in_true_false(e) {
+                    Some(e.truthy())
+                } else {
+                    None
+                }
+            }
+        }
+    }
+
+    /// `fuzzy_not(x)`: `None` for None, else `not x` (Python's truth value
+    /// of a SymPy object: `TypeError` for a Relational).
+    pub fn fuzzy_not(&self) -> Option<bool> {
+        match self {
+            Fuzzy::Py(v) => v.map(|b| !b),
+            Fuzzy::Sym(e) => Some(!e.truthy()),
+        }
+    }
+
+    /// `_sympify(x)` for a value that is not None.
+    pub fn sympify(&self) -> Expr {
+        match self {
+            Fuzzy::Py(Some(b)) => boolean(*b),
+            Fuzzy::Py(None) => unreachable!("_sympify(None) is not called"),
+            Fuzzy::Sym(e) => e.clone(),
+        }
+    }
+
+    /// The value for callers that want a fuzzy bool: `True`/`S.true`,
+    /// `False`/`S.false` or `None`. A SymPy object that is neither (an
+    /// unevaluated Boolean from a dispatch handler) has no such reading.
+    pub fn known(&self) -> Option<bool> {
+        match self {
+            Fuzzy::Py(v) => *v,
+            Fuzzy::Sym(e) if e.is_cls(C::BooleanTrue) => Some(true),
+            Fuzzy::Sym(e) if e.is_cls(C::BooleanFalse) => Some(false),
+            Fuzzy::Sym(e) => not_ported(format!(
+                "a fuzzy comparison returning {} where a bool is expected",
+                e.class_name()
+            )),
+        }
+    }
+}
+
 const DIGITS: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyz";
 
 /// The label of the implementation a generated dispatch table picks.
@@ -858,76 +931,66 @@ fn dispatch(table: &[&str], impls: &'static [&'static str], a: &Expr, b: &Expr) 
 }
 
 /// `_eval_is_ge(lhs, rhs)` (multipledispatch).
-fn eval_is_ge(lhs: &Expr, rhs: &Expr) -> Option<bool> {
+fn eval_is_ge(lhs: &Expr, rhs: &Expr) -> Fuzzy {
     match dispatch(&EVAL_IS_GE, EVAL_IS_GE_IMPLS, lhs, rhs) {
-        "relational(Expr, Expr)" => None,
+        "relational(Expr, Expr)" => Fuzzy::Py(None),
         other => not_ported(format!("_eval_is_ge {other}")),
     }
 }
 
-/// `fuzzy_bool(x)` for an `is_eq` result.
-fn fuzzy_bool(x: Option<bool>) -> Option<bool> {
-    x
-}
-
 /// `_eval_is_eq(lhs, rhs)` (multipledispatch).
-fn eval_is_eq(lhs: &Expr, rhs: &Expr) -> Option<bool> {
+fn eval_is_eq(lhs: &Expr, rhs: &Expr) -> Fuzzy {
     match dispatch(&EVAL_IS_EQ, EVAL_IS_EQ_IMPLS, lhs, rhs) {
         "relational(Basic, Basic)"
         | "relational(Tuple, AppliedUndef)"
-        | "relational(Tuple, Symbol)" => None,
+        | "relational(Tuple, Symbol)" => Fuzzy::Py(None),
         "relational(Tuple, Expr)"
         | "numbers(NaN, Expr)"
         | "numbers(Tuple, Number)"
         | "sets(Interval, FiniteSet)"
         | "sets(FiniteSet, Interval)"
-        | "sets(Set, Basic)" => Some(false),
+        | "sets(Set, Basic)" => Fuzzy::Py(Some(false)),
         // And(Eq(lhs.left, rhs.left), Eq(lhs.right, rhs.right),
         //     lhs.left_open == rhs.left_open,
         //     lhs.right_open == rhs.right_open)
-        "sets(Interval, Interval)" => {
-            let r = crate::logic::boolalg::and(vec![
-                equality(lhs.arg(0), rhs.arg(0)),
-                equality(lhs.arg(1), rhs.arg(1)),
-                boolean(lhs.arg(2) == rhs.arg(2)),
-                boolean(lhs.arg(3) == rhs.arg(3)),
-            ]);
-            match r.cls() {
-                C::BooleanTrue => Some(true),
-                C::BooleanFalse => Some(false),
-                _ => not_ported("is_eq returning an unevaluated Boolean (Interval == Interval)"),
-            }
-        }
+        "sets(Interval, Interval)" => Fuzzy::Sym(crate::logic::boolalg::and(vec![
+            equality(lhs.arg(0), rhs.arg(0)),
+            equality(lhs.arg(1), rhs.arg(1)),
+            boolean(lhs.arg(2) == rhs.arg(2)),
+            boolean(lhs.arg(3) == rhs.arg(3)),
+        ])),
         "relational(Tuple, Tuple)" => {
             if lhs.args().len() != rhs.args().len() {
-                return Some(false);
+                return Fuzzy::Py(Some(false));
             }
-            fuzzy_and(
+            // fuzzy_and stops at the first False, so later pairs are not
+            // compared
+            Fuzzy::Py(fuzzy_and(
                 lhs.args()
                     .iter()
                     .zip(rhs.args())
-                    .map(|(s, o)| fuzzy_bool(is_eq(s, o))),
-            )
+                    .map(|(s, o)| is_eq_exact(s, o).fuzzy_bool()),
+            ))
         }
         other => not_ported(format!("_eval_is_eq {other}")),
     }
 }
 
 /// `side._eval_Eq(other)` for the classes that have one.
-fn eval_eq_method(side: &Expr, other: &Expr) -> Option<bool> {
+fn eval_eq_method(side: &Expr, other: &Expr) -> Fuzzy {
     match side.method_owner(Method::Eval_Eq) {
-        "" => None,
+        "" => Fuzzy::Py(None),
         // Interval._eval_Eq
         "Interval" => {
             if !other.is_cls(C::Interval) {
                 if other.is_cls(C::FiniteSet) {
-                    return Some(false);
+                    return Fuzzy::Sym(s::false_());
                 } else if other.is_a(Tag::Set) {
-                    return None;
+                    return Fuzzy::Py(None);
                 }
-                return Some(false);
+                return Fuzzy::Sym(s::false_());
             }
-            None
+            Fuzzy::Py(None)
         }
         o => not_ported(format!("{o}._eval_Eq")),
     }
@@ -935,21 +998,31 @@ fn eval_eq_method(side: &Expr, other: &Expr) -> Option<bool> {
 
 /// `is_lt(lhs, rhs)`.
 pub fn is_lt(lhs: &Expr, rhs: &Expr) -> Option<bool> {
-    fuzzy_not(is_ge(lhs, rhs))
+    is_ge_exact(lhs, rhs).fuzzy_not()
 }
 
 /// `is_gt(lhs, rhs)`.
 pub fn is_gt(lhs: &Expr, rhs: &Expr) -> Option<bool> {
-    fuzzy_not(is_le(lhs, rhs))
+    is_le_exact(lhs, rhs).fuzzy_not()
 }
 
-/// `is_le(lhs, rhs)`.
+/// `is_le(lhs, rhs)`, read as a fuzzy bool (see [`Fuzzy::known`]).
 pub fn is_le(lhs: &Expr, rhs: &Expr) -> Option<bool> {
-    is_ge(rhs, lhs)
+    is_le_exact(lhs, rhs).known()
 }
 
-/// `is_ge(lhs, rhs)` with no assumptions.
+/// `is_le(lhs, rhs)` exactly as SymPy returns it.
+pub fn is_le_exact(lhs: &Expr, rhs: &Expr) -> Fuzzy {
+    is_ge_exact(rhs, lhs)
+}
+
+/// `is_ge(lhs, rhs)`, read as a fuzzy bool (see [`Fuzzy::known`]).
 pub fn is_ge(lhs: &Expr, rhs: &Expr) -> Option<bool> {
+    is_ge_exact(lhs, rhs).known()
+}
+
+/// `is_ge(lhs, rhs)` (no assumptions) exactly as SymPy returns it.
+pub fn is_ge_exact(lhs: &Expr, rhs: &Expr) -> Fuzzy {
     if !(lhs.is_a(Tag::Expr) && rhs.is_a(Tag::Expr)) {
         raise(
             ErrorKind::TypeError,
@@ -957,39 +1030,44 @@ pub fn is_ge(lhs: &Expr, rhs: &Expr) -> Option<bool> {
         );
     }
     let retval = eval_is_ge(lhs, rhs);
-    if retval.is_some() {
+    if !retval.is_none() {
         return retval;
     }
     if let Some(n2) = n2(lhs, rhs) {
         // use float comparison for infinity.
         // otherwise get stuck in infinite recursion
-        return Some(match n2.cls() {
-            C::Infinity => true,
-            C::NegativeInfinity => false,
-            // n2 >= 0: n2 is S.Zero or a Float
-            _ => number_sign(&n2) >= 0,
-        });
+        return match n2.cls() {
+            C::Infinity => Fuzzy::Py(Some(true)),
+            C::NegativeInfinity => Fuzzy::Py(Some(false)),
+            // `n2 >= 0` on S.Zero or a Float: S.true or S.false
+            _ => Fuzzy::Sym(ge(&n2, &s::zero())),
+        };
     }
     if lhs.is_extended_real() == Some(true) && rhs.is_extended_real() == Some(true) {
         if (lhs.is_infinite() == Some(true) && lhs.is_extended_positive() == Some(true))
             || (rhs.is_infinite() == Some(true) && rhs.is_extended_negative() == Some(true))
         {
-            return Some(true);
+            return Fuzzy::Py(Some(true));
         }
         let diff = ops::sub(lhs, rhs);
         if !diff.is_cls(C::NaN) {
             let rv = diff.is_extended_nonnegative();
             if rv.is_some() {
-                return rv;
+                return Fuzzy::Py(rv);
             }
         }
     }
-    None
+    Fuzzy::Py(None)
 }
 
 /// `is_neq(lhs, rhs)`.
 pub fn is_neq(lhs: &Expr, rhs: &Expr) -> Option<bool> {
-    fuzzy_not(is_eq(lhs, rhs))
+    is_eq_exact(lhs, rhs).fuzzy_not()
+}
+
+/// `is_eq(lhs, rhs)`, read as a fuzzy bool (see [`Fuzzy::known`]).
+pub fn is_eq(lhs: &Expr, rhs: &Expr) -> Option<bool> {
+    is_eq_exact(lhs, rhs).known()
 }
 
 /// `sift(Add.make_args(expr), real_imag)` in `is_eq`: the `'real'`,
@@ -1008,47 +1086,50 @@ fn split_real_imag(expr: &Expr) -> (Vec<Expr>, Vec<Expr>, Vec<Expr>) {
     (re, im, none)
 }
 
-/// `is_eq(lhs, rhs)` with no assumptions.
-pub fn is_eq(lhs: &Expr, rhs: &Expr) -> Option<bool> {
+/// `is_eq(lhs, rhs)` (no assumptions) exactly as SymPy returns it.
+pub fn is_eq_exact(lhs: &Expr, rhs: &Expr) -> Fuzzy {
     // here, _eval_Eq is only called for backwards compatibility
     for (side1, side2) in [(lhs, rhs), (rhs, lhs)] {
-        if let Some(v) = eval_eq_method(side1, side2) {
-            return Some(v);
+        let retval = eval_eq_method(side1, side2);
+        if !retval.is_none() {
+            return retval;
         }
     }
     let retval = eval_is_eq(lhs, rhs);
-    if retval.is_some() {
+    if !retval.is_none() {
         return retval;
     }
     // `dispatch(type(lhs), type(rhs)) != dispatch(type(rhs), type(lhs))`
     // compares two new decorator closures, so it always holds.
     let retval = eval_is_eq(rhs, lhs);
-    if retval.is_some() {
+    if !retval.is_none() {
         return retval;
     }
+    let t = Fuzzy::Py(Some(true));
+    let f = Fuzzy::Py(Some(false));
     // retval is still None, so go through the equality logic
     // If expressions have the same structure, they must be equal.
     if lhs == rhs {
-        return Some(true);
+        return t; // e.g. True == True
     } else if lhs.is_a(Tag::BooleanAtom) && rhs.is_a(Tag::BooleanAtom) {
-        return Some(false);
+        return f; // True != False
     } else if !(lhs.is_Symbol() || rhs.is_Symbol())
         && lhs.is_a(Tag::Boolean) != rhs.is_a(Tag::Boolean)
     {
-        return Some(false);
+        return f; // only Booleans can equal Booleans
     }
     if lhs.is_infinite() == Some(true) || rhs.is_infinite() == Some(true) {
         if fuzzy_xor([lhs.is_infinite(), rhs.is_infinite()]) == Some(true) {
-            return Some(false);
+            return f;
         }
         if fuzzy_xor([lhs.is_extended_real(), rhs.is_extended_real()]) == Some(true) {
-            return Some(false);
+            return f;
         }
         if fuzzy_and([lhs.is_extended_real(), rhs.is_extended_real()]) == Some(true) {
-            return fuzzy_xor([
+            return Fuzzy::Py(fuzzy_xor([
                 lhs.is_extended_positive(),
                 fuzzy_not(rhs.is_extended_positive()),
-            ]);
+            ]));
         }
         // Try to split real/imaginary parts and equate them
         let (lre, lim, lnone) = split_real_imag(lhs);
@@ -1056,12 +1137,12 @@ pub fn is_eq(lhs: &Expr, rhs: &Expr) -> Option<bool> {
             let (rre, rim, rnone) = split_real_imag(rhs);
             if rnone.is_empty() {
                 let i = s::imaginary_unit();
-                let eq_real = is_eq(&crate::add::add(lre), &crate::add::add(rre));
-                let eq_imag = is_eq(
+                let eq_real = is_eq_exact(&crate::add::add(lre), &crate::add::add(rre));
+                let eq_imag = is_eq_exact(
                     &ops::mul(&i, &crate::add::add(lim)),
                     &ops::mul(&i, &crate::add::add(rim)),
                 );
-                return fuzzy_and([fuzzy_bool(eq_real), fuzzy_bool(eq_imag)]);
+                return Fuzzy::Py(fuzzy_and([eq_real.fuzzy_bool(), eq_imag.fuzzy_bool()]));
             }
         }
         // Compare e.g. zoo with 1+I*oo by comparing args
@@ -1069,7 +1150,7 @@ pub fn is_eq(lhs: &Expr, rhs: &Expr) -> Option<bool> {
         let argrhs = crate::functions::call(C::Arg, vec![rhs.clone()]);
         // Guard against Eq(nan, nan) -> False
         if !(arglhs.is_cls(C::NaN) && argrhs.is_cls(C::NaN)) {
-            return fuzzy_bool(is_eq(&arglhs, &argrhs));
+            return Fuzzy::Py(is_eq_exact(&arglhs, &argrhs).fuzzy_bool());
         }
     }
     if lhs.is_a(Tag::Expr) && rhs.is_a(Tag::Expr) {
@@ -1079,26 +1160,26 @@ pub fn is_eq(lhs: &Expr, rhs: &Expr) -> Option<bool> {
         if let Some(z) = z {
             if !z && dif.is_commutative() == Some(true) {
                 // issue 10728
-                return Some(false);
+                return f;
             }
             if z {
-                return Some(true);
+                return t;
             }
         }
         // is_zero cannot help decide integer/rational with Float
-        let (c, t) = dif.as_coeff_Add(false);
+        let (c, rest) = dif.as_coeff_Add(false);
         if c.is_Float() {
             if numbers::int_valued(&c) {
-                if t.is_integer() == Some(false) {
-                    return Some(false);
+                if rest.is_integer() == Some(false) {
+                    return f;
                 }
-            } else if t.is_rational() == Some(false) {
-                return Some(false);
+            } else if rest.is_rational() == Some(false) {
+                return f;
             }
         }
         if let Some(n2) = n2(lhs, rhs) {
-            // _sympify(n2 == 0): only S.Zero equals 0
-            return Some(n2.is_cls(C::Zero));
+            // _sympify(n2 == 0)
+            return Fuzzy::Sym(boolean(numbers::number_eq(&n2, &s::zero())));
         }
         // see if the ratio evaluates
         let (n, d) = dif.as_numer_denom();
@@ -1122,10 +1203,10 @@ pub fn is_eq(lhs: &Expr, rhs: &Expr) -> Option<bool> {
             rv = Some(false);
         }
         if rv.is_some() {
-            return rv;
+            return Fuzzy::Py(rv);
         }
     }
-    None
+    Fuzzy::Py(None)
 }
 
 /// `_n2(a, b)`: `(a - b).evalf(2)` if `a` and `b` are comparable and the
@@ -1165,17 +1246,6 @@ fn number_evalf_2(n: &Expr) -> Expr {
     };
     // re_acc is the working precision, so p = min(prec, wp) = prec
     numbers::float_new(re, prec, true)
-}
-
-/// The sign of `S.Zero` or a Float.
-fn number_sign(n: &Expr) -> i32 {
-    if let Some((m, _)) = n.as_float() {
-        return mlib::mpf_sign(m);
-    }
-    if n.is_cls(C::Zero) {
-        return 0;
-    }
-    unreachable!("number_sign of {}", n.class_name())
 }
 
 #[cfg(test)]

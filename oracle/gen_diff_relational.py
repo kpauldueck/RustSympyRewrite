@@ -197,32 +197,32 @@ def comparisons():
     for p in NUMBERS:
         for q in NUMBERS:
             for name, f in CMP.items():
-                add("cmp", [p, q], under(True, f), op=name, eval=True)
+                add("cmp", [p, q], under(True, f), cmp=name, eval=True)
     # numbers under evaluate(False): a sample, and everything with oo/-oo
     pairs = [(p, q) for p in NUMBERS for q in NUMBERS]
     for p, q in pairs:
         if p in (oo, -oo, nan) or q in (oo, -oo, nan) or RNG.random() < 0.15:
             name = RNG.choice(list(CMP))
-            add("cmp", [p, q], under(False, CMP[name]), op=name, eval=False)
+            add("cmp", [p, q], under(False, CMP[name]), cmp=name, eval=False)
     # symbols and expressions against numbers and each other
     left = SYMS + EXPRS
     for p in left:
         for q in SMALL_NUMS:
             for name, f in CMP.items():
-                add("cmp", [p, q], under(True, f), op=name, eval=True)
-                add("cmp", [q, p], under(True, f), op=name, eval=True)
+                add("cmp", [p, q], under(True, f), cmp=name, eval=True)
+                add("cmp", [q, p], under(True, f), cmp=name, eval=True)
             name = RNG.choice(list(CMP))
-            add("cmp", [p, q], under(False, CMP[name]), op=name, eval=False)
+            add("cmp", [p, q], under(False, CMP[name]), cmp=name, eval=False)
     for p in left:
         for q in RNG.sample(left, 8):
             name = RNG.choice(list(CMP))
-            add("cmp", [p, q], under(True, CMP[name]), op=name, eval=True)
+            add("cmp", [p, q], under(True, CMP[name]), cmp=name, eval=True)
     # Booleans and relationals in comparisons
     for p in BATOMS + RELS[:6] + COMPOUND[:4]:
         for q in [S(1), x, true, x < 1]:
             name = RNG.choice(list(CMP))
-            add("cmp", [p, q], under(True, CMP[name]), op=name, eval=True)
-            add("cmp", [q, p], under(True, CMP[name]), op=name, eval=True)
+            add("cmp", [p, q], under(True, CMP[name]), cmp=name, eval=True)
+            add("cmp", [q, p], under(True, CMP[name]), cmp=name, eval=True)
 
 
 # ---------------------------------------------------------------------------
@@ -237,6 +237,11 @@ def constructors():
             p, q = RNG.choice(pool), RNG.choice(pool)
             ev = RNG.choice([None, None, True, False])
             g = RNG.random() < 0.8
+            if not g and ev and not (p.is_Number and q.is_Number):
+                # evaluating under evaluate(False) builds unevaluated
+                # arithmetic whose assumptions SymPy answers in hash
+                # order (or with a TypeError deep in Mul.flatten)
+                g = True
             add("rel_new", [p, q],
                 under(g, lambda p, q, cls=cls, ev=ev: cls(p, q, **kwargs(ev))),
                 cls=name, evaluate=ev, globl=g)
@@ -283,7 +288,7 @@ def fuzzy():
     for name, f in fns.items():
         for _ in range(300):
             p, q = RNG.choice(pool), RNG.choice(pool)
-            add("fuzzy", [p, q], f, fn=name)
+            add("fuzzy", [p, q], f, func=name)
 
 
 PROPS = ["lhs", "rhs", "rel_op", "gts", "lts", "reversed", "reversedsign",
@@ -318,6 +323,8 @@ def properties():
              + BATOMS + COMPOUND[:3] + [S(1), x + 1])
     for e in items:
         for name in PROPS:
+            if name == "func" and e.is_Atom:
+                continue  # Symbol() and friends: not this module's
             add("prop", [e], prop(name), name=name)
     for e in RELS[:10]:
         add("equals", [e, e.reversed], lambda p, q: p.equals(q))
@@ -385,21 +392,21 @@ def operators():
     for p in pool:
         for q in RNG.sample(pool, 12):
             for name, f in BITOPS.items():
-                add("bitop", [p, q], f, op=name)
+                add("bitop", [p, q], f, sym=name)
     for p, q in [(S(6), S(3)), (S(-6), S(3)), (S(6), S(-3)), (S(1), S(70)),
                  (S(-5), S(2)), (S(5), S(0)), (Integer(2**70), S(3)),
                  (Integer(-2**70), S(65)), (S(0), S(0)), (S(-1), S(-1))]:
         for name, f in BITOPS.items():
-            add("bitop", [p, q], f, op=name)
-            add("bitop", [q, p], f, op=name)
+            add("bitop", [p, q], f, sym=name)
+            add("bitop", [q, p], f, sym=name)
     for p in pool + [S(-6), Integer(-2**70)]:
         add("invert", [p], operator.invert)
     # BooleanAtom arithmetic
     for p in [true, false]:
         for q in [S(1), x, true, Float("1.0"), oo, S.Half, x < 1]:
             for name, f in ARITH.items():
-                add("arith", [p, q], f, op=name)
-                add("arith", [q, p], f, op=name)
+                add("arith", [p, q], f, sym=name)
+                add("arith", [q, p], f, sym=name)
         add("neg", [p], operator.neg)
         add("abs", [p], abs)
 
@@ -418,7 +425,7 @@ def forms():
                                                  evaluate=False),
                And(a, ~a, evaluate=False), Or(a, ~a, b, evaluate=False),
                Nand(a, b, c, evaluate=False), Xor(a, true, remove_true=False),
-               Xor(a & b, c, remove_true=False), And(a, b, x + 1, evaluate=False),
+               Xor(a & b, c, remove_true=False), Basic.__new__(And, a, b, x + 1),
                Or(a & b, a & ~b, evaluate=False)])
     for e in pool:
         add("is_literal", [e], is_literal)

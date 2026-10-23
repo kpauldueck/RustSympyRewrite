@@ -1360,140 +1360,17 @@ fn number_eq_method(a: &Expr, b: &Expr) -> bool {
     }
 }
 
-/// `bool(a < b)` for two Numbers, as Python's `<` dispatches it.
+/// `bool(a < b)` for two Numbers, as Python's `<` dispatches it (see
+/// [`crate::relational::lt`]).
 pub fn number_lt(a: &Expr, b: &Expr) -> bool {
     debug_assert!(a.is_Number() && b.is_Number());
-    if is_proper_subclass(b, a) {
-        number_rich(b, a, Rel::Gt)
-    } else {
-        number_rich(a, b, Rel::Lt)
-    }
+    crate::relational::lt(a, b).truthy()
 }
 
 /// `bool(a > b)` for two Numbers, as Python's `>` dispatches it.
 pub fn number_gt(a: &Expr, b: &Expr) -> bool {
     debug_assert!(a.is_Number() && b.is_Number());
-    if is_proper_subclass(b, a) {
-        number_rich(b, a, Rel::Lt)
-    } else {
-        number_rich(a, b, Rel::Gt)
-    }
-}
-
-/// `__lt__` or `__gt__`.
-#[derive(Clone, Copy, PartialEq)]
-enum Rel {
-    Lt,
-    Gt,
-}
-
-impl Rel {
-    /// The reflected comparison (`__lt__` <-> `__gt__`).
-    fn reflected(self) -> Rel {
-        match self {
-            Rel::Lt => Rel::Gt,
-            Rel::Gt => Rel::Lt,
-        }
-    }
-
-    fn mpf(self, s: &Mpf, t: &Mpf) -> bool {
-        match self {
-            Rel::Lt => mlib::mpf_lt(s, t),
-            Rel::Gt => mlib::mpf_gt(s, t),
-        }
-    }
-}
-
-/// `bool(a.__lt__(b))` / `bool(a.__gt__(b))` for two Numbers: each class's
-/// method, falling back to `Expr.__lt__` / `Expr.__gt__`.
-fn number_rich(a: &Expr, b: &Expr, op: Rel) -> bool {
-    match a.cls() {
-        // Integer.__lt__ / __gt__
-        C::Integer | C::Zero | C::One | C::NegativeOne if b.is_Integer() => match op {
-            Rel::Lt => int(a) < int(b),
-            Rel::Gt => int(a) > int(b),
-        },
-        C::Integer | C::Zero | C::One | C::NegativeOne | C::Rational | C::Half => {
-            rational_rich(a, b, op)
-        }
-        // Float.__lt__ / __gt__ (`other` is never a NumberSymbol here)
-        C::Float => match float_frel(a, b, op) {
-            Some(v) => v,
-            None => expr_rich(a, b, op),
-        },
-        // Infinity, NegativeInfinity and NaN: `__lt__ = Expr.__lt__`, ...
-        C::Infinity | C::NegativeInfinity | C::NaN => expr_rich(a, b, op),
-        _ => unreachable!("number comparison on {}", a.class_name()),
-    }
-}
-
-/// `Rational.__lt__` / `__gt__`: `_Rrel(other, '__gt__')` (resp.
-/// `'__lt__'`), else `Expr.__lt__` / `Expr.__gt__`.
-fn rational_rich(s: &Expr, other: &Expr, op: Rel) -> bool {
-    // _Rrel; `other` is a Number and never a NumberSymbol.
-    let attr = op.reflected();
-    if other.is_Float() {
-        // op = getattr(o, attr); return op(s)
-        return number_rich(other, s, attr);
-    }
-    if other.is_Rational() {
-        let s2 = Expr::integer(&s.p() * &other.q());
-        let o2 = Expr::integer(&s.q() * &other.p());
-        return number_rich(&o2, &s2, attr);
-    }
-    if other.is_number() && other.is_extended_real() == Some(true) {
-        // return Integer(s.p), s.q*o: `o` is oo or -oo here and s.q > 0,
-        // so s.q*o is o.
-        return expr_rich(&Expr::integer(s.p()), other, op);
-    }
-    // rv is None: Expr.__lt__(self, other)
-    expr_rich(s, other, op)
-}
-
-/// `Float._Frel(other, op)` for a Number `other` (`None` where it returns
-/// None).
-fn float_frel(a: &Expr, other: &Expr, op: Rel) -> Option<bool> {
-    let (m, _) = a.as_float().expect("Float");
-    if other.is_Rational() {
-        let q = mlib::from_int(&other.q(), 0, mlib::ROUND_FAST);
-        let smpf = mlib::mpf_mul(m, &q, 0, mlib::ROUND_FAST);
-        let ompf = mlib::from_int(&other.p(), 0, mlib::ROUND_FAST);
-        return Some(op.mpf(&smpf, &ompf));
-    }
-    if let Some((n, _)) = other.as_float() {
-        return Some(op.mpf(m, n));
-    }
-    // `other.is_comparable and other not in (S.Infinity,
-    // S.NegativeInfinity)`: the Numbers left are oo and -oo (excluded) and
-    // nan (`is_comparable = False`).
-    None
-}
-
-/// `bool(Expr.__lt__(a, b))`: `bool(StrictLessThan(a, b))` (resp.
-/// `StrictGreaterThan`), whose `_Inequality.__new__` first rejects
-/// non-real arguments and NaN, then asks `is_lt` / `is_gt`.
-fn expr_rich(lhs: &Expr, rhs: &Expr, op: Rel) -> bool {
-    for me in [lhs, rhs] {
-        if me.is_extended_real() == Some(false) {
-            raise(
-                ErrorKind::TypeError,
-                format!("Invalid comparison of non-real {}", me.class_name()),
-            );
-        }
-        if me.is_cls(C::NaN) {
-            raise(ErrorKind::TypeError, "Invalid NaN comparison");
-        }
-    }
-    let cls = match op {
-        Rel::Lt => C::StrictLessThan,
-        Rel::Gt => C::StrictGreaterThan,
-    };
-    // _Inequality.__new__ under the current evaluate flag, then bool() of
-    // what it returns (TypeError for an unevaluated Relational)
-    if !ctx::evaluate() {
-        return crate::relational::raw_rel(cls, lhs, rhs).truthy();
-    }
-    crate::relational::eval_relation(cls, lhs, rhs).truthy()
+    crate::relational::gt(a, b).truthy()
 }
 
 /// `float(n)` for a Number: `Number.__float__`,
