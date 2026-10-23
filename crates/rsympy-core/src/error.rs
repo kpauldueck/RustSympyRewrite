@@ -38,6 +38,15 @@ pub enum ErrorKind {
     KeyError,
     /// An `assert` in SymPy's code failing.
     AssertionError,
+    /// `sympy.core.function.BadSignatureError` (a `TypeError` subclass).
+    BadSignatureError,
+    /// `sympy.core.function.BadArgumentsError` (a `TypeError` subclass).
+    BadArgumentsError,
+    /// `sympy.core.function.ArgumentIndexError` (a `ValueError` subclass).
+    ArgumentIndexError,
+    /// `sympy.polys.polyerrors.PolynomialError` (`PolificationFailed`'s
+    /// base class).
+    PolynomialError,
     NotPortedYet,
 }
 
@@ -63,6 +72,10 @@ impl ErrorKind {
             ErrorKind::IndexError => "IndexError",
             ErrorKind::KeyError => "KeyError",
             ErrorKind::AssertionError => "AssertionError",
+            ErrorKind::BadSignatureError => "BadSignatureError",
+            ErrorKind::BadArgumentsError => "BadArgumentsError",
+            ErrorKind::ArgumentIndexError => "ArgumentIndexError",
+            ErrorKind::PolynomialError => "PolynomialError",
             ErrorKind::NotPortedYet => "NotPortedYet",
         }
     }
@@ -77,6 +90,10 @@ impl ErrorKind {
                     | (ErrorKind::ComplexResult, ErrorKind::ValueError)
                     | (ErrorKind::SympifyError, ErrorKind::ValueError)
                     | (ErrorKind::TokenError, ErrorKind::SyntaxError)
+                    | (ErrorKind::BadSignatureError, ErrorKind::TypeError)
+                    | (ErrorKind::BadArgumentsError, ErrorKind::TypeError)
+                    | (ErrorKind::ArgumentIndexError, ErrorKind::ValueError)
+                    | (ErrorKind::PolificationFailed, ErrorKind::PolynomialError)
             )
     }
 }

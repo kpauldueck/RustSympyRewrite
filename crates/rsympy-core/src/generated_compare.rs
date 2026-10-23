@@ -1102,6 +1102,28 @@ pub(crate) const COMPARE_INFO: [CompareInfo; NUM_CLASSES] = [
         as_ordered_terms: "Expr.as_ordered_terms",
         str_print: "_print_AccumulationBounds",
     },
+    // IdentityFunction
+    CompareInfo {
+        class_key: (5, 0, "IdentityFunction"),
+        sort_key: "Expr.sort_key",
+        hashable_content: "Expr._hashable_content",
+        compare: "Basic.compare",
+        sorted_args: "Basic._sorted_args",
+        as_ordered_factors: "Expr.as_ordered_factors",
+        as_ordered_terms: "Expr.as_ordered_terms",
+        str_print: "_print_Lambda",
+    },
+    // WildFunction
+    CompareInfo {
+        class_key: (4, 0, "WildFunction"),
+        sort_key: "Atom.sort_key",
+        hashable_content: "Expr._hashable_content",
+        compare: "Basic.compare",
+        sorted_args: "Atom._sorted_args",
+        as_ordered_factors: "Expr.as_ordered_factors",
+        as_ordered_terms: "Expr.as_ordered_terms",
+        str_print: "_print_WildFunction",
+    },
 ];
 
 /// `funcs` in `Function.class_key`: `class_key()[1]` by class name.

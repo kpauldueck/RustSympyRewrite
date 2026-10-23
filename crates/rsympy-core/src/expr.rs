@@ -47,6 +47,9 @@ pub(crate) enum Data {
     Sym(Arc<SymbolData>),
     /// An undefined function's name, for `AppliedUndef` nodes.
     Undef(Arc<UndefData>),
+    /// A `WildFunction`'s `name` and `nargs` attributes, which its
+    /// `__eq__` and `__hash__` ignore (they compare `args` only).
+    WildFunction(Arc<WildFunctionData>),
     /// `Str.name`.
     Str(Arc<str>),
 }
@@ -64,7 +67,7 @@ pub struct SymbolData {
 }
 
 /// An `UndefinedFunction` (the class of `f(x)` for `f = Function('f')`).
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct UndefData {
     pub name: Arc<str>,
     /// `_kwargs`: the sanitized assumptions given to
@@ -72,6 +75,42 @@ pub struct UndefData {
     pub kwargs: Kb,
     /// The class's `default_assumptions`, which each `f(x)` starts from.
     pub assumptions: Kb,
+    /// The `nargs` keyword as given to `Function(name, nargs=...)` (`None`
+    /// when not given). It is part of `_kwargs`, so `__eq__` compares it as
+    /// given: `nargs=1` and `nargs=(1,)` make different functions.
+    pub nargs: Option<crate::functions::NargsArg>,
+}
+
+/// The attributes `WildFunction.__init__` sets on an instance: `name` (the
+/// string given) and `nargs` (`None`: not set, for a node built with
+/// `Basic.__new__`). Neither is part of `_hashable_content`, so they never
+/// make two `WildFunction`s unequal.
+#[derive(Clone, Debug)]
+pub struct WildFunctionData {
+    pub name: WildFunctionName,
+    pub nargs: Option<crate::functions::Nargs>,
+}
+
+/// A `WildFunction`'s `name` attribute: the string `WildFunction(name)` was
+/// given, or the expression a rebuild `WildFunction(*args)` passed to
+/// `__init__`, or none at all.
+#[derive(Clone, Debug)]
+pub enum WildFunctionName {
+    Str(Arc<str>),
+    Expr(Expr),
+    Unset,
+}
+
+impl PartialEq for WildFunctionData {
+    fn eq(&self, _: &WildFunctionData) -> bool {
+        true
+    }
+}
+
+impl Eq for WildFunctionData {}
+
+impl Hash for WildFunctionData {
+    fn hash<H: Hasher>(&self, _: &mut H) {}
 }
 
 impl Node {
@@ -271,6 +310,10 @@ impl Expr {
             Data::Sym(s) => Some(&s.name),
             Data::Undef(u) => Some(&u.name),
             Data::Str(s) => Some(s),
+            Data::WildFunction(w) => match &w.name {
+                WildFunctionName::Str(s) => Some(s),
+                _ => None,
+            },
             _ => None,
         }
     }
@@ -278,6 +321,13 @@ impl Expr {
     pub(crate) fn undef_data(&self) -> Option<&Arc<UndefData>> {
         match &self.0.data {
             Data::Undef(u) => Some(u),
+            _ => None,
+        }
+    }
+
+    pub(crate) fn wild_function_data(&self) -> Option<&Arc<WildFunctionData>> {
+        match &self.0.data {
+            Data::WildFunction(w) => Some(w),
             _ => None,
         }
     }

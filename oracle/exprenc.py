@@ -85,9 +85,11 @@ def _namespace():
     from sympy.core.relational import (Equality, GreaterThan, LessThan,
                                        StrictGreaterThan, StrictLessThan,
                                        Unequality)
+    from sympy.functions.elementary.miscellaneous import IdentityFunction
     from sympy.functions.elementary.piecewise import ExprCondPair
 
     ns.update(Str=Str, Equality=Equality, Unequality=Unequality,
+              IdentityFunction=IdentityFunction,
               StrictLessThan=StrictLessThan, LessThan=LessThan,
               StrictGreaterThan=StrictGreaterThan, GreaterThan=GreaterThan,
               ExprCondPair=ExprCondPair, true=sp.true, false=sp.false,

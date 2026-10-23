@@ -1496,3 +1496,96 @@ pub fn number_float(n: &Expr) -> f64 {
     debug_assert!(n.is_Number());
     mlib::to_float(&as_mpf_val(n, 53), false, mlib::ROUND_FAST).expect("not strict")
 }
+
+/// `int(n)` for the classes of `core.numbers` that define `__int__`
+/// (`Integer`, `Rational`, `Float` and the `NumberSymbol`s); `None` for
+/// any other class (`Expr.__int__` applies).
+pub(crate) fn number_int(n: &Expr) -> Option<Int> {
+    Some(match n.cls() {
+        // Integer.__int__
+        C::Integer | C::Zero | C::One | C::NegativeOne => int(n).clone(),
+        // Rational.__int__: truncates toward zero
+        C::Rational | C::Half => {
+            let (p, q) = (n.p(), n.q());
+            if p.is_negative() {
+                -(-p).floor_div(&q).expect("q > 0")
+            } else {
+                p.floor_div(&q).expect("q > 0")
+            }
+        }
+        // Float.__int__ (to_int rounds down)
+        C::Float => {
+            let (m, _) = n.as_float().expect("Float");
+            if *m == mlib::FZERO {
+                return Some(Int::ZERO);
+            }
+            mlib::to_int(m, None).unwrap_or_else(|e| raise_mpf(e))
+        }
+        C::Exp1 => Int::from(2),
+        C::Pi => Int::from(3),
+        C::GoldenRatio | C::TribonacciConstant => Int::from(1),
+        C::EulerGamma | C::Catalan => Int::from(0),
+        _ => return None,
+    })
+}
+
+/// Python's `x == y` for two SymPy objects: the Numbers' `__eq__`
+/// between two Numbers, `Basic.__eq__` (structural equality) otherwise.
+pub(crate) fn py_eq(x: &Expr, y: &Expr) -> bool {
+    if x.is_Number() && y.is_Number() {
+        number_eq(x, y)
+    } else {
+        x == y
+    }
+}
+
+/// `equal_valued(x, y)`: `x == y`, except that a Float equals a Rational
+/// (or another Float) of the same value whatever its precision.
+pub fn equal_valued(x: &Expr, y: &Expr) -> bool {
+    // Handle everything except Float/Rational first
+    let (mut x, mut y) = (x, y);
+    if !x.is_Float() && !y.is_Float() {
+        return py_eq(x, y);
+    } else if x.is_Float() && y.is_Float() {
+        // Compare values without regard for precision
+        return x.as_float().expect("Float").0 == y.as_float().expect("Float").0;
+    } else if x.is_Float() {
+        std::mem::swap(&mut x, &mut y);
+    }
+    if !x.is_Rational() {
+        return false;
+    }
+
+    // Now y is Float and x is Rational.
+    let m = y.as_float().expect("Float").0;
+    let (p, q) = (x.p(), x.q());
+    let man = if m.sign == 1 {
+        -m.man.clone()
+    } else {
+        m.man.clone()
+    };
+    let exp = m.exp;
+    if exp == 0 {
+        // y odd integer
+        q.is_one() && man == p
+    } else if exp > 0 {
+        // y even integer
+        if !q.is_one() {
+            return false;
+        }
+        if p.bit_length() != man.bit_length() + exp as u64 {
+            return false;
+        }
+        (&man << exp as u64) == p
+    } else {
+        // y non-integer. Need p == man and q == 2**-exp
+        if p != man {
+            return false;
+        }
+        let neg_exp = (-exp) as u64;
+        if q.bit_length() - 1 != neg_exp {
+            return false;
+        }
+        (Int::ONE << neg_exp) == q
+    }
+}

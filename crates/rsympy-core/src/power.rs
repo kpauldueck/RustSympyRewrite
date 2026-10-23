@@ -967,3 +967,53 @@ fn eval_is_algebraic(p: &Expr, b: &Expr, x: &Expr) -> Option<bool> {
     }
     None
 }
+
+/// `Pow._eval_Mod(q)`: `b**e mod q`, dispatched by `Mod`.
+///
+/// The totient reductions (for large exponents, and for a power in the
+/// exponent) need `totient`, which is not ported yet.
+pub(crate) fn eval_mod(p: &Expr, q: &Expr) -> Option<Expr> {
+    use rsympy_num::Int;
+    let (base, exp) = (p.arg(0), p.arg(1));
+
+    if exp.is_integer() == Some(true) && exp.is_positive() == Some(true) {
+        if q.is_integer() == Some(true) {
+            // base % q == 0
+            let r = ops::rem(base, q);
+            if r.is_Number() && crate::numbers::number_eq(&r, &s::zero()) {
+                return Some(s::zero());
+            }
+        }
+
+        if base.is_Integer() && exp.is_Integer() && q.is_Integer() {
+            let (b, e, m) = (base.p(), exp.p(), q.p());
+            let mb = m.bit_length();
+            if mb <= 80 && e >= Int::from(mb) && Int::from(e.bit_length()).pow(4) >= m {
+                not_ported("Pow._eval_Mod: totient(m)");
+            }
+            let r = b
+                .pow_mod(&e, &m)
+                .unwrap_or_else(|_| raise(ErrorKind::ValueError, "pow() 3rd argument cannot be 0"));
+            return Some(Expr::integer(r));
+        }
+
+        if base.is_Pow() && base.is_integer() == Some(true) && base.is_number() {
+            let base = crate::functions::mod_(base, q);
+            return Some(crate::functions::mod_(&pow_with(&base, exp, false), q));
+        }
+
+        if exp.is_Pow() && exp.is_integer() == Some(true) && exp.is_number() {
+            // bit_length = int(q).bit_length()
+            let Some(qi) = crate::functions::core_mod::py_int(q) else {
+                raise(ErrorKind::TypeError, "Cannot convert symbols to int")
+            };
+            // XXX Mod-Pow actually attempts to do a hanging evaluation
+            // if this dispatched function returns None.
+            // May need some fixes in the dispatcher itself.
+            if qi.bit_length() <= 80 {
+                not_ported("Pow._eval_Mod: totient(q)");
+            }
+        }
+    }
+    None
+}

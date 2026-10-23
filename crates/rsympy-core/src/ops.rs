@@ -25,6 +25,26 @@ fn check_operands(a: &Expr, b: &Expr, op: &str) {
     if a.is_a(Tag::Expr) && b.is_a(Tag::Expr) {
         return;
     }
+    // Tuple's only arithmetic dunders are `__add__`/`__radd__` and
+    // `__mul__`/`__rmul__`, so its other operators with an Expr or a Tuple
+    // raise TypeError (NaN.__sub__ and NaN.__truediv__ excepted: they
+    // return nan for anything).
+    if matches!(op, "sub" | "truediv" | "pow" | "mod")
+        && (a.is_cls(C::Tuple) || b.is_cls(C::Tuple))
+        && [a, b]
+            .iter()
+            .all(|x| x.is_a(Tag::Expr) || x.is_cls(C::Tuple))
+        && !(a.is_cls(C::NaN) && matches!(op, "sub" | "truediv"))
+    {
+        raise(
+            ErrorKind::TypeError,
+            format!(
+                "unsupported operand type(s) for {op}: '{}' and '{}'",
+                a.class_name(),
+                b.class_name()
+            ),
+        );
+    }
     for x in [a, b] {
         if x.is_a(Tag::BooleanAtom) {
             raise(

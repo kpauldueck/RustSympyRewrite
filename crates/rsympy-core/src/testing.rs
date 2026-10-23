@@ -6,7 +6,7 @@
 //!
 //! - an undefined function prints its assumptions,
 //!   `Function('f', real=True, ...)(x)`, listing all of `_kwargs` in
-//!   alphabetical order;
+//!   alphabetical order (with `nargs=...` when it was given);
 //! - nothing else: `Float('...', precision=p)` round-trips exactly because
 //!   `srepr` prints `repr_dps(p)` digits.
 //!
@@ -45,6 +45,11 @@ pub fn parse(text: &str) -> Expr {
     v
 }
 
+/// The class whose SymPy `__name__` is `name` (`"exp"`, `"Mod"`, ...).
+pub fn class_by_name(name: &str) -> Option<C> {
+    CLASS_BY_NAME.get(name).copied()
+}
+
 /// Encodes `e` the way the oracle does (see the module docs).
 pub fn encode(e: &Expr) -> String {
     let mut out = String::new();
@@ -66,12 +71,21 @@ static CLASS_BY_NAME: LazyLock<HashMap<&'static str, C>> = LazyLock::new(|| {
 /// A name, its `fact=bool` keywords and its integer keywords.
 type NamedArgs = (String, Vec<(Fact, bool)>, Vec<(String, Int)>);
 
+/// A `Function`'s name, its `fact=bool` keywords and its `nargs=`.
+type FunctionArgs = (
+    String,
+    Vec<(Fact, bool)>,
+    Option<crate::functions::NargsArg>,
+);
+
 enum Val {
     Expr(Expr),
     Int(Int),
     Str(String),
     Bool(bool),
     None,
+    /// A Python tuple, `(1,)` or `(1, 2)`.
+    Tuple(Vec<Val>),
 }
 
 struct Arg {
@@ -239,6 +253,26 @@ impl Parser<'_> {
 
     fn value(&mut self) -> Val {
         match self.peek() {
+            Some(b'(') => {
+                self.pos += 1;
+                let mut items = Vec::new();
+                if self.eat(b')') {
+                    return Val::Tuple(items);
+                }
+                loop {
+                    items.push(self.value());
+                    if self.eat(b')') {
+                        if items.len() == 1 {
+                            self.fail("a 1-tuple needs its trailing comma");
+                        }
+                        return Val::Tuple(items);
+                    }
+                    self.expect(b',');
+                    if self.eat(b')') {
+                        return Val::Tuple(items);
+                    }
+                }
+            }
             Some(b'\'' | b'"') => Val::Str(self.string()),
             Some(c) if c.is_ascii_digit() => Val::Int(self.int()),
             Some(b'-') if self.src.get(self.pos + 1).is_some_and(u8::is_ascii_digit) => {
@@ -337,9 +371,21 @@ impl Parser<'_> {
                 _ => self.fail("Str('name')"),
             },
             "Symbol" | "Dummy" | "Wild" => self.symbol(&name, &args),
+            "WildFunction" => match args.as_slice() {
+                // WildFunction('F'): the constructor, as the oracle's
+                // decoder calls it (it sympifies the name)
+                [
+                    Arg {
+                        key: None,
+                        val: Val::Str(t),
+                    },
+                ] => crate::functions::application::wild_function(t, None),
+                _ => self.fail("WildFunction('name')"),
+            },
             "Function" => {
-                let (fname, assumptions, _) = self.name_and_assumptions(&args, &[]);
-                let f = crate::functions::undefined_function(&fname, &assumptions);
+                let (fname, assumptions, nargs) = self.function_args(&args);
+                let f =
+                    crate::functions::application::undefined_function(&fname, &assumptions, nargs);
                 let applied = self.args();
                 let applied = self.exprs(applied);
                 let kb = f.assumptions;
@@ -365,6 +411,43 @@ impl Parser<'_> {
                 _ => self.fail("expected an expression argument"),
             })
             .collect()
+    }
+
+    /// `Function`'s `('name', fact=bool, ..., nargs=...)`.
+    fn function_args(&self, args: &[Arg]) -> FunctionArgs {
+        use crate::functions::NargsArg;
+        let Some(Arg {
+            key: None,
+            val: Val::Str(name),
+        }) = args.first()
+        else {
+            self.fail("expected a name string")
+        };
+        let small = |i: &Int| i.as_i64().unwrap_or_else(|| self.fail("nargs"));
+        let mut facts = Vec::new();
+        let mut nargs = None;
+        for a in &args[1..] {
+            match (a.key.as_deref(), &a.val) {
+                (Some("nargs"), Val::None) => nargs = Some(NargsArg::None),
+                (Some("nargs"), Val::Int(i)) => nargs = Some(NargsArg::Int(small(i))),
+                (Some("nargs"), Val::Tuple(items)) => {
+                    let v = items
+                        .iter()
+                        .map(|x| match x {
+                            Val::Int(i) => small(i),
+                            _ => self.fail("nargs=(int, ...)"),
+                        })
+                        .collect();
+                    nargs = Some(NargsArg::Tuple(v));
+                }
+                (Some(k), Val::Bool(b)) => {
+                    let f = Fact::from_name(k).unwrap_or_else(|| self.fail("unknown fact"));
+                    facts.push((f, *b));
+                }
+                _ => self.fail("expected fact=True/False or nargs=..."),
+            }
+        }
+        (name.clone(), facts, nargs)
     }
 
     /// `('name', fact=bool, ...)`, plus the integer keywords in `extra`.
@@ -463,12 +546,27 @@ fn write_expr(out: &mut String, e: &Expr) {
             let u = e.undef_data().expect("AppliedUndef has its function");
             out.push_str("Function(");
             out.push_str(&crate::py::repr_str(&u.name));
-            for (f, v) in u.kwargs.items(false) {
-                let v = v.expect("items(false) has no None");
-                out.push_str(&format!(", {}={}", f.name(), py_bool(v)));
+            for (k, v) in crate::functions::application::undefined_kwargs_repr(u) {
+                out.push_str(&format!(", {k}={v}"));
             }
             out.push(')');
             write_args(out, e.args());
+            return;
+        }
+        C::WildFunction => {
+            // ReprPrinter._print_WildFunction: "%s('%s')" % (cls, expr.name)
+            use crate::expr::WildFunctionName as N;
+            let d = e.wild_function_data().expect("a WildFunction");
+            let name = match &d.name {
+                N::Str(t) => t.to_string(),
+                N::Expr(x) if x.is_Symbol() => x.name().expect("a Symbol's name").to_string(),
+                N::Expr(x) => not_ported(format!("str({x:?}) as a WildFunction name")),
+                N::Unset => raise(
+                    ErrorKind::AttributeError,
+                    "'WildFunction' object has no attribute 'name'",
+                ),
+            };
+            out.push_str(&format!("WildFunction('{name}')"));
             return;
         }
         _ => e.class_name(),

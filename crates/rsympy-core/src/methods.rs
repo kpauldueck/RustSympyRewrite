@@ -36,7 +36,8 @@ impl Expr {
     pub fn is_comparable(&self) -> bool {
         match self.method_owner(Method::IsComparable) {
             "Zero" | "Infinity" | "NegativeInfinity" => true,
-            "NaN" => false,
+            // NaN, and Symbol's class attribute `is_comparable = False`
+            "NaN" | "Symbol" => false,
             "Basic" => {
                 if self.is_extended_real() == Some(false) {
                     return false;
@@ -157,6 +158,7 @@ impl Expr {
             C::Mul => crate::mul::as_base_exp(self),
             C::ImaginaryUnit => (s::negative_one(), s::half()),
             C::Exp => crate::functions::exp_as_base_exp(self),
+            _ if self.is_a(Tag::Application) => crate::functions::head_of(self).as_base_exp(self),
             _ => {
                 self.expr_default(Method::AsBaseExp, "as_base_exp");
                 (self.clone(), s::one())
@@ -173,6 +175,9 @@ impl Expr {
             C::Mul => crate::mul::as_numer_denom(self),
             C::Pow => crate::power::as_numer_denom(self),
             C::Exp => crate::functions::exp_as_numer_denom(self),
+            _ if self.is_a(Tag::Application) => {
+                crate::functions::head_of(self).as_numer_denom(self)
+            }
             _ => {
                 self.expr_default(Method::AsNumerDenom, "as_numer_denom");
                 (self.clone(), s::one())
@@ -278,7 +283,16 @@ fn collect_free_symbols(e: &Expr, out: &mut Vec<Expr>, seen: &mut HashSet<Expr>)
         }
         return;
     }
-    if e.is_a(Tag::ExprWithLimits) || matches!(e.cls(), C::Lambda | C::Derivative | C::Subs) {
+    if matches!(e.cls(), C::Lambda | C::IdentityFunction) {
+        // Lambda.free_symbols: the body's, less the bound variables
+        for s in crate::functions::lambda::free_symbols(e) {
+            if seen.insert(s.clone()) {
+                out.push(s);
+            }
+        }
+        return;
+    }
+    if e.is_a(Tag::ExprWithLimits) || matches!(e.cls(), C::Derivative | C::Subs) {
         crate::error::not_ported(format!("{}.free_symbols", e.class_name()));
     }
     for a in e.args() {
