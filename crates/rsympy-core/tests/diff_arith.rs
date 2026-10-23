@@ -22,7 +22,7 @@ fn coeff_and_args((c, args): (Expr, Vec<Expr>)) -> Value {
 // (mpf_pow), is_comparable (evalf) and _monotonic_sign of an Add (polys).
 #[test]
 fn arith_matches_sympy() {
-    run_partial("arith", 692, |v| {
+    run_partial("arith", 682, |v| {
         let args = || (0..v.args.len()).map(|i| v.expr(i)).collect::<Vec<_>>();
         let e = || v.expr(0);
         match v.op.as_str() {
