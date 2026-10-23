@@ -91,11 +91,19 @@ fn squares_and_jacobi() {
     let doc = load();
     for row in doc["is_square"].as_array().unwrap() {
         let n = int(&row[0]);
-        assert_eq!(rsympy_ntheory::is_square(&n), row[1].as_bool().unwrap(), "is_square({n})");
+        assert_eq!(
+            rsympy_ntheory::is_square(&n),
+            row[1].as_bool().unwrap(),
+            "is_square({n})"
+        );
     }
     for row in doc["jacobi"].as_array().unwrap() {
         let (x, y) = (int(&row[0]), int(&row[1]));
         let want = row[2].as_i64().unwrap();
-        assert_eq!(i64::from(rsympy_ntheory::jacobi(&x, &y).unwrap()), want, "jacobi({x}, {y})");
+        assert_eq!(
+            i64::from(rsympy_ntheory::jacobi(&x, &y).unwrap()),
+            want,
+            "jacobi({x}, {y})"
+        );
     }
 }

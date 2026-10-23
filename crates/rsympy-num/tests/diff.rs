@@ -30,7 +30,7 @@ fn py_float_repr(f: f64) -> String {
     let exp: i32 = exp.parse().expect("int exponent");
     let (sign, mant) = mant.strip_prefix('-').map_or(("", mant), |m| ("-", m));
     let digits: String = mant.chars().filter(|c| *c != '.').collect();
-    if (-5..16).contains(&exp) {
+    if (-4..16).contains(&exp) {
         let point = exp + 1;
         if point <= 0 {
             format!("{sign}0.{}{digits}", "0".repeat((-point) as usize))

@@ -384,6 +384,24 @@ impl Int {
         }
     }
 
+    /// Python's `int(f)` for a finite float: truncates toward zero, exactly.
+    /// `None` for infinities and NaN (Python raises).
+    pub fn from_f64_trunc(f: f64) -> Option<Int> {
+        if !f.is_finite() {
+            return None;
+        }
+        let t = f.trunc();
+        if t.abs() < 9.0e18 {
+            return Some(Int::small(t as i64));
+        }
+        // |t| >= 2**63: an integer times a power of two.
+        let bits = t.abs().to_bits();
+        let exp = ((bits >> 52) & 0x7ff) as i64 - 1075;
+        let man = (bits & ((1u64 << 52) - 1)) | (1u64 << 52);
+        let v = &Int::from(man) << exp as u64;
+        Some(if t < 0.0 { -v } else { v })
+    }
+
     /// Decimal digits of the magnitude.
     pub fn num_decimal_digits(&self) -> usize {
         let s = self.abs().to_string();

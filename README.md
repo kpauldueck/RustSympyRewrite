@@ -7,8 +7,9 @@ Status: Tier 1 (numbers) in progress: exact integers and fractions, Python's ran
 ## Layout
 
 - `crates/rsympy-num`: exact numbers (`Int` with Python's semantics, `Rational`) and Python's RNG (`PyRandom`).
+- `crates/rsympy-mpf`: the port of mpmath, SymPy's float library. So far `libmpf` (float arithmetic with mpmath's exact rounding, string conversion) and the constants pi, e, ln 2, ln 10.
 - `crates/rsympy-ntheory`: SymPy's number-theory base: primality, `nextprime`, `perfect_power`, `multiplicity`, `factorint`.
-- `crates/rsympy`: the facade that will re-export the public API. For now it holds the oracle runner (`tests/oracle.rs`). The other planned crates (`rsympy-core`, `rsympy-mpf`, the domain crates, `rsympy-py`) are described in the plan.
+- `crates/rsympy`: the facade that will re-export the public API. For now it holds the oracle runner (`tests/oracle.rs`). The other planned crates (`rsympy-core`, the domain crates, `rsympy-py`) are described in the plan.
 - `oracle/`: Python that asks a pinned SymPy for the right answers and saves them as golden test cases. `gen_cases.py` runs everything and defines six general topics; the other topics are one module each in `oracle/topics/`. `inventory.py` measures SymPy itself (`sympy_inventory.json`). Every expected answer is what SymPy itself returns (or the exception it raises), computed live; nothing is hand-written. `oracle/caselib.py` documents the format. `gen_diff.py` writes differential test vectors (`oracle/diff/`) that the number crates' own tests replay against CPython and SymPy.
 
 ## Checking against SymPy
