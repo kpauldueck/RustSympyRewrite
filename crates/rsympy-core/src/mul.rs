@@ -11,7 +11,7 @@ use rsympy_num::Int;
 use crate::add::{Flattened, assoc_new};
 use crate::assume::{fuzzy_group, fuzzy_not};
 use crate::compare::sort_args;
-use crate::error::not_ported;
+use crate::error::{ErrorKind, not_ported, raise};
 use crate::expr::Expr;
 use crate::facts::Fact;
 use crate::generated::ClassId as C;
@@ -101,7 +101,9 @@ pub(crate) fn flatten(mut seq: Vec<Expr>) -> Flattened {
             std::mem::swap(&mut a, &mut b);
             seq = vec![a.clone(), b.clone()];
         }
-        debug_assert!(!a.is_cls(C::One));
+        if a.is_cls(C::One) {
+            raise(ErrorKind::AssertionError, "assert a is not S.One");
+        }
         if a.is_Rational() && a.is_zero() != Some(true) {
             let (r, b) = b.as_coeff_Mul(false);
             if b.is_Add() {
@@ -469,7 +471,9 @@ pub(crate) fn flatten(mut seq: Vec<Expr>) -> Flattened {
                     if obj.is_Number() {
                         coeff = ops::mul(&coeff, &obj);
                     } else {
-                        assert!(obj.is_Pow());
+                        if !obj.is_Pow() {
+                            raise(ErrorKind::AssertionError, "assert obj.is_Pow");
+                        }
                         let (bi, ei) = (obj.arg(0).clone(), obj.arg(1).clone());
                         pnew.setdefault_with(ei, Vec::new).push(bi);
                     }
@@ -998,9 +1002,13 @@ fn eval_is_integer(e: &Expr) -> Option<bool> {
                 });
             } else if !hit {
                 // int b and pos int e: a = b**e is integer
-                assert!(ex.is_positive() != Some(true));
+                if ex.is_positive() == Some(true) {
+                    raise(ErrorKind::AssertionError, "assert not e.is_positive");
+                }
                 // for rational self and e equal to zero: a = b**e is 1
-                assert!(ex.is_zero() != Some(true));
+                if ex.is_zero() == Some(true) {
+                    raise(ErrorKind::AssertionError, "assert not e.is_zero");
+                }
                 return None; // sign of e unknown -> self.is_integer unknown
             } else {
                 // x**2, 2**x, or x**y with x and y int-unknown -> unknown

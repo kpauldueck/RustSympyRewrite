@@ -387899,6 +387899,2008 @@
    "out": {
     "bool": false
    }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "algebraic"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "antihermitian"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "commutative"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "complex"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "composite"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "even"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "extended_negative"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "extended_nonnegative"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "extended_nonpositive"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "extended_nonzero"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "extended_positive"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "extended_real"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "finite"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "hermitian"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "imaginary"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "infinite"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "integer"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "irrational"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "negative"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "noninteger"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "nonnegative"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "nonpositive"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "nonzero"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "odd"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "polar"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "positive"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "prime"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "rational"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "real"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "transcendental"
+    }
+   ],
+   "out": {
+    "error": "TypeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Pow(E, true)"
+    },
+    {
+     "str": "zero"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "algebraic"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "antihermitian"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "commutative"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "complex"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "composite"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "even"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "extended_negative"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "extended_nonnegative"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "extended_nonpositive"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "extended_positive"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "extended_real"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "imaginary"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "infinite"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "integer"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "irrational"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "negative"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "noninteger"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "nonnegative"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "nonpositive"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "nonzero"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "odd"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "polar"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "positive"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "prime"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "rational"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 2), Mul(Integer(-1), Integer(2))), Integer(3))"
+    },
+    {
+     "str": "zero"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "algebraic"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "antihermitian"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "commutative"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "complex"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "composite"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "even"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "extended_nonnegative"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "extended_nonpositive"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "extended_real"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "imaginary"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "infinite"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "integer"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "irrational"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "negative"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "noninteger"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "nonnegative"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "nonpositive"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "nonzero"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "odd"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "polar"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "positive"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "prime"
+    }
+   ],
+   "out": {
+    "error": "AssertionError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "rational"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Mul(Pow(Rational(1, 3), Mul(Integer(-1), Integer(0))), Integer(3))"
+    },
+    {
+     "str": "zero"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "algebraic"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "antihermitian"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "commutative"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "complex"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "composite"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "even"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "extended_negative"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "extended_nonnegative"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "extended_nonpositive"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "extended_nonzero"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "extended_positive"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "extended_real"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "finite"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "hermitian"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "imaginary"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "infinite"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "integer"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "irrational"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "negative"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "noninteger"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "nonnegative"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "nonpositive"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "nonzero"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "odd"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "polar"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "positive"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "prime"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "rational"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "real"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "transcendental"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Derivative(Function('f')(Symbol('x')), Tuple(Symbol('x'), Integer(1)))"
+    },
+    {
+     "str": "zero"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "algebraic"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "antihermitian"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "commutative"
+    }
+   ],
+   "out": {
+    "error": "AttributeError"
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "complex"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "composite"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "even"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "extended_negative"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "extended_nonnegative"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "extended_nonpositive"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "extended_nonzero"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "extended_positive"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "extended_real"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "finite"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "hermitian"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "imaginary"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "infinite"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "integer"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "irrational"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "negative"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "noninteger"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "nonnegative"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "nonpositive"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "nonzero"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "odd"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "polar"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "positive"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "prime"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "rational"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "real"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "transcendental"
+    }
+   ],
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "is",
+   "args": [
+    {
+     "expr": "Integral(Symbol('x'), Tuple(Symbol('x'), Integer(0), Integer(1)))"
+    },
+    {
+     "str": "zero"
+    }
+   ],
+   "out": {
+    "none": null
+   }
   }
  ]
 }
