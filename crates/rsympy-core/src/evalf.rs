@@ -6,9 +6,27 @@ use crate::error::not_ported;
 use crate::expr::Expr;
 
 /// `expr.evalf(n)` with default options (`n` significant digits).
+///
+/// Only the path for a class `evalf_table` has no entry for (an
+/// `AppliedUndef`, `Mod`, ...) whose `_eval_evalf` returns `None` is
+/// ported: the object comes back unchanged.
 pub fn evalf(e: &Expr, n: i64) -> Expr {
-    let _ = (e, n);
-    not_ported("evalf")
+    if crate::generated_function::FUNCTION_INFO[e.cls() as usize].in_evalf_table {
+        not_ported("evalf");
+    }
+    let prec = rsympy_mpf::dps_to_prec(n);
+    // result = evalf(self, prec + 4, options): with no evalf_table entry
+    // for type(x), that is "xe = x._eval_evalf(prec)", and
+    // NotImplementedError when xe is None
+    if crate::functions::eval_evalf_of(e, prec + 4).is_some() {
+        not_ported("evalf: the as_real_imag of an _eval_evalf result");
+    }
+    // except NotImplementedError: fall back to the ordinary evalf
+    match crate::functions::eval_evalf_of(e, prec) {
+        None => e.clone(),
+        Some(v) if !v.is_number() => v,
+        Some(_) => not_ported("evalf: normalizing a numeric _eval_evalf result"),
+    }
 }
 
 /// `expr._eval_evalf(prec)` (binary precision), or `None`.

@@ -4,74 +4,86 @@
 //!
 //! # The `Head` trait
 //!
-//! Every SymPy function class is a *head*: the object that builds `f(*args)`,
-//! evaluates it, and answers questions about the applied expressions of its
-//! class. That covers every `Application` subclass: `Function` and its
-//! defined subclasses (`Mod`, `sin`, ...), each undefined function
-//! `Function('f')` (a class of its own in SymPy), `WildFunction`, and the
-//! non-`Function` `Application`s (`Min`, `Max`, `And`, `Not`, ...).
+//! Every SymPy function class is a *head*: the object that builds
+//! `cls(*args)`, evaluates it, and answers questions about the applied
+//! expressions of its class. That covers every `Application` subclass:
+//! `Function` and its defined subclasses (`Mod`, `sin`, ...), each undefined
+//! function `Function('f')` (a class of its own in SymPy), `WildFunction`,
+//! and the `Application`s that are not `Function`s (`Min`, `Max`, `And`,
+//! `Not`, ...). [`Head`] is the trait; a class used as a value (what
+//! `f(x).func` returns) is a [`FunctionClass`].
 //!
 //! ## Who implements it
 //!
 //! - **Defined classes** (a [`ClassId`]): one zero-sized struct per ported
-//!   class (`core_mod::ModHead`), returned by [`head`]. A class that has no
-//!   port yet gets [`GenericHead`], whose every method is the inherited
-//!   behaviour guarded by the table below, so using it raises
-//!   `NotPortedYet` naming the first SymPy method that is missing.
-//! - **Undefined functions**: [`UndefData`] (the payload of
-//!   `Function('f', **kwargs)`, stored in each `f(x)` node) implements
-//!   `Head` itself, so `f`'s name, assumptions and `nargs` travel with the
-//!   node.
+//!   class (`core_mod::ModHead`, `application::WildFunctionHead`), returned
+//!   by [`head`]. A class with no port yet gets [`GenericHead`], whose
+//!   methods are all the inherited defaults, each guarded by the table
+//!   below, so using it raises `NotPortedYet` naming the first SymPy method
+//!   that is missing (`sin.eval`).
+//! - **Undefined functions**: `Arc<UndefData>` (the class
+//!   `Function('f', **kwargs)`, stored in each `f(x)` node's payload)
+//!   implements `Head` itself, so `f`'s name, assumptions and `nargs`
+//!   travel with the node.
 //! - **Foreign heads** (for `rsympy-py`): users' own `Function` subclasses,
-//!   and SymPy classes not ported yet while Python serves them, are an
-//!   `Arc<dyn Head>` whose methods call back into Python. They will sit in
-//!   the node's payload exactly like `UndefData` (a new `Data` variant) and
-//!   [`head_of`] will return them; nothing else changes, because all of core
+//!   and SymPy classes not ported yet while Python serves them, will be an
+//!   `Arc<dyn Head>` whose methods call back into Python. They sit in the
+//!   node's payload exactly like `UndefData` (a new `Data` variant), and
+//!   [`head_of`] returns them; nothing else changes, because all of core
 //!   reaches a head through [`head_of`] (an applied expression) or
-//!   [`FunctionClass::head`] (a class used as a value).
+//!   [`FunctionClass::head`] (a class used as a value). A foreign head
+//!   overrides [`Head::class_id`] with the nearest ported base class (for
+//!   the class table) and every method Python defines.
 //!
 //! ## Inheritance by table
 //!
-//! Each trait method's default is what SymPy's MRO would run when the class
-//! does not override it (the `Function`, `Application`, `Expr` or `Basic`
-//! method). Before running it, the default looks up which class defines the
-//! method for this class: `FUNCTION_INFO[cls].hooks` in
-//! `generated_function.rs` (written by `oracle/gen_tables_function.py`) and,
-//! for assumptions, `ClassInfo::handler_owners`. When SymPy would find an
-//! override that the Rust impl does not provide, the default raises
-//! `NotPortedYet` naming it (`sin.eval`, `TrigonometricFunction._eval_is_rational`).
-//! So porting a class means implementing the methods its table row names,
-//! and a forgotten one fails loudly rather than answering with the base
-//! class's behaviour. Intermediate bases (`ExpBase`, `TrigonometricFunction`,
-//! `RoundFunction`, `MinMaxBase`) are free functions that each subclass's
-//! impl calls for the hooks whose owner is that base. Every default is also
-//! available as a free function (`default_eval_is`, ...), which is how an
-//! override calls "super".
+//! Each trait method's default is what SymPy's MRO runs when the class does
+//! not override the method (the `Function`, `Application`, `Expr` or
+//! `Basic` version). Before running it, the default looks up which class
+//! defines the method for this class: `FUNCTION_INFO[cls].hooks` in
+//! `generated_function.rs` (written by `oracle/gen_tables_function.py` from
+//! the live classes) and, for assumptions, `ClassInfo::handler_owners`.
+//! When SymPy would find an override that the Rust impl does not provide,
+//! the default raises `NotPortedYet` naming it (`sin.eval`,
+//! `TrigonometricFunction._eval_is_rational`). So porting a class means
+//! implementing the methods its table row names, and a forgotten one fails
+//! loudly rather than answering with the base class's behaviour.
+//! Intermediate bases (`ExpBase`, `TrigonometricFunction`, `RoundFunction`,
+//! `MinMaxBase`) are free functions that each subclass's impl calls for the
+//! hooks whose owner is that base. Every default is also a free function
+//! (`default_eval_is`, `default_fdiff`, ...), which is how an override calls
+//! `super()`.
 //!
 //! ## The hooks
 //!
 //! | SymPy | `Head` method | default |
 //! |---|---|---|
 //! | `cls.__name__`, `cls.class_key()` | [`Head::name`], [`Head::class_key`] | table; `Function.class_key` |
-//! | `cls._nargs`, `cls.nargs`, `obj.nargs` | [`Head::nargs`], [`Head::instance_nargs`] | table |
+//! | `cls._nargs`, `cls.nargs`, `cls._valid_nargs(n)` | [`Head::class_nargs`], [`Head::nargs`], [`Head::valid_nargs`] | table |
+//! | `obj.nargs` (set by `Application.__new__`) | [`Head::instance_nargs`] | table |
 //! | `cls(*args, evaluate=...)` | [`Head::new`] | `Function._new_` + `Application.__new__` ([`application::function_new`]) |
 //! | `cls.eval(*args)` | [`Head::eval`] | `Application.eval`: `None` |
 //! | `cls._should_evalf(arg)` | [`Head::should_evalf`] | `Function._should_evalf` |
 //! | `Basic.__new__(cls, *args)` | [`Head::raw`] | the node with the class's assumptions |
 //! | `isinstance(e, cls)` | [`Head::is_instance`] | table (`supers`) |
-//! | `_eval_is_<fact>` | [`Head::eval_is`] | `Function._eval_is_commutative`, `Expr._eval_is_extended_positive`/`negative` |
+//! | `_eval_is_<fact>` (the `_prop_handler`) | [`Head::eval_is`] | `Function._eval_is_commutative`, `Expr._eval_is_extended_positive`/`negative` |
 //! | `fdiff(argindex)` | [`Head::fdiff`] | `Function.fdiff` (needs `Derivative`/`Subs`) |
 //! | `inverse(argindex)` | [`Head::inverse`] | `AttributeError` (no base class has it) |
 //! | `_eval_subs(old, new)` | [`Head::eval_subs`] | `Application._eval_subs` |
 //! | `_eval_evalf(prec)` | [`Head::eval_evalf`] | `Function._eval_evalf` |
 //! | `_eval_conjugate`, `_eval_transpose`, `_eval_adjoint` | [`Head::eval_conjugate`], ... | `Expr`'s |
 //! | `_eval_power(e)` | [`Head::eval_power`] | `Expr._eval_power`: `None` |
+//! | `_eval_Mod(q)`, `_eval_Abs()` | [`Head::eval_mod`], [`Head::eval_abs`] | none (`hasattr` is false) |
 //! | `as_base_exp()`, `as_numer_denom()` | [`Head::as_base_exp`], [`Head::as_numer_denom`] | `Expr`'s: `(self, 1)` |
 //! | `_eval_derivative`, `_eval_nseries`, `_eval_as_leading_term`, `_eval_simplify` | same names | not ported yet |
 //! | `_eval_rewrite(rule, args)` | [`Head::eval_rewrite`] | `Basic._eval_rewrite`: `None` |
 //! | `_eval_rewrite_as_<target>` | [`Head::eval_rewrite_as`] | the rewrite registry |
 //! | `_eval_expand_<hint>` | [`Head::eval_expand`] | the expand registry |
-//! | `_sympystr` (and later `_latex`, `_pretty`) | [`Head::sympystr`] | none: the printer's `_print_<Class>` |
+//! | `_sympystr` (later `_latex`, `_pretty`, ...) | [`Head::sympystr`] | none: the printer's `_print_<Class>` |
+//!
+//! The evalf call that `Function._new_` makes when every argument is a
+//! Float is `crate::evalf::evalf`, which so far only has the path for
+//! classes `evalf_table` has no entry for.
 //!
 //! ## Open registries
 //!
@@ -162,6 +174,7 @@ pub trait Head: Send + Sync {
     fn valid_nargs(&self, n: usize) -> bool {
         match self.class_nargs() {
             Some(v) if !v.is_empty() => v.contains(&(n as i64)),
+            // nargs is S.Naturals0
             _ => true,
         }
     }
@@ -277,6 +290,26 @@ pub trait Head: Send + Sync {
         }
     }
 
+    /// `e._eval_Mod(q)`, which `Mod.eval` calls when `e` has it: `None`
+    /// both when the class has no such method and when it returns `None`.
+    fn eval_mod(&self, e: &Expr, q: &Expr) -> Option<Expr> {
+        let _ = (e, q);
+        match hook_owner(self, Hook::Eval_Mod) {
+            "" => None,
+            o => not_ported(format!("{o}._eval_Mod")),
+        }
+    }
+
+    /// `e._eval_Abs()`, which `Abs.eval` calls when `e` has it (`None` as
+    /// for [`Head::eval_mod`]).
+    fn eval_abs(&self, e: &Expr) -> Option<Expr> {
+        let _ = e;
+        match hook_owner(self, Hook::Eval_Abs) {
+            "" => None,
+            o => not_ported(format!("{o}._eval_Abs")),
+        }
+    }
+
     /// `e.as_base_exp()`.
     fn as_base_exp(&self, e: &Expr) -> (Expr, Expr) {
         match hook_owner(self, Hook::AsBaseExp) {
@@ -322,9 +355,8 @@ pub trait Head: Send + Sync {
 
     /// `e._eval_simplify(**kwargs)`.
     fn eval_simplify(&self, e: &Expr) -> Expr {
-        match hook_owner(self, Hook::EvalSimplify) {
-            o => not_ported(format!("{o}._eval_simplify ({})", e.class_name())),
-        }
+        let owner = hook_owner(self, Hook::EvalSimplify);
+        not_ported(format!("{owner}._eval_simplify ({})", e.class_name()))
     }
 
     /// `e._eval_rewrite(rule, args, **hints)`, the hook `Basic._rewrite`
@@ -405,7 +437,7 @@ pub fn head(cls: ClassId) -> &'static dyn Head {
 /// its defined class's head.
 pub fn head_of(e: &Expr) -> &dyn Head {
     match e.data() {
-        Data::Undef(u) => &**u,
+        Data::Undef(u) => u,
         _ => head(e.cls()),
     }
 }
@@ -413,7 +445,7 @@ pub fn head_of(e: &Expr) -> &dyn Head {
 const _: () = assert!(NUM_CLASSES == crate::generated::ALL_CLASSES.len());
 
 // ---------------------------------------------------------------------------
-// the existing entry points
+// the entry points other modules call
 
 /// `cls(*args)`: `Function.__new__` for a defined function class, including
 /// its `eval`.
@@ -440,6 +472,11 @@ pub fn call_undefined(f: &Arc<UndefData>, args: Vec<Expr>) -> Expr {
 /// `f(*args, evaluate=evaluate)` for an undefined function.
 pub fn call_undefined_with(f: &Arc<UndefData>, args: Vec<Expr>, evaluate: Option<bool>) -> Expr {
     f.new(args, evaluate)
+}
+
+/// `Mod(p, q)`.
+pub fn mod_(p: &Expr, q: &Expr) -> Expr {
+    call(ClassId::Mod, vec![p.clone(), q.clone()])
 }
 
 /// `exp(x)`.
@@ -472,6 +509,7 @@ pub fn eval_power(owner: &str, base: &Expr, exp: &Expr) -> Option<Expr> {
 /// `assume.rs` (functions, `Lambda`, the numeric singletons, Derivative,
 /// Sum, ...), picked by the class that defines the handler.
 pub(crate) fn handler(e: &Expr, fact: Fact) -> Option<bool> {
+    use ClassId as C;
     if e.is_a(Tag::Number) || e.is_a(Tag::NumberSymbol) {
         // Their only handlers are Expr's, answered from their known values.
         return crate::numbers::singleton_handler(e, fact);
@@ -480,7 +518,7 @@ pub(crate) fn handler(e: &Expr, fact: Fact) -> Option<bool> {
         return head_of(e).eval_is(e, fact);
     }
     match e.cls() {
-        ClassId::Lambda | ClassId::IdentityFunction => lambda::handler(e, fact),
+        C::Lambda | C::IdentityFunction => lambda::eval_is(e, fact),
         _ => default_eval_is(e, fact),
     }
 }
@@ -504,7 +542,7 @@ pub fn default_class_key<H: Head + ?Sized>(h: &H) -> (i32, i32, String) {
 }
 
 /// The `_eval_is_<fact>` handler SymPy's `_prop_handler` holds for `e`'s
-/// class, when it is one every function inherits.
+/// class, when it is one every function (and every `Expr`) inherits.
 pub fn default_eval_is(e: &Expr, fact: Fact) -> Option<bool> {
     match e.handler_owner(fact) {
         Some("Function._eval_is_commutative") => function_eval_is_commutative(e),
@@ -530,6 +568,8 @@ pub(crate) fn expr_eval_is_extended_positive_negative(e: &Expr) -> Option<bool> 
     // check to see that we can get a value
     let n2 = match crate::error::catch_kind(ErrorKind::ValueError, || eval_evalf_of(e, 2)) {
         // XXX: This shouldn't be caught here
+        // Catches ValueError: hypsum() failed to converge to the requested
+        // number of digits
         None => return None,
         Some(n2) => n2,
     };
@@ -561,10 +601,8 @@ pub fn default_fdiff<H: Head + ?Sized>(h: &H, e: &Expr, argindex: usize) -> Expr
         "Function" => {
             if !(1 <= argindex && argindex <= e.args().len()) {
                 raise(
-                    ErrorKind::ValueError,
-                    format!(
-                        "Invalid operation with argument number {argindex} for Function {e}"
-                    ),
+                    ErrorKind::ArgumentIndexError,
+                    format!("Invalid operation with argument number {argindex} for Function {e:?}"),
                 );
             }
             not_ported("Function.fdiff (needs Derivative and Subs)")
@@ -576,9 +614,10 @@ pub fn default_fdiff<H: Head + ?Sized>(h: &H, e: &Expr, argindex: usize) -> Expr
 /// `Application._eval_subs(old, new)`, or `Basic._eval_subs` (`None`).
 ///
 /// `Application._eval_subs` only fires when `old` is the function class
-/// itself (`f(x).subs(f, g)`); an `Expr` never equals a class, so with
-/// expressions for `old` and `new` it is always `None`. Substituting a
-/// function class is [`application::subs_function_class`].
+/// itself (`f(x).subs(f, g)`): `old == self.func` is false for any
+/// expression `old` (an `Expr` never equals a class), so with expressions
+/// for `old` and `new` it is always `None`. Substituting function classes
+/// (which are not expressions) is not ported yet.
 pub fn default_eval_subs<H: Head + ?Sized>(
     h: &H,
     e: &Expr,
@@ -592,7 +631,7 @@ pub fn default_eval_subs<H: Head + ?Sized>(
     }
 }
 
-/// `Function._eval_evalf(prec)`.
+/// `Function._eval_evalf(prec)`, or the class's override.
 pub fn default_eval_evalf<H: Head + ?Sized>(h: &H, e: &Expr, prec: i64) -> Option<Expr> {
     match hook_owner(h, Hook::EvalEvalf) {
         "Function" => application::function_eval_evalf(h, e, prec),
@@ -632,6 +671,7 @@ pub fn expr_eval_adjoint<H: Head + ?Sized>(h: &H, e: &Expr) -> Option<Expr> {
         return Some(-e);
     }
     if h.eval_conjugate(e).is_some() {
+        // obj = self._eval_conjugate(); if obj is not None: return transpose(obj)
         not_ported("Expr._eval_adjoint: transpose");
     }
     if let Some(obj) = h.eval_transpose(e) {
@@ -715,7 +755,12 @@ pub fn register_expand(owner: &'static str, hint: &'static str, f: ExpandFn) {
         .push((owner, hint, f));
 }
 
-fn lookup<F: Copy>(builtin: &[(&str, &str, F)], extra: &Registry<F>, owner: &str, name: &str) -> Option<F> {
+fn lookup<F: Copy>(
+    builtin: &[(&str, &str, F)],
+    extra: &Registry<F>,
+    owner: &str,
+    name: &str,
+) -> Option<F> {
     if let Some(&(_, _, f)) = builtin.iter().find(|(o, n, _)| *o == owner && *n == name) {
         return Some(f);
     }
@@ -765,7 +810,7 @@ pub fn default_eval_expand(e: &Expr, hint: &str, hints: &Hints) -> Option<Expr> 
 
 /// `e._eval_rewrite_as_<target>(...)` through `e`'s head for applied
 /// functions, else the registry.
-pub(crate) fn eval_rewrite_as_of(
+pub fn eval_rewrite_as_of(
     e: &Expr,
     target: &str,
     args: &[Expr],
@@ -779,9 +824,18 @@ pub(crate) fn eval_rewrite_as_of(
 
 /// `e._eval_rewrite(rule, args, **hints)` through `e`'s head for applied
 /// functions.
-pub(crate) fn eval_rewrite_of(e: &Expr, rule: &str, args: &[Expr], hints: &Hints) -> Option<Expr> {
+pub fn eval_rewrite_of(e: &Expr, rule: &str, args: &[Expr], hints: &Hints) -> Option<Expr> {
     if e.is_a(Tag::Application) {
         return head_of(e).eval_rewrite(e, rule, args, hints);
     }
     default_eval_rewrite(e, rule, args, hints)
+}
+
+/// `e._eval_expand_<hint>(**hints)` through `e`'s head for applied
+/// functions, else the registry.
+pub fn eval_expand_of(e: &Expr, hint: &str, hints: &Hints) -> Option<Expr> {
+    if e.is_a(Tag::Application) {
+        return head_of(e).eval_expand(e, hint, hints);
+    }
+    default_eval_expand(e, hint, hints)
 }

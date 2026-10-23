@@ -109,6 +109,10 @@ pub(crate) struct FunctionInfo {
     /// The mpmath function `Function._eval_evalf` evaluates instances with
     /// (`_get_mpmath_func`), or "" when it finds none.
     pub mpmath_func: &'static str,
+    /// `type(e) in evalf_table` for instances of the class.
+    pub in_evalf_table: bool,
+    /// `iterable(obj)` for instances of the class (it has `__iter__`).
+    pub iterable: bool,
 }
 
 /// Indexed by `ClassId`.
@@ -161,6 +165,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Zero
     FunctionInfo {
@@ -210,6 +216,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // One
     FunctionInfo {
@@ -259,6 +267,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // NegativeOne
     FunctionInfo {
@@ -308,6 +318,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Rational
     FunctionInfo {
@@ -357,6 +369,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Half
     FunctionInfo {
@@ -406,6 +420,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Float
     FunctionInfo {
@@ -455,6 +471,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Infinity
     FunctionInfo {
@@ -504,6 +522,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // NegativeInfinity
     FunctionInfo {
@@ -553,6 +573,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // NaN
     FunctionInfo {
@@ -602,6 +624,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // ComplexInfinity
     FunctionInfo {
@@ -651,6 +675,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // ImaginaryUnit
     FunctionInfo {
@@ -700,6 +726,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Exp1
     FunctionInfo {
@@ -749,6 +777,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("cos", "Exp1"), ("sin", "Exp1")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Pi
     FunctionInfo {
@@ -798,6 +828,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // EulerGamma
     FunctionInfo {
@@ -847,6 +879,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Catalan
     FunctionInfo {
@@ -896,6 +930,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("Sum", "Catalan")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // GoldenRatio
     FunctionInfo {
@@ -945,6 +981,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("sqrt", "GoldenRatio")],
         expand_hints: &[("complex", "Expr"), ("func", "GoldenRatio")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // TribonacciConstant
     FunctionInfo {
@@ -994,6 +1032,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("sqrt", "TribonacciConstant")],
         expand_hints: &[("complex", "Expr"), ("func", "TribonacciConstant")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Symbol
     FunctionInfo {
@@ -1043,6 +1083,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Dummy
     FunctionInfo {
@@ -1092,6 +1134,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Wild
     FunctionInfo {
@@ -1141,6 +1185,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Add
     FunctionInfo {
@@ -1155,6 +1201,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Mul
     FunctionInfo {
@@ -1169,6 +1217,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr"), ("mul", "Mul")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Pow
     FunctionInfo {
@@ -1194,6 +1244,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
             ("power_exp", "Pow"),
         ],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // AppliedUndef
     FunctionInfo {
@@ -1243,6 +1295,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Exp
     FunctionInfo {
@@ -1298,6 +1352,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr"), ("power_exp", "ExpBase")],
         mpmath_func: "exp",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Log
     FunctionInfo {
@@ -1347,6 +1403,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr"), ("log", "log")],
         mpmath_func: "log",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Sin
     FunctionInfo {
@@ -1409,6 +1467,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "TrigonometricFunction"), ("trig", "sin")],
         mpmath_func: "sin",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Cos
     FunctionInfo {
@@ -1470,6 +1530,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "TrigonometricFunction"), ("trig", "cos")],
         mpmath_func: "cos",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Tan
     FunctionInfo {
@@ -1531,6 +1593,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "TrigonometricFunction"), ("trig", "tan")],
         mpmath_func: "tan",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Cot
     FunctionInfo {
@@ -1592,6 +1656,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "TrigonometricFunction"), ("trig", "cot")],
         mpmath_func: "cot",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Sec
     FunctionInfo {
@@ -1656,6 +1722,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
             ("trig", "ReciprocalTrigonometricFunction"),
         ],
         mpmath_func: "sec",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Csc
     FunctionInfo {
@@ -1720,6 +1788,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
             ("trig", "ReciprocalTrigonometricFunction"),
         ],
         mpmath_func: "csc",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Asin
     FunctionInfo {
@@ -1777,6 +1847,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "asin",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Acos
     FunctionInfo {
@@ -1834,6 +1906,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "acos",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Atan
     FunctionInfo {
@@ -1891,6 +1965,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "atan",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Acot
     FunctionInfo {
@@ -1948,6 +2024,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "acot",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Sinh
     FunctionInfo {
@@ -2006,6 +2084,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "sinh"), ("trig", "sinh")],
         mpmath_func: "sinh",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Cosh
     FunctionInfo {
@@ -2064,6 +2144,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "cosh"), ("trig", "cosh")],
         mpmath_func: "cosh",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Tanh
     FunctionInfo {
@@ -2121,6 +2203,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr"), ("trig", "tanh")],
         mpmath_func: "tanh",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Abs
     FunctionInfo {
@@ -2175,6 +2259,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "fabs",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Sign
     FunctionInfo {
@@ -2228,6 +2314,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "sign",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Re
     FunctionInfo {
@@ -2277,6 +2365,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("im", "re")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "re",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Im
     FunctionInfo {
@@ -2326,6 +2416,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("re", "im")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "im",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Arg
     FunctionInfo {
@@ -2375,6 +2467,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("atan2", "arg")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "arg",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Conjugate
     FunctionInfo {
@@ -2424,6 +2518,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "conj",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Floor
     FunctionInfo {
@@ -2473,6 +2569,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("ceiling", "floor"), ("frac", "floor")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "floor",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Ceiling
     FunctionInfo {
@@ -2522,6 +2620,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("floor", "ceiling"), ("frac", "ceiling")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "ceil",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Factorial
     FunctionInfo {
@@ -2571,6 +2671,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("Product", "factorial"), ("gamma", "factorial")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "factorial",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Binomial
     FunctionInfo {
@@ -2625,6 +2727,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr"), ("func", "binomial")],
         mpmath_func: "binomial",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Mod
     FunctionInfo {
@@ -2674,6 +2778,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("floor", "Mod")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Min
     FunctionInfo {
@@ -2727,6 +2833,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Max
     FunctionInfo {
@@ -2780,6 +2888,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Asinh
     FunctionInfo {
@@ -2836,6 +2946,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "asinh",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Acosh
     FunctionInfo {
@@ -2892,6 +3004,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "acosh",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Atanh
     FunctionInfo {
@@ -2941,6 +3055,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("asinh", "atanh"), ("log", "atanh"), ("tractable", "atanh")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "atanh",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Coth
     FunctionInfo {
@@ -2996,6 +3112,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr"), ("trig", "coth")],
         mpmath_func: "coth",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Atan2
     FunctionInfo {
@@ -3045,6 +3163,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("arg", "atan2"), ("atan", "atan2"), ("log", "atan2")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "atan2",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Gamma
     FunctionInfo {
@@ -3094,6 +3214,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("factorial", "gamma"), ("tractable", "gamma")],
         expand_hints: &[("complex", "Expr"), ("func", "gamma")],
         mpmath_func: "gamma",
+        in_evalf_table: false,
+        iterable: false,
     },
     // RisingFactorial
     FunctionInfo {
@@ -3149,6 +3271,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "rf",
+        in_evalf_table: false,
+        iterable: false,
     },
     // FallingFactorial
     FunctionInfo {
@@ -3204,6 +3328,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "ff",
+        in_evalf_table: false,
+        iterable: false,
     },
     // KroneckerDelta
     FunctionInfo {
@@ -3253,6 +3379,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("Piecewise", "KroneckerDelta")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Heaviside
     FunctionInfo {
@@ -3306,6 +3434,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // DiracDelta
     FunctionInfo {
@@ -3358,6 +3488,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         ],
         expand_hints: &[("complex", "Expr"), ("diracdelta", "DiracDelta")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Piecewise
     FunctionInfo {
@@ -3407,6 +3539,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("ITE", "Piecewise"), ("KroneckerDelta", "Piecewise")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // ExprCondPair
     FunctionInfo {
@@ -3456,6 +3590,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: true,
     },
     // Lambda
     FunctionInfo {
@@ -3470,6 +3606,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Derivative
     FunctionInfo {
@@ -3519,6 +3657,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Subs
     FunctionInfo {
@@ -3568,6 +3708,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Integral
     FunctionInfo {
@@ -3617,6 +3759,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("basic", "AddWithLimits"), ("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Sum
     FunctionInfo {
@@ -3666,6 +3810,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("Product", "Sum")],
         expand_hints: &[("basic", "AddWithLimits"), ("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Product
     FunctionInfo {
@@ -3715,6 +3861,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("Sum", "Product")],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: true,
+        iterable: false,
     },
     // Limit
     FunctionInfo {
@@ -3764,6 +3912,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Order
     FunctionInfo {
@@ -3813,6 +3963,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Equality
     FunctionInfo {
@@ -3862,6 +4014,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("Add", "Equality")],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Unequality
     FunctionInfo {
@@ -3911,6 +4065,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // StrictLessThan
     FunctionInfo {
@@ -3960,6 +4116,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // LessThan
     FunctionInfo {
@@ -4009,6 +4167,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // StrictGreaterThan
     FunctionInfo {
@@ -4058,6 +4218,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // GreaterThan
     FunctionInfo {
@@ -4107,6 +4269,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // BooleanTrue
     FunctionInfo {
@@ -4156,6 +4320,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // BooleanFalse
     FunctionInfo {
@@ -4205,6 +4371,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // And
     FunctionInfo {
@@ -4254,6 +4422,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("Nor", "And")],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Or
     FunctionInfo {
@@ -4303,6 +4473,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("Nand", "Or")],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Not
     FunctionInfo {
@@ -4352,6 +4524,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Tuple
     FunctionInfo {
@@ -4366,6 +4540,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: true,
     },
     // Str
     FunctionInfo {
@@ -4380,6 +4556,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Interval
     FunctionInfo {
@@ -4394,6 +4572,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // FiniteSet
     FunctionInfo {
@@ -4443,6 +4623,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[("PowerSet", "FiniteSet")],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: true,
     },
     // Union
     FunctionInfo {
@@ -4457,6 +4639,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: true,
     },
     // Intersection
     FunctionInfo {
@@ -4506,6 +4690,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: true,
     },
     // Complement
     FunctionInfo {
@@ -4555,6 +4741,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: true,
     },
     // EmptySet
     FunctionInfo {
@@ -4569,6 +4757,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: true,
     },
     // Range
     FunctionInfo {
@@ -4583,6 +4773,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: true,
     },
     // Indexed
     FunctionInfo {
@@ -4632,6 +4824,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // IndexedBase
     FunctionInfo {
@@ -4681,6 +4875,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // Idx
     FunctionInfo {
@@ -4730,6 +4926,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // AccumulationBounds
     FunctionInfo {
@@ -4779,6 +4977,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // IdentityFunction
     FunctionInfo {
@@ -4828,6 +5028,8 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
     // WildFunction
     FunctionInfo {
@@ -4877,5 +5079,7 @@ pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [
         rewrites: &[],
         expand_hints: &[("complex", "Expr")],
         mpmath_func: "",
+        in_evalf_table: false,
+        iterable: false,
     },
 ];

@@ -1529,13 +1529,23 @@ pub(crate) fn number_int(n: &Expr) -> Option<Int> {
     })
 }
 
+/// Python's `x == y` for two SymPy objects: the Numbers' `__eq__`
+/// between two Numbers, `Basic.__eq__` (structural equality) otherwise.
+pub(crate) fn py_eq(x: &Expr, y: &Expr) -> bool {
+    if x.is_Number() && y.is_Number() {
+        number_eq(x, y)
+    } else {
+        x == y
+    }
+}
+
 /// `equal_valued(x, y)`: `x == y`, except that a Float equals a Rational
 /// (or another Float) of the same value whatever its precision.
 pub fn equal_valued(x: &Expr, y: &Expr) -> bool {
     // Handle everything except Float/Rational first
     let (mut x, mut y) = (x, y);
     if !x.is_Float() && !y.is_Float() {
-        return x.py_eq(y);
+        return py_eq(x, y);
     } else if x.is_Float() && y.is_Float() {
         // Compare values without regard for precision
         return x.as_float().expect("Float").0 == y.as_float().expect("Float").0;

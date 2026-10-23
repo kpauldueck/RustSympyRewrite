@@ -24,9 +24,7 @@ use rsympy_num::Int;
 use crate::error::{ErrorKind, catch, not_ported, raise, reraise};
 use crate::expr::Expr;
 use crate::generated::{ClassId as C, ORDERING_OF_CLASSES, Tag};
-use crate::generated_compare::{
-    COMPARE_INFO, CompareInfo, FUNCTION_CLASS_KEY_FUNCS, FUNCTION_CLASS_KEY_NATURALS0,
-};
+use crate::generated_compare::{COMPARE_INFO, CompareInfo};
 use crate::numbers::{self, s};
 use crate::py::PyDict;
 
@@ -1002,15 +1000,8 @@ fn py_int(i: &Int) -> i64 {
 /// `cls.class_key()` as its three entries.
 pub fn class_key(e: &Expr) -> (i32, i32, String) {
     if e.is_cls(C::AppliedUndef) {
-        // Function.class_key on the UndefinedFunction: `funcs[name]`, else 0
-        // as `nargs` is Naturals0 (rsympy's undefined functions have no
-        // `nargs`).
-        let name = e.class_name();
-        let i = FUNCTION_CLASS_KEY_FUNCS
-            .iter()
-            .find(|(n, _)| *n == name)
-            .map_or(FUNCTION_CLASS_KEY_NATURALS0, |(_, i)| *i);
-        return (4, i, name.to_string());
+        // Function.class_key on the UndefinedFunction
+        return crate::functions::head_of(e).class_key();
     }
     let (a, b, n) = info(e).class_key;
     (a, b, n.to_string())

@@ -67,7 +67,7 @@ pub struct SymbolData {
 }
 
 /// An `UndefinedFunction` (the class of `f(x)` for `f = Function('f')`).
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct UndefData {
     pub name: Arc<str>,
     /// `_kwargs`: the sanitized assumptions given to
@@ -82,12 +82,23 @@ pub struct UndefData {
 }
 
 /// The attributes `WildFunction.__init__` sets on an instance: `name` (the
-/// string given) and `nargs`. Neither is part of `_hashable_content`, so
-/// they never make two `WildFunction`s unequal.
+/// string given) and `nargs` (`None`: not set, for a node built with
+/// `Basic.__new__`). Neither is part of `_hashable_content`, so they never
+/// make two `WildFunction`s unequal.
 #[derive(Clone, Debug)]
 pub struct WildFunctionData {
-    pub name: Arc<str>,
-    pub nargs: crate::functions::Nargs,
+    pub name: WildFunctionName,
+    pub nargs: Option<crate::functions::Nargs>,
+}
+
+/// A `WildFunction`'s `name` attribute: the string `WildFunction(name)` was
+/// given, or the expression a rebuild `WildFunction(*args)` passed to
+/// `__init__`, or none at all.
+#[derive(Clone, Debug)]
+pub enum WildFunctionName {
+    Str(Arc<str>),
+    Expr(Expr),
+    Unset,
 }
 
 impl PartialEq for WildFunctionData {
@@ -299,7 +310,10 @@ impl Expr {
             Data::Sym(s) => Some(&s.name),
             Data::Undef(u) => Some(&u.name),
             Data::Str(s) => Some(s),
-            Data::WildFunction(w) => Some(&w.name),
+            Data::WildFunction(w) => match &w.name {
+                WildFunctionName::Str(s) => Some(s),
+                _ => None,
+            },
             _ => None,
         }
     }

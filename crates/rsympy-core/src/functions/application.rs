@@ -8,7 +8,7 @@ use std::sync::Arc;
 
 use crate::ctx;
 use crate::error::{ErrorKind, not_ported, raise};
-use crate::expr::{Data, Expr, UndefData, WildFunctionData};
+use crate::expr::{Data, Expr, UndefData, WildFunctionData, WildFunctionName};
 use crate::facts::{Fact, Kb};
 use crate::functions::{Head, hook_owner};
 use crate::generated::{ClassId as C, Tag};
@@ -97,6 +97,19 @@ impl NargsArg {
             }
         }
     }
+
+    /// `repr(nargs)`, as `UndefinedFunction._kwargs` prints it.
+    pub fn repr(&self) -> String {
+        match self {
+            NargsArg::None => "None".to_string(),
+            NargsArg::Int(n) => n.to_string(),
+            NargsArg::Tuple(v) if v.len() == 1 => format!("({},)", v[0]),
+            NargsArg::Tuple(v) => {
+                let items: Vec<String> = v.iter().map(i64::to_string).collect();
+                format!("({})", items.join(", "))
+            }
+        }
+    }
 }
 
 /// `tuple(ordered(set(v)))` for ints.
@@ -107,7 +120,7 @@ fn sorted_set(v: &[i64]) -> Vec<i64> {
     v
 }
 
-/// `cls.nargs` as `Function._new_`'s TypeError message uses it.
+/// The TypeError `Function._new_` raises for a wrong number of arguments.
 fn nargs_type_error(name: &str, nargs: &Nargs, given: usize) -> ! {
     let Nargs::Finite(v) = nargs else {
         unreachable!("Naturals0 accepts any number of arguments")
@@ -154,7 +167,8 @@ impl FunctionClass {
         self.head().new(args, evaluate)
     }
 
-    /// `e.func` for an applied function `e`.
+    /// `e.func` for an applied function `e` (`None` for other expressions,
+    /// whose `func` is not a function class).
     pub fn of(e: &Expr) -> Option<FunctionClass> {
         match e.data() {
             Data::Undef(u) => Some(FunctionClass::Undefined(u.clone())),
@@ -174,7 +188,10 @@ pub fn function_new<H: Head + ?Sized>(h: &H, args: Vec<Expr>, evaluate: Option<b
 
     if !h.valid_nargs(n) {
         // XXX: exception message must be in exactly this format to
-        // make it work with NumPy's functions like vectorize().
+        // make it work with NumPy's functions like vectorize(). See,
+        // for example, https://github.com/numpy/numpy/issues/1697.
+        // The ideal solution would be just to attach metadata to
+        // the exception and change NumPy to take advantage of this.
         nargs_type_error(h.name(), &h.nargs(), n);
     }
 
@@ -195,7 +212,7 @@ pub fn function_new<H: Head + ?Sized>(h: &H, args: Vec<Expr>, evaluate: Option<b
 /// when evaluating, else (or when it returns `None`) the bare node.
 ///
 /// The node's `nargs` attribute is not stored: [`Head::instance_nargs`]
-/// derives it from the class.
+/// derives it from the class (and a `WildFunction` keeps its own).
 pub fn application_new<H: Head + ?Sized>(h: &H, args: Vec<Expr>, evaluate: Option<bool>) -> Expr {
     let evaluate = evaluate.unwrap_or_else(ctx::evaluate);
     if evaluate && let Some(evaluated) = h.eval(&args) {
@@ -233,11 +250,13 @@ pub fn function_class_key(name: &str, nargs: &Nargs) -> (i32, i32, String) {
 /// `Function._eval_evalf(prec)`.
 pub fn function_eval_evalf<H: Head + ?Sized>(h: &H, e: &Expr, prec: i64) -> Option<Expr> {
     let _ = prec;
-    // _get_mpmath_func(fname): None for an AppliedUndef (it might have an
-    // _imp_, which only rsympy-py's implemented functions can have).
-    if hook_owner(h, Hook::EvalMpmath) != "" {
-        not_ported(format!("{}._eval_mpmath", hook_owner(h, Hook::EvalMpmath)));
+    // _eval_mpmath = getattr(self, '_eval_mpmath', None)
+    let eval_mpmath = hook_owner(h, Hook::EvalMpmath);
+    if !eval_mpmath.is_empty() {
+        not_ported(format!("{eval_mpmath}._eval_mpmath"));
     }
+    // _get_mpmath_func(self.func.__name__): None for an AppliedUndef
+    // ("Shouldn't lookup in mpmath but might have ._imp_")
     let func = if e.is_a(Tag::AppliedUndef) {
         ""
     } else {
@@ -245,8 +264,9 @@ pub fn function_eval_evalf<H: Head + ?Sized>(h: &H, e: &Expr, prec: i64) -> Opti
     };
     if func.is_empty() {
         // Fall-back evaluation
-        if hook_owner(h, Hook::Imp) != "" {
-            not_ported("Function._eval_evalf: _imp_");
+        let imp = hook_owner(h, Hook::Imp);
+        if !imp.is_empty() {
+            not_ported(format!("{imp}._imp_"));
         }
         return None;
     }
@@ -257,14 +277,15 @@ pub fn function_eval_evalf<H: Head + ?Sized>(h: &H, e: &Expr, prec: i64) -> Opti
 // UndefinedFunction and AppliedUndef
 
 /// `UndefinedFunction(name, **kwargs)` for a string name: `Function(name,
-/// **assumptions, nargs=nargs)`.
+/// **assumptions, nargs=nargs)` (`nargs` not given: `None`).
 pub fn undefined_function(
     name: &str,
     assumptions: &[(Fact, bool)],
     nargs: Option<NargsArg>,
 ) -> Arc<UndefData> {
-    // assumptions = Symbol(name, **assumptions).assumptions0, dropping
-    // commutative unless it was given.
+    // commutative = assumptions.get('commutative', None)
+    // assumptions = Symbol(name, **assumptions).assumptions0
+    // if commutative is None: assumptions.pop('commutative')
     let sym = crate::symbol::symbol_with(name, assumptions);
     let mut kwargs = sym.symbol_data().expect("a Symbol").assumptions0;
     if !assumptions.iter().any(|(f, _)| *f == Fact::Commutative) {
@@ -284,7 +305,7 @@ pub fn undefined_function_from_symbol(
     let Some(d) = sym.symbol_data() else {
         raise(ErrorKind::TypeError, "expecting string or Symbol for name")
     };
-    // Symbol._merge
+    // Symbol._merge: base = self.assumptions0, checked against the new ones
     let mut base = d.assumptions0;
     for &(k, v) in assumptions {
         if let Some(old) = base.get(k)
@@ -301,6 +322,7 @@ pub fn undefined_function_from_symbol(
             );
         }
     }
+    // base.update(assumptions): a dict update, no deduction
     for &(k, v) in assumptions {
         base.tell(k, Some(v));
     }
@@ -312,10 +334,10 @@ fn py_bool(b: bool) -> &'static str {
 }
 
 /// The rest of `UndefinedFunction.__new__` and `FunctionClass.__init__`:
-/// the class's `is_<fact>` attributes become its `default_assumptions`,
-/// and `nargs` is canonicalized (raising for an empty tuple).
+/// the class's `is_<fact>` attributes become its `default_assumptions`
+/// (`StdFactKB` of them; `AppliedUndef` adds none of its own), and `nargs`
+/// is canonicalized (raising for an empty tuple).
 fn make_undefined(name: &str, kwargs: Kb, nargs: Option<NargsArg>) -> Arc<UndefData> {
-    // AppliedUndef contributes no assumptions of its own.
     let assumptions = Kb::deduced(&kwargs.items(false));
     if let Some(n) = &nargs {
         n.function_class_nargs();
@@ -337,14 +359,17 @@ impl Head for Arc<UndefData> {
         &self.name
     }
 
+    /// `FunctionClass.__init__`: the `nargs` keyword, else `arity(cls)`
+    /// (`None`: `Application.eval` takes `*args`), else `AppliedUndef._nargs`
+    /// (`None`).
     fn class_nargs(&self) -> Option<Vec<i64>> {
-        // cls.__dict__.get('nargs', arity(cls)), where arity is None
         self.nargs.as_ref().and_then(NargsArg::function_class_nargs)
     }
 
+    /// `Application.__new__` reads the `nargs` class attribute when it was
+    /// given and canonicalizes it as `__init__` did, else uses `_nargs`:
+    /// the same value either way.
     fn instance_nargs(&self) -> Nargs {
-        // the `nargs` class attribute when given, else `_nargs`: the same
-        // canonical value either way
         self.nargs()
     }
 
@@ -367,15 +392,36 @@ impl Head for Arc<UndefData> {
         )
     }
 
-    /// `UndefinedFunction.__instancecheck__`: `cls in type(e).__mro__`.
+    /// `UndefinedFunction.__instancecheck__`: `cls in type(e).__mro__`,
+    /// which compares classes with `UndefinedFunction.__eq__`.
     fn is_instance(&self, e: &Expr) -> bool {
         e.undef_data().is_some_and(|u| **u == **self)
     }
 }
 
-/// `Function('f')`'s `nargs` as `Naturals0` or not, for `class_key`.
-pub(crate) fn undef_class_key(u: &Arc<UndefData>) -> (i32, i32, String) {
-    u.class_key()
+/// `f.nargs` for an undefined function.
+pub fn undefined_nargs(f: &Arc<UndefData>) -> Nargs {
+    f.nargs()
+}
+
+/// `repr` of an undefined function's `_kwargs` items, sorted by key, as
+/// `sorted(f._kwargs.items())` lists them: `[("nargs", "1"), ("real",
+/// "True"), ...]`.
+pub fn undefined_kwargs_repr(f: &UndefData) -> Vec<(String, String)> {
+    let mut out: Vec<(String, String)> = f
+        .kwargs
+        .items(false)
+        .into_iter()
+        .map(|(k, v)| {
+            let v = v.expect("items(false) has no None");
+            (k.name().to_string(), py_bool(v).to_string())
+        })
+        .collect();
+    if let Some(n) = &f.nargs {
+        out.push(("nargs".to_string(), n.repr()));
+    }
+    out.sort();
+    out
 }
 
 // ---------------------------------------------------------------------------
@@ -389,42 +435,58 @@ impl Head for WildFunctionHead {
         C::WildFunction
     }
 
-    /// `WildFunction(*args)` as `func(*args)` rebuilds it: `__init__` gets
-    /// the (sympified) first argument as its `name`, and `nargs` is reset
-    /// to `Naturals0`.
+    /// `WildFunction(*args)`, as `func(*args)` rebuilds one: `Function.__new__`
+    /// with the args, then `__init__(obj, *args)`, whose `name` is the first
+    /// (sympified) argument and whose `nargs` is `S.Naturals0`.
     fn new(&self, args: Vec<Expr>, evaluate: Option<bool>) -> Expr {
-        let name = match args.first() {
-            Some(a) => a.to_string(),
-            None => raise(
+        let Some(name) = args.first().cloned() else {
+            raise(
                 ErrorKind::TypeError,
                 "WildFunction.__init__() missing 1 required positional argument: 'name'",
-            ),
+            )
         };
+        if args.len() > 1 {
+            raise(
+                ErrorKind::TypeError,
+                "WildFunction.__init__() takes 2 positional arguments",
+            );
+        }
         let obj = function_new(self, args, evaluate);
-        wild_function_init(&obj, &name, Nargs::Naturals0)
+        wild_function_init(&obj, WildFunctionName::Expr(name), Nargs::Naturals0)
     }
 
+    /// `Basic.__new__(WildFunction, *args)`: no `__init__` runs, so the
+    /// instance has no `name` or `nargs` attribute.
     fn raw(&self, args: Vec<Expr>) -> Expr {
-        Expr::make(
-            C::WildFunction,
-            Data::WildFunction(Arc::new(WildFunctionData {
-                name: Arc::from(""),
-                nargs: Nargs::Naturals0,
-            })),
-            args,
-        )
+        wild_function_raw(args)
     }
+}
+
+/// `Basic.__new__(WildFunction, *args)`.
+pub(crate) fn wild_function_raw(args: Vec<Expr>) -> Expr {
+    Expr::make(
+        C::WildFunction,
+        Data::WildFunction(Arc::new(WildFunctionData {
+            name: WildFunctionName::Unset,
+            nargs: None,
+        })),
+        args,
+    )
 }
 
 /// `WildFunction.__init__(obj, name, nargs=...)`: sets the instance's
 /// `name` and `nargs` (the node is rebuilt with them; they are not part of
-/// its identity).
-fn wild_function_init(obj: &Expr, name: &str, nargs: Nargs) -> Expr {
+/// its identity). `__init__` runs on `obj` whatever `__new__` returned, as
+/// long as it is a WildFunction.
+fn wild_function_init(obj: &Expr, name: WildFunctionName, nargs: Nargs) -> Expr {
+    if !obj.is_cls(C::WildFunction) {
+        return obj.clone();
+    }
     Expr::make_with_kb(
         C::WildFunction,
         Data::WildFunction(Arc::new(WildFunctionData {
-            name: Arc::from(name),
-            nargs,
+            name,
+            nargs: Some(nargs),
         })),
         obj.args().to_vec(),
         obj.assumptions_kb(),
@@ -433,7 +495,8 @@ fn wild_function_init(obj: &Expr, name: &str, nargs: Nargs) -> Expr {
 
 /// `WildFunction(name, nargs=nargs)` (`nargs` not given: `Naturals0`).
 pub fn wild_function(name: &str, nargs: Option<NargsArg>) -> Expr {
-    // Function.__new__ -> Application.__new__: args = [sympify(name)]
+    // Function.__new__ -> Function._new_ -> Application.__new__, which
+    // sympifies the name and drops `nargs`
     let arg = crate::sympify::sympify_str(name, ctx::evaluate());
     let obj = function_new(&WildFunctionHead, vec![arg], None);
     // WildFunction.__init__
@@ -448,15 +511,18 @@ pub fn wild_function(name: &str, nargs: Option<NargsArg>) -> Expr {
         // (an empty tuple gives FiniteSet() = EmptySet)
         Some(NargsArg::Tuple(v)) => Nargs::Finite(sorted_set(&v)),
     };
-    wild_function_init(&obj, name, nargs)
+    wild_function_init(&obj, WildFunctionName::Str(Arc::from(name)), nargs)
 }
 
-/// A `WildFunction`'s `nargs`.
+/// A `WildFunction`'s `nargs` attribute.
 pub fn wild_function_nargs(w: &Expr) -> Nargs {
-    w.wild_function_data()
-        .expect("a WildFunction")
-        .nargs
-        .clone()
+    match &w.wild_function_data().expect("a WildFunction").nargs {
+        Some(n) => n.clone(),
+        None => raise(
+            ErrorKind::AttributeError,
+            "'WildFunction' object has no attribute 'nargs'",
+        ),
+    }
 }
 
 /// `WildFunction.matches(expr, repl_dict)`.
@@ -478,8 +544,8 @@ pub fn wild_function_matches(
 
 /// `obj.nargs` for an applied function.
 pub fn nargs_of(e: &Expr) -> Nargs {
-    if let Some(w) = e.wild_function_data() {
-        return w.nargs.clone();
+    if e.wild_function_data().is_some() {
+        return wild_function_nargs(e);
     }
     crate::functions::head_of(e).instance_nargs()
 }

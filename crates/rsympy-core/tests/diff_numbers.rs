@@ -9,7 +9,7 @@ use rsympy_core::{Fact, ops};
 #[test]
 fn numbers_match_sympy() {
     // Unported: Function.__new__ (Mod, Abs of non-numbers).
-    run_partial("numbers", 67, |v| {
+    run_partial("numbers", 1, |v| {
         let e = || Value::Expr;
         match v.op.as_str() {
             "add" => e()(ops::add(&v.expr(0), &v.expr(1))),

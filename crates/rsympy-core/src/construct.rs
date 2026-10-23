@@ -45,6 +45,7 @@ pub fn raw(cls: C, args: Vec<Expr>) -> Expr {
             let [b, e] = <[Expr; 2]>::try_from(args).expect("Pow has two args");
             crate::power::from_args(&b, &e)
         }
+        C::WildFunction => crate::functions::application::wild_function_raw(args),
         _ => Expr::make(cls, Data::None, args),
     }
 }
@@ -69,6 +70,19 @@ pub fn rebuild(e: &Expr, args: Vec<Expr>) -> Expr {
             crate::functions::call_undefined(&u, args)
         }
         _ if e.is_a(Tag::Application) => crate::functions::call(e.cls(), args),
+        C::Lambda => {
+            let [sig, body] = <[Expr; 2]>::try_from(args).unwrap_or_else(|args| {
+                crate::error::raise(
+                    crate::error::ErrorKind::TypeError,
+                    match args.len() {
+                        0 => "Lambda.__new__() missing 2 required positional arguments: 'signature' and 'expr'".to_string(),
+                        1 => "Lambda.__new__() missing 1 required positional argument: 'expr'".to_string(),
+                        n => format!("Lambda.__new__() takes 3 positional arguments but {} were given", n + 1),
+                    },
+                )
+            });
+            crate::functions::lambda::lambda(&sig, &body)
+        }
         _ => not_ported(format!("{}.func(*args)", e.class_name())),
     }
 }
