@@ -726,6 +726,28 @@ pub(crate) fn neg(a: &Expr) -> Expr {
     }
 }
 
+/// `Number._eval_subs(old, new)`: a number is only replaced through its
+/// negation (`old == -self` gives `-new`); `self == old` was handled by
+/// `_subs` already.
+pub(crate) fn number_eval_subs(e: &Expr, old: &Expr, new: &Expr) -> Expr {
+    let neg_self = crate::ops::neg(e);
+    let hit = if old.is_Number() && neg_self.is_Number() {
+        number_eq(old, &neg_self)
+    } else {
+        *old == neg_self
+    };
+    if hit {
+        return crate::ops::neg(new);
+    }
+    e.clone() // there is no other possibility
+}
+
+/// `Infinity._eval_subs` and `NegativeInfinity._eval_subs`: `new` if
+/// `self == old`, else None.
+pub(crate) fn infinity_eval_subs(e: &Expr, old: &Expr, new: &Expr) -> Option<Expr> {
+    if e == old { Some(new.clone()) } else { None }
+}
+
 /// `abs(a)` for a Number or numeric singleton, `None` where SymPy falls
 /// back to `Abs(a)`.
 pub(crate) fn abs(a: &Expr) -> Option<Expr> {

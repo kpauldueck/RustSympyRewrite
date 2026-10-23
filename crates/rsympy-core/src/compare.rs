@@ -1632,7 +1632,7 @@ fn node_count(e: &Expr) -> f64 {
 }
 
 /// `_nodes(e)` for an expression.
-fn nodes(e: &Expr) -> f64 {
+pub fn nodes(e: &Expr) -> f64 {
     if e.is_Derivative() {
         not_ported("_nodes of a Derivative");
     }
@@ -1658,6 +1658,41 @@ fn group_and_sort<K>(
     }
     py_sort_by(&mut groups, |a, b| lt(&a.0, &b.0));
     groups.into_iter().map(|(_, v)| v).collect()
+}
+
+/// `list(ordered(seq, keys, default=default))` for a list of key
+/// functions: group by the first key, sort the groups, and break ties in
+/// a group with the remaining keys (then, if `default`, with the default
+/// keys of [`ordered`]; otherwise ties keep their order).
+pub fn ordered_with(
+    seq: Vec<Expr>,
+    keys: &[&dyn Fn(&Expr) -> SortKey],
+    default: bool,
+) -> Vec<Expr> {
+    let Some((f, rest)) = keys.split_first() else {
+        if !default {
+            raise(
+                ErrorKind::ValueError,
+                "if default=False then keys must be provided",
+            );
+        }
+        return ordered(seq);
+    };
+    let mut out = Vec::new();
+    for value in group_and_sort(seq, |a| f(a), key_eq, key_lt) {
+        if value.len() > 1 {
+            if !rest.is_empty() {
+                out.extend(ordered_with(value, rest, default));
+            } else if default {
+                out.extend(ordered(value));
+            } else {
+                out.extend(value);
+            }
+        } else {
+            out.extend(value);
+        }
+    }
+    out
 }
 
 /// `list(ordered(seq))` with the default keys: by `_nodes`, then

@@ -763,6 +763,545 @@ pub fn eval_power(base: &Expr, expt: &Expr) -> Option<Expr> {
     Some(p)
 }
 
+/// A non-commutative factor in `Mul._eval_subs`: a `[base, exponent]`
+/// pair from `breakup`, or the expression that replaced it.
+#[derive(Clone)]
+enum NcFactor {
+    Pair(Expr, Expr),
+    Done(Expr),
+}
+
+impl NcFactor {
+    /// `nc[i][0]`, `nc[i][1]`: only pairs are subscriptable.
+    fn pair(&self) -> (&Expr, &Expr) {
+        match self {
+            NcFactor::Pair(b, e) => (b, e),
+            NcFactor::Done(e) => raise(
+                ErrorKind::TypeError,
+                format!("'{}' object is not subscriptable", e.class_name()),
+            ),
+        }
+    }
+}
+
+/// `base_exp(a)` in `Mul._eval_subs`: a true Pow or exp separated into
+/// base and exponent, anything else with exponent 1.
+fn subs_base_exp(a: &Expr) -> (Expr, Expr) {
+    if a.is_Pow() || a.is_cls(C::Exp) {
+        return a.as_base_exp();
+    }
+    (a.clone(), s::one())
+}
+
+/// `breakup(eq)` in `Mul._eval_subs`: the commutative factors as
+/// `{base: rational exponent}` and the non-commutative ones as
+/// `[base, exponent]` pairs, in order.
+fn subs_breakup(eq: &Expr) -> (PyDict<Expr, Expr>, Vec<NcFactor>) {
+    let mut c: PyDict<Expr, Expr> = PyDict::new();
+    let mut nc = Vec::new();
+    for a in make_args(eq) {
+        let a = powdenest_factor(&a);
+        let (mut b, mut e) = subs_base_exp(&a);
+        if !e.is_cls(C::One) {
+            let (co, _) = e.as_coeff_mul();
+            b = pow(&b, &ops::div(&e, &co));
+            e = co;
+        }
+        if a.is_commutative() == Some(true) {
+            // c[b] += e (a defaultdict(int))
+            let v = match c.get(&b) {
+                Some(old) => ops::add(old, &e),
+                None => e,
+            };
+            c.insert(b, v);
+        } else {
+            nc.push(NcFactor::Pair(b, e));
+        }
+    }
+    (c, nc)
+}
+
+/// `rejoin(b, co)` in `Mul._eval_subs`: puts the rational back with the
+/// exponent.
+fn subs_rejoin(b: &Expr, co: &Expr) -> Expr {
+    let (b, e) = subs_base_exp(b);
+    pow(&b, &ops::mul(&e, co))
+}
+
+/// `ndiv(a, b)` in `Mul._eval_subs`: if `b` divides `a` in an extractive
+/// way (like 1/4 divides 1/2 but not vice versa, and 2/5 does not divide
+/// 1/3) the integer number of times it divides (`int(a/b)`), else 0.
+fn subs_ndiv(a: &Expr, b: &Expr) -> Int {
+    let (aq, bq) = (a.q(), b.q());
+    if bq.py_mod(&aq).expect("q > 0").is_zero() || aq.py_mod(&bq).expect("q > 0").is_zero() {
+        // int(Rational) truncates toward zero
+        let r = ops::div(a, b);
+        return r.p().div_rem_trunc(&r.q()).expect("q > 0").0;
+    }
+    Int::ZERO
+}
+
+/// `sign(r)` for a Rational exponent: -1, 0 or 1.
+fn rational_sign(r: &Expr) -> i32 {
+    if !r.is_Rational() {
+        not_ported(format!(
+            "sign() of a {} exponent in Mul._eval_subs",
+            r.class_name()
+        ));
+    }
+    r.p().signum()
+}
+
+/// `co_self.extract_multiplicatively(co_old)` for two different
+/// Rationals, as `Expr.extract_multiplicatively` does it.
+fn rational_extract_multiplicatively(e: &Expr, c: &Expr) -> Option<Expr> {
+    if c.is_cls(C::One) {
+        return Some(e.clone());
+    } else if c == e {
+        return Some(s::one());
+    }
+    let quotient = ops::div(e, c);
+    let ok = if e.is_Integer() {
+        quotient.is_Integer()
+    } else {
+        quotient.is_Rational()
+    };
+    if !ok || e.is_positive() == Some(true) && quotient.is_negative() == Some(true) {
+        return None;
+    }
+    Some(quotient)
+}
+
+/// `multiplicity(p, n)` (`sympy.ntheory.factor_`) for two Rationals.
+fn rational_multiplicity(p: &Expr, n: &Expr) -> Int {
+    let m = |p: &Int, n: &Int| -> Int {
+        match rsympy_ntheory::multiplicity(p, n) {
+            Ok(k) => Int::from(k),
+            Err(rsympy_ntheory::NtError::Value(msg)) => raise(ErrorKind::ValueError, msg),
+            Err(rsympy_ntheory::NtError::ZeroDivision(msg)) => {
+                raise(ErrorKind::ZeroDivisionError, msg)
+            }
+        }
+    };
+    let (pp, pq, np, nq) = (p.p(), p.q(), n.p(), n.q());
+    if pq.is_one() && nq.is_one() {
+        return m(&pp, &np);
+    }
+    if pq.is_one() {
+        if np.is_one() {
+            return -m(&pp, &nq);
+        }
+        return m(&pp, &np) - m(&pp, &nq);
+    } else if pp.is_one() {
+        return m(&pq, &nq);
+    }
+    let like = std::cmp::min(m(&pp, &np), m(&pq, &nq));
+    let cross = std::cmp::min(m(&pq, &np), m(&pp, &nq));
+    like - cross
+}
+
+/// `powdenest(a)` (`sympy.simplify.powsimp`) for a factor that
+/// `Mul._eval_subs` breaks up: `powsimp(a)`, then `_denest_pow` on each
+/// outermost power. Both are only ported where they leave the factor
+/// alone: atoms, sums and products of symbols, undefined functions and
+/// rational numbers, and powers of a symbol or an undefined function with
+/// an integer, rational or symbol exponent. Everything else raises
+/// `NotPortedYet`.
+fn powdenest_factor(a: &Expr) -> Expr {
+    let new = powsimp_unchanged(a);
+    let transform = |m: &Expr| denest_pow_unchanged(m);
+    let filter = |m: &Expr| m.is_Pow() || m.is_cls(C::Exp);
+    crate::basic::xreplace_with(
+        &new,
+        &crate::basic::Transform {
+            transform: &transform,
+            filter: &filter,
+        },
+    )
+}
+
+/// A base whose powers `powsimp` and `_denest_pow` leave alone: a symbol
+/// or an undefined function (`as_base_exp()` is `(b, 1)`, it is not a Mul,
+/// a Rational, a Pow or exp, and its positive or polar cases all rebuild
+/// `b**e`).
+fn plain_base(b: &Expr) -> bool {
+    b.is_Symbol() || b.is_cls(C::AppliedUndef)
+}
+
+/// `powsimp(e)` (deep=False, combine='all') where it gives `e` back
+/// (rebuilt the way it rebuilds it).
+fn powsimp_unchanged(e: &Expr) -> Expr {
+    if e.is_Atom() {
+        return e.clone();
+    }
+    if e.is_Add() {
+        // expr.func(*[recurse(w) for w in expr.args]), then returned
+        return e.func(e.args().iter().map(powsimp_unchanged).collect());
+    }
+    if e.is_Mul() {
+        // A product of rationals, distinct commutative symbols and
+        // undefined functions, and non-commutative symbols no two
+        // neighbours alike: every exponent is 1, no base is a Pow, no
+        // base or its inverse or negation appears twice, so both the
+        // 'exp' and the 'base' passes rebuild the same product.
+        let mut seen = HashSet::new();
+        let mut prev_nc: Option<&Expr> = None;
+        let simple = e.args().iter().all(|t| {
+            if t.is_Rational() {
+                return true;
+            }
+            match t.is_commutative() {
+                Some(true) => plain_base(t) && seen.insert(t.clone()),
+                Some(false) if t.is_Symbol() => {
+                    let ok = prev_nc != Some(t);
+                    prev_nc = Some(t);
+                    ok
+                }
+                _ => false,
+            }
+        });
+        if simple {
+            return mul(e.args().to_vec());
+        }
+        not_ported(
+            "powsimp of a Mul other than a product of rationals, symbols and undefined functions",
+        );
+    }
+    if e.is_Pow() {
+        // recurse(expr*_y, deep=False)/_y: the product of b**e and a dummy
+        // rebuilds Pow(b, e) when e is an integer, a rational (bkey splits
+        // it as root(b, q)**p) or a symbol.
+        let (b, x) = (e.arg(0), e.arg(1));
+        let simple_exp = x.is_Rational() || (x.is_Symbol() && x.is_commutative() == Some(true));
+        if plain_base(b) && simple_exp && !x.is_cls(C::One) {
+            return pow(b, x);
+        }
+        not_ported(format!(
+            "powsimp of a Pow with a {} base and a {} exponent",
+            b.class_name(),
+            x.class_name()
+        ));
+    }
+    // not an Add, Mul or Pow: returned as it is
+    e.clone()
+}
+
+/// `_denest_pow(eq)` where it gives `eq` back.
+fn denest_pow_unchanged(eq: &Expr) -> Expr {
+    if eq.is_Pow() && plain_base(eq.arg(0)) {
+        return eq.clone();
+    }
+    not_ported(format!(
+        "_denest_pow of a {} with a {} base",
+        eq.class_name(),
+        eq.arg(0).class_name()
+    ));
+}
+
+/// `Mul._eval_subs(old, new)`: replaces a product `old` whose factors
+/// (with their powers) divide this product's, as many times as they do
+/// (`(x**2*y**4).subs(x*y**2, z)` is `z**2`), keeping the order of
+/// non-commutative factors.
+pub(crate) fn eval_subs(e: &Expr, old: &Expr, new: &Expr) -> Option<Expr> {
+    use crate::basic::_subs;
+
+    if !old.is_Mul() {
+        return None;
+    }
+
+    // try keep replacement literal so -2*x doesn't replace 4*x
+    let zero = s::zero();
+    if old.arg(0).is_Number()
+        && crate::numbers::number_lt(old.arg(0), &zero)
+        && e.arg(0).is_Number()
+    {
+        if crate::numbers::number_lt(e.arg(0), &zero) {
+            return Some(_subs(e, &ops::neg(old), &ops::neg(new)));
+        }
+        return None;
+    }
+
+    // give Muls in the denominator a chance to be changed (see issue 5651)
+    // rv will be the default return value
+    let mut rv: Option<Expr> = None;
+    let (n, d) = crate::exprtools::fraction(e, false);
+    let mut self2 = e.clone();
+    if !d.is_cls(C::One) {
+        self2 = ops::div(&_subs(&n, old, new), &_subs(&d, old, new));
+        if !self2.is_Mul() {
+            return Some(_subs(&self2, old, new));
+        }
+        if self2 != *e {
+            rv = Some(self2.clone());
+        }
+    }
+
+    // Now continue with regular substitution.
+
+    // handle the leading coefficient and use it to decide if anything
+    // should even be started; we always know where to find the Rational
+    // so it's a quick test
+
+    let co_self = self2.arg(0).clone();
+    let co_old = old.arg(0).clone();
+    let mut co_xmul: Option<Expr> = None;
+    if co_old.is_Rational() && co_self.is_Rational() {
+        // if coeffs are the same there will be no updating to do
+        // below after breakup() step; so skip (and keep co_xmul=None)
+        if co_old != co_self {
+            co_xmul = rational_extract_multiplicatively(&co_self, &co_old);
+        }
+    } else if co_old.is_Rational() {
+        return rv;
+    }
+
+    // break self and old into factors
+
+    let (mut c, mut nc) = subs_breakup(&self2);
+    let (old_c, old_nc) = subs_breakup(old);
+
+    // update the coefficients if we had an extraction
+    // e.g. if co_self were 2*(3/35*x)**2 and co_old = 3/5
+    // then co_self in c is replaced by (3/5)**2 and co_residual
+    // is 2*(1/7)**2
+
+    let abs_co_old = || ops::abs(&co_old);
+    let co_residual = if co_xmul
+        .as_ref()
+        .is_some_and(|x| x.truthy() && x.is_Rational())
+        && abs_co_old() != s::one()
+    {
+        let mult = Expr::integer(rational_multiplicity(&abs_co_old(), &co_self));
+        if c.remove(&co_self).is_none() {
+            raise(ErrorKind::KeyError, format!("{co_self}"));
+        }
+        let v = match c.get(&co_old) {
+            Some(v) => ops::add(v, &mult),
+            None => mult.clone(),
+        };
+        c.insert(co_old.clone(), v);
+        ops::div(&co_self, &ops::pow(&co_old, &mult))
+    } else {
+        s::one()
+    };
+
+    // do quick tests to see if we can't succeed
+
+    let nc_bases: HashSet<&Expr> = nc.iter().map(|f| f.pair().0).collect();
+    let ok = if old_nc.len() > nc.len() {
+        // more non-commutative terms
+        false
+    } else if old_c.len() > c.len() {
+        // more commutative terms
+        false
+    } else if old_nc.iter().any(|f| !nc_bases.contains(f.pair().0)) {
+        // unmatched non-commutative bases
+        false
+    } else if old_c.keys().any(|b| !c.contains_key(b)) {
+        // unmatched commutative terms
+        false
+    } else {
+        // differences in sign
+        !old_c
+            .iter()
+            .any(|(b, old_e)| rational_sign(c.get(b).expect("checked")) != rational_sign(old_e))
+    };
+    if !ok {
+        return rv;
+    }
+
+    let cdid: Option<Int> = if old_c.is_empty() {
+        None
+    } else {
+        let mut rat = Vec::new();
+        for (b, old_e) in old_c.iter() {
+            let c_e = c.get(b).expect("checked");
+            rat.push(subs_ndiv(c_e, old_e));
+            if rat.last().expect("pushed").is_zero() {
+                return rv;
+            }
+        }
+        rat.into_iter().min()
+    };
+
+    let ncdid: Option<Int>;
+    if old_nc.is_empty() {
+        ncdid = None;
+        for f in nc.iter_mut() {
+            let (b, x) = f.pair();
+            *f = NcFactor::Done(subs_rejoin(b, x));
+        }
+    } else {
+        let mut did = Int::ZERO; // number of nc replacements we did
+        let take = old_nc.len(); // how much to look at each time
+        // max number that we can take (None: S.Infinity)
+        let mut limit: Option<Int> = cdid.clone();
+        let mut failed: Vec<usize> = Vec::new(); // failed terms will need subs if other terms pass
+        let mut i = 0;
+        while limit.as_ref().is_none_or(|l| !l.is_zero()) && i + take <= nc.len() {
+            let mut hit = false;
+
+            // the bases must be equivalent in succession, and
+            // the powers must be extractively compatible on the
+            // first and last factor but equal in between.
+
+            let mut rat: Vec<Int> = Vec::new();
+            let mut broke = false;
+            for j in 0..take {
+                let (nb, ne) = nc[i + j].pair();
+                let (ob, oe) = old_nc[j].pair();
+                if nb != ob {
+                    broke = true;
+                    break;
+                } else if j == 0 || j == take - 1 {
+                    rat.push(subs_ndiv(ne, oe));
+                } else if ne != oe {
+                    broke = true;
+                    break;
+                } else {
+                    rat.push(Int::from(1));
+                }
+            }
+            if !broke {
+                let mut ndo = rat.into_iter().min().expect("take > 0");
+                if !ndo.is_zero() {
+                    if take == 1 {
+                        if let Some(cd) = &cdid {
+                            ndo = std::cmp::min(cd.clone(), ndo);
+                        }
+                        let (b0, e0) = nc[i].pair();
+                        let oe0 = old_nc[0].pair().1;
+                        let rest = ops::sub(e0, &ops::mul(&Expr::integer(ndo.clone()), oe0));
+                        nc[i] = NcFactor::Done(ops::mul(
+                            &pow(new, &Expr::integer(ndo.clone())),
+                            &subs_rejoin(b0, &rest),
+                        ));
+                    } else {
+                        ndo = Int::from(1);
+                        let ndo_e = Expr::integer(ndo.clone());
+
+                        // the left residual
+
+                        let (b0, e0) = nc[i].pair();
+                        let l =
+                            subs_rejoin(b0, &ops::sub(e0, &ops::mul(&ndo_e, old_nc[0].pair().1)));
+
+                        // eliminate all middle terms
+
+                        let mid = new.clone();
+
+                        // the right residual (which may be the same as the middle if take == 2)
+
+                        let ir = i + take - 1;
+                        let (rb, re) = nc[ir].pair();
+                        let r = (
+                            rb.clone(),
+                            ops::sub(re, &ops::mul(&ndo_e, old_nc[take - 1].pair().1)),
+                        );
+                        let lm = ops::mul(&l, &mid);
+                        let replacement = if r.1.truthy() {
+                            if i + take < nc.len() {
+                                vec![NcFactor::Done(lm), NcFactor::Pair(r.0, r.1)]
+                            } else {
+                                let r = subs_rejoin(&r.0, &r.1);
+                                vec![NcFactor::Done(ops::mul(&lm, &r))]
+                            }
+                        } else {
+                            // there was nothing left on the right
+                            vec![NcFactor::Done(lm)]
+                        };
+                        nc.splice(i..i + take, replacement);
+                    }
+                    if let Some(l) = &mut limit {
+                        *l = &*l - &ndo;
+                    }
+                    did = did + &ndo;
+                    hit = true;
+                }
+            }
+            if !hit {
+                // do the subs on this failing factor
+                failed.push(i);
+            }
+            i += 1;
+        }
+        // (the loop's else clause: it has no break)
+        if did.is_zero() {
+            return rv;
+        }
+
+        // although we didn't fail, certain nc terms may have
+        // failed so we rebuild them after attempting a partial
+        // subs on them
+
+        failed.extend(i..nc.len());
+        for i in failed {
+            let (b, x) = nc[i].pair();
+            nc[i] = NcFactor::Done(subs_rejoin(b, x).subs(old, new));
+        }
+        ncdid = Some(did);
+    }
+
+    // rebuild the expression
+
+    let do_ = match (&cdid, &ncdid) {
+        (None, _) => ncdid.clone(),
+        (_, None) => cdid.clone(),
+        (Some(a), Some(b)) => Some(std::cmp::min(a.clone(), b.clone())),
+    };
+
+    let mut margs = Vec::new();
+    for (b, cb) in c.iter() {
+        if let Some(ob) = old_c.get(b) {
+            // calculate the new exponent
+            let do_e = Expr::integer(do_.clone().expect("old_c is not empty"));
+            let x = ops::sub(cb, &ops::mul(ob, &do_e));
+            margs.push(subs_rejoin(b, &x));
+        } else {
+            margs.push(subs_rejoin(&b.subs(old, new), cb));
+        }
+    }
+    if let Some(cd) = &cdid
+        && !cd.is_zero()
+        && ncdid.as_ref().is_none_or(|n| n.is_zero())
+    {
+        // in case we are replacing commutative with non-commutative,
+        // we want the new term to come at the front just like the
+        // rest of this routine
+        margs.insert(0, pow(new, &Expr::integer(cd.clone())));
+    }
+    let nc: Vec<Expr> = nc
+        .into_iter()
+        .map(|f| match f {
+            NcFactor::Done(x) => x,
+            NcFactor::Pair(..) => unreachable!("every nc factor is rebuilt"),
+        })
+        .collect();
+    Some(ops::mul(
+        &ops::mul(&co_residual, &self2.func(margs)),
+        &self2.func(nc),
+    ))
+}
+
+/// `Mul._eval_is_polynomial(syms)`: every term is (`all()`, so an
+/// unknown counts as not).
+pub(crate) fn eval_is_polynomial(e: &Expr, syms: &[Expr]) -> Option<bool> {
+    Some(
+        e.args()
+            .iter()
+            .all(|term| term.eval_is_polynomial(syms) == Some(true)),
+    )
+}
+
+/// `Mul._eval_is_rational_function(syms)`.
+pub(crate) fn eval_is_rational_function(e: &Expr, syms: &[Expr]) -> Option<bool> {
+    Some(
+        e.args()
+            .iter()
+            .all(|term| term.eval_is_rational_function(syms) == Some(true)),
+    )
+}
+
 /// `Mul.as_coeff_Mul(rational)`.
 #[allow(non_snake_case)]
 pub fn as_coeff_Mul(e: &Expr, rational: bool) -> (Expr, Expr) {
