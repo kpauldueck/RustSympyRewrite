@@ -65,6 +65,20 @@ impl Expr {
     }
 }
 
+impl Expr {
+    /// The fallback of a method dispatched below: `Expr`'s default, unless
+    /// the class has no such method (a non-`Expr` Basic such as a Boolean
+    /// or a Tuple), where Python raises AttributeError.
+    fn expr_default(&self, method: Method, name: &str) {
+        if self.method_owner(method).is_empty() {
+            raise(
+                ErrorKind::AttributeError,
+                format!("'{}' object has no attribute '{name}'", self.class_name()),
+            );
+        }
+    }
+}
+
 #[allow(non_snake_case)]
 impl Expr {
     /// `self.as_coeff_Mul(rational)`: `(coeff, rest)` with a Number coeff.
@@ -82,6 +96,7 @@ impl Expr {
         if self.is_Mul() {
             return crate::mul::as_coeff_Mul(self, rational);
         }
+        self.expr_default(Method::AsCoeff_Mul, "as_coeff_Mul");
         (s::one(), self.clone())
     }
 
@@ -100,6 +115,7 @@ impl Expr {
         if self.is_Add() {
             return crate::add::as_coeff_Add(self, rational);
         }
+        self.expr_default(Method::AsCoeff_Add, "as_coeff_Add");
         (s::zero(), self.clone())
     }
 
@@ -117,6 +133,7 @@ impl Expr {
         if self.is_Mul() {
             return crate::mul::as_coeff_mul(self, true);
         }
+        self.expr_default(Method::AsCoeffMul, "as_coeff_mul");
         (s::one(), vec![self.clone()])
     }
 
@@ -131,6 +148,7 @@ impl Expr {
         if self.is_Add() {
             return crate::add::as_coeff_add(self);
         }
+        self.expr_default(Method::AsCoeffAdd, "as_coeff_add");
         (s::zero(), vec![self.clone()])
     }
 
@@ -141,7 +159,10 @@ impl Expr {
             C::Mul => crate::mul::as_base_exp(self),
             C::ImaginaryUnit => (s::negative_one(), s::half()),
             C::Exp => crate::functions::exp_as_base_exp(self),
-            _ => (self.clone(), s::one()),
+            _ => {
+                self.expr_default(Method::AsBaseExp, "as_base_exp");
+                (self.clone(), s::one())
+            }
         }
     }
 
@@ -154,7 +175,10 @@ impl Expr {
             C::Mul => crate::mul::as_numer_denom(self),
             C::Pow => crate::power::as_numer_denom(self),
             C::Exp => crate::functions::exp_as_numer_denom(self),
-            _ => (self.clone(), s::one()),
+            _ => {
+                self.expr_default(Method::AsNumerDenom, "as_numer_denom");
+                (self.clone(), s::one())
+            }
         }
     }
 

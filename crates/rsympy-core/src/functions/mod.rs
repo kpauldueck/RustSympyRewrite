@@ -77,10 +77,13 @@ pub fn eval_power(owner: &str, base: &Expr, exp: &Expr) -> Option<Expr> {
     not_ported(format!("{owner}._eval_power"))
 }
 
-/// The `_eval_is_<fact>` handlers of function classes (and of numeric
-/// singletons, which only have `Expr`'s).
+/// The `_eval_is_<fact>` handlers of every class not dispatched in
+/// `assume.rs` (functions, the numeric singletons, Derivative, Sum, ...),
+/// picked by the class that defines the handler.
 pub(crate) fn handler(e: &Expr, fact: Fact) -> Option<bool> {
-    if !e.is_a(crate::generated::Tag::Application) {
+    use crate::generated::Tag;
+    if e.is_a(Tag::Number) || e.is_a(Tag::NumberSymbol) {
+        // Their only handlers are Expr's, answered from their known values.
         return crate::numbers::singleton_handler(e, fact);
     }
     match e.handler_owner(fact) {

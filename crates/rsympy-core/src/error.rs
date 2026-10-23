@@ -36,6 +36,8 @@ pub enum ErrorKind {
     OverflowError,
     IndexError,
     KeyError,
+    /// An `assert` in SymPy's code failing.
+    AssertionError,
     NotPortedYet,
 }
 
@@ -60,6 +62,7 @@ impl ErrorKind {
             ErrorKind::OverflowError => "OverflowError",
             ErrorKind::IndexError => "IndexError",
             ErrorKind::KeyError => "KeyError",
+            ErrorKind::AssertionError => "AssertionError",
             ErrorKind::NotPortedYet => "NotPortedYet",
         }
     }

@@ -9,23 +9,57 @@
 //! All `Expr`s share `_op_priority = 10.0`, so `call_highest_priority`
 //! never hands the operation to the right operand.
 
-use crate::error::{ErrorKind, raise};
+use crate::error::{ErrorKind, not_ported, raise};
 use crate::expr::Expr;
 use crate::generated::{ClassId as C, Tag};
 use crate::numbers::{self, s};
 
-/// `BooleanAtom._noop`: `true` and `false` define `__add__`, `__radd__`,
-/// ..., `__mod__`, `__rmod__` to raise `TypeError` (and win the reflected
-/// call through `_op_priority = 11`), so arithmetic with either operand a
-/// BooleanAtom raises; they have no `__neg__`, `__abs__` or
-/// `__floordiv__` either.
-fn reject_boolean_atoms(a: &Expr, b: &Expr) {
-    if a.is_a(Tag::BooleanAtom) || b.is_a(Tag::BooleanAtom) {
-        raise(
-            ErrorKind::TypeError,
-            "BooleanAtom not allowed in this context.",
-        );
+/// Python's operator protocol when an operand is not an `Expr`.
+/// `Expr.__add__` and friends (and Number's, which end there) return
+/// `NotImplemented` for a non-`Expr` other (`@sympify_return`), so Python
+/// asks `other.__radd__`. `BooleanAtom` defines every arithmetic dunder as
+/// `_noop`, which raises TypeError; other Booleans (Relational, And, ...)
+/// define none, so Python raises TypeError itself. Other non-`Expr`
+/// objects (Tuple, sets) have their own operators, not ported yet.
+fn check_operands(a: &Expr, b: &Expr, op: &str) {
+    if a.is_a(Tag::Expr) && b.is_a(Tag::Expr) {
+        return;
     }
+    for x in [a, b] {
+        if x.is_a(Tag::BooleanAtom) {
+            raise(
+                ErrorKind::TypeError,
+                "BooleanAtom not allowed in this context.",
+            );
+        }
+        if !x.is_a(Tag::Expr) && !x.is_a(Tag::Boolean) {
+            not_ported(format!("{}.__{op}__ / __r{op}__", x.class_name()));
+        }
+    }
+    raise(
+        ErrorKind::TypeError,
+        format!(
+            "unsupported operand type(s) for {op}: '{}' and '{}'",
+            a.class_name(),
+            b.class_name()
+        ),
+    )
+}
+
+/// Python's unary operators (`-a`, `abs(a)`) on a non-`Expr`: `Expr`
+/// defines `__neg__` and `__abs__`, `Boolean` (BooleanAtom, Relational,
+/// And, ...) does not, so Python raises TypeError.
+fn check_unary(a: &Expr, op: &str) {
+    if a.is_a(Tag::Expr) {
+        return;
+    }
+    if !a.is_a(Tag::Boolean) {
+        not_ported(format!("{}.__{op}__", a.class_name()));
+    }
+    raise(
+        ErrorKind::TypeError,
+        format!("bad operand type for {op}: '{}'", a.class_name()),
+    )
 }
 
 /// The classes whose `__add__` etc. are defined in `core.numbers` (Number
@@ -36,7 +70,7 @@ fn numeric(a: &Expr) -> bool {
 
 /// `a + b`.
 pub fn add(a: &Expr, b: &Expr) -> Expr {
-    reject_boolean_atoms(a, b);
+    check_operands(a, b, "add");
     if numeric(a) {
         return numbers::add(a, b);
     }
@@ -45,7 +79,7 @@ pub fn add(a: &Expr, b: &Expr) -> Expr {
 
 /// `a - b`.
 pub fn sub(a: &Expr, b: &Expr) -> Expr {
-    reject_boolean_atoms(a, b);
+    check_operands(a, b, "sub");
     if numeric(a) {
         return numbers::sub(a, b);
     }
@@ -54,7 +88,7 @@ pub fn sub(a: &Expr, b: &Expr) -> Expr {
 
 /// `a * b`.
 pub fn mul(a: &Expr, b: &Expr) -> Expr {
-    reject_boolean_atoms(a, b);
+    check_operands(a, b, "mul");
     if numeric(a) {
         return numbers::mul(a, b);
     }
@@ -63,7 +97,7 @@ pub fn mul(a: &Expr, b: &Expr) -> Expr {
 
 /// `a / b`.
 pub fn div(a: &Expr, b: &Expr) -> Expr {
-    reject_boolean_atoms(a, b);
+    check_operands(a, b, "truediv");
     if numeric(a) {
         return numbers::truediv(a, b);
     }
@@ -76,13 +110,13 @@ pub fn div(a: &Expr, b: &Expr) -> Expr {
 
 /// `a ** b`.
 pub fn pow(a: &Expr, b: &Expr) -> Expr {
-    reject_boolean_atoms(a, b);
+    check_operands(a, b, "pow");
     crate::power::pow(a, b)
 }
 
 /// `-a`.
 pub fn neg(a: &Expr) -> Expr {
-    reject_boolean_atoms(a, a);
+    check_unary(a, "neg");
     match a.cls() {
         C::Integer
         | C::Zero
@@ -104,7 +138,7 @@ pub fn neg(a: &Expr) -> Expr {
 
 /// `abs(a)`.
 pub fn abs(a: &Expr) -> Expr {
-    reject_boolean_atoms(a, a);
+    check_unary(a, "abs");
     if let Some(r) = numbers::abs(a) {
         return r;
     }
@@ -113,7 +147,7 @@ pub fn abs(a: &Expr) -> Expr {
 
 /// `a % b`.
 pub fn rem(a: &Expr, b: &Expr) -> Expr {
-    reject_boolean_atoms(a, b);
+    check_operands(a, b, "mod");
     if numeric(a)
         && let Some(r) = numbers::rem(a, b)
     {
@@ -124,7 +158,7 @@ pub fn rem(a: &Expr, b: &Expr) -> Expr {
 
 /// `a // b`: `floor(a / b)`, or Python's `//` for two Integers.
 pub fn floordiv(a: &Expr, b: &Expr) -> Expr {
-    reject_boolean_atoms(a, b);
+    check_operands(a, b, "floordiv");
     if let (Some(x), Some(y)) = (a.as_int(), b.as_int()) {
         let q = x.floor_div(y).unwrap_or_else(|_| {
             crate::error::raise(
