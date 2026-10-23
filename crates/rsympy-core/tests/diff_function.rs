@@ -211,5 +211,5 @@ fn dispatch(v: &Vector) -> Value {
 
 #[test]
 fn function_matches_sympy() {
-    run_partial("function", 3057, dispatch);
+    run_partial("function", 3072, dispatch);
 }

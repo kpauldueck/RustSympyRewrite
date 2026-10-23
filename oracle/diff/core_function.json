@@ -79212,6 +79212,886 @@
    }
   },
   {
+   "op": "class_key",
+   "args": [],
+   "params": {
+    "cls": "Xor"
+   },
+   "out": {
+    "tuple": [
+     {
+      "int": "5"
+     },
+     {
+      "int": "0"
+     },
+     {
+      "str": "Xor"
+     }
+    ]
+   }
+  },
+  {
+   "op": "class_nargs",
+   "args": [],
+   "params": {
+    "cls": "Xor"
+   },
+   "out": {
+    "str": "Naturals0"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [],
+   "params": {
+    "cls": "Xor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Symbol('x')"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Xor(Symbol('x'), Symbol('y'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    },
+    {
+     "expr": "Symbol('z')"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Xor(Symbol('x'), Symbol('y'), Symbol('z'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "class_key",
+   "args": [],
+   "params": {
+    "cls": "Nand"
+   },
+   "out": {
+    "tuple": [
+     {
+      "int": "5"
+     },
+     {
+      "int": "0"
+     },
+     {
+      "str": "Nand"
+     }
+    ]
+   }
+  },
+  {
+   "op": "class_nargs",
+   "args": [],
+   "params": {
+    "cls": "Nand"
+   },
+   "out": {
+    "str": "Naturals0"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [],
+   "params": {
+    "cls": "Nand",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Nand()"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "params": {
+    "cls": "Nand",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Nand(Symbol('x'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "cls": "Nand",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Nand(Symbol('x'), Symbol('y'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    },
+    {
+     "expr": "Symbol('z')"
+    }
+   ],
+   "params": {
+    "cls": "Nand",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Nand(Symbol('x'), Symbol('y'), Symbol('z'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "params": {
+    "cls": "Nand",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Nand(Float('1.5', precision=53))"
+   }
+  },
+  {
+   "op": "class_key",
+   "args": [],
+   "params": {
+    "cls": "Nor"
+   },
+   "out": {
+    "tuple": [
+     {
+      "int": "5"
+     },
+     {
+      "int": "0"
+     },
+     {
+      "str": "Nor"
+     }
+    ]
+   }
+  },
+  {
+   "op": "class_nargs",
+   "args": [],
+   "params": {
+    "cls": "Nor"
+   },
+   "out": {
+    "str": "Naturals0"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [],
+   "params": {
+    "cls": "Nor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Nor()"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "params": {
+    "cls": "Nor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Nor(Symbol('x'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "cls": "Nor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Nor(Symbol('x'), Symbol('y'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    },
+    {
+     "expr": "Symbol('z')"
+    }
+   ],
+   "params": {
+    "cls": "Nor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Nor(Symbol('x'), Symbol('y'), Symbol('z'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "params": {
+    "cls": "Nor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Nor(Float('1.5', precision=53))"
+   }
+  },
+  {
+   "op": "class_key",
+   "args": [],
+   "params": {
+    "cls": "Xnor"
+   },
+   "out": {
+    "tuple": [
+     {
+      "int": "5"
+     },
+     {
+      "int": "0"
+     },
+     {
+      "str": "Xnor"
+     }
+    ]
+   }
+  },
+  {
+   "op": "class_nargs",
+   "args": [],
+   "params": {
+    "cls": "Xnor"
+   },
+   "out": {
+    "str": "Naturals0"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [],
+   "params": {
+    "cls": "Xnor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Xnor()"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "params": {
+    "cls": "Xnor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Xnor(Symbol('x'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "cls": "Xnor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Xnor(Symbol('x'), Symbol('y'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    },
+    {
+     "expr": "Symbol('z')"
+    }
+   ],
+   "params": {
+    "cls": "Xnor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Xnor(Symbol('x'), Symbol('y'), Symbol('z'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "params": {
+    "cls": "Xnor",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Xnor(Float('1.5', precision=53))"
+   }
+  },
+  {
+   "op": "class_key",
+   "args": [],
+   "params": {
+    "cls": "Implies"
+   },
+   "out": {
+    "tuple": [
+     {
+      "int": "5"
+     },
+     {
+      "int": "0"
+     },
+     {
+      "str": "Implies"
+     }
+    ]
+   }
+  },
+  {
+   "op": "class_nargs",
+   "args": [],
+   "params": {
+    "cls": "Implies"
+   },
+   "out": {
+    "str": "Naturals0"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [],
+   "params": {
+    "cls": "Implies",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Implies()"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "params": {
+    "cls": "Implies",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Implies(Symbol('x'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "cls": "Implies",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Implies(Symbol('x'), Symbol('y'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    },
+    {
+     "expr": "Symbol('z')"
+    }
+   ],
+   "params": {
+    "cls": "Implies",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Implies(Symbol('x'), Symbol('y'), Symbol('z'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "params": {
+    "cls": "Implies",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Implies(Float('1.5', precision=53))"
+   }
+  },
+  {
+   "op": "class_key",
+   "args": [],
+   "params": {
+    "cls": "Equivalent"
+   },
+   "out": {
+    "tuple": [
+     {
+      "int": "5"
+     },
+     {
+      "int": "0"
+     },
+     {
+      "str": "Equivalent"
+     }
+    ]
+   }
+  },
+  {
+   "op": "class_nargs",
+   "args": [],
+   "params": {
+    "cls": "Equivalent"
+   },
+   "out": {
+    "str": "Naturals0"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Equivalent(Symbol('x'), Symbol('y'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    },
+    {
+     "expr": "Symbol('z')"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Equivalent(Symbol('x'), Symbol('y'), Symbol('z'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "class_key",
+   "args": [],
+   "params": {
+    "cls": "ITE"
+   },
+   "out": {
+    "tuple": [
+     {
+      "int": "5"
+     },
+     {
+      "int": "0"
+     },
+     {
+      "str": "ITE"
+     }
+    ]
+   }
+  },
+  {
+   "op": "class_nargs",
+   "args": [],
+   "params": {
+    "cls": "ITE"
+   },
+   "out": {
+    "str": "Naturals0"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [],
+   "params": {
+    "cls": "ITE",
+    "evaluate": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "params": {
+    "cls": "ITE",
+    "evaluate": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "cls": "ITE",
+    "evaluate": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    },
+    {
+     "expr": "Symbol('z')"
+    }
+   ],
+   "params": {
+    "cls": "ITE",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "ITE(Symbol('x'), Symbol('y'), Symbol('z'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "params": {
+    "cls": "ITE",
+    "evaluate": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "class_key",
+   "args": [],
+   "params": {
+    "cls": "Exclusive"
+   },
+   "out": {
+    "tuple": [
+     {
+      "int": "5"
+     },
+     {
+      "int": "0"
+     },
+     {
+      "str": "Exclusive"
+     }
+    ]
+   }
+  },
+  {
+   "op": "class_nargs",
+   "args": [],
+   "params": {
+    "cls": "Exclusive"
+   },
+   "out": {
+    "str": "Naturals0"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [],
+   "params": {
+    "cls": "Exclusive",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Exclusive()"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "params": {
+    "cls": "Exclusive",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Exclusive(Symbol('x'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "cls": "Exclusive",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Exclusive(Symbol('x'), Symbol('y'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Symbol('x')"
+    },
+    {
+     "expr": "Symbol('y')"
+    },
+    {
+     "expr": "Symbol('z')"
+    }
+   ],
+   "params": {
+    "cls": "Exclusive",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Exclusive(Symbol('x'), Symbol('y'), Symbol('z'))"
+   }
+  },
+  {
+   "op": "defined_call",
+   "args": [
+    {
+     "expr": "Float('1.5', precision=53)"
+    }
+   ],
+   "params": {
+    "cls": "Exclusive",
+    "evaluate": false
+   },
+   "out": {
+    "expr": "Exclusive(Float('1.5', precision=53))"
+   }
+  },
+  {
    "op": "eval_conjugate",
    "args": [
     {
