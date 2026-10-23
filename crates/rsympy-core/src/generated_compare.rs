@@ -1102,6 +1102,94 @@ pub(crate) const COMPARE_INFO: [CompareInfo; NUM_CLASSES] = [
         as_ordered_terms: "Expr.as_ordered_terms",
         str_print: "_print_AccumulationBounds",
     },
+    // Xor
+    CompareInfo {
+        class_key: (5, 0, "Xor"),
+        sort_key: "Basic.sort_key",
+        hashable_content: "Basic._hashable_content",
+        compare: "Basic.compare",
+        sorted_args: "Basic._sorted_args",
+        as_ordered_factors: "",
+        as_ordered_terms: "",
+        str_print: "_print_Xor",
+    },
+    // Nand
+    CompareInfo {
+        class_key: (5, 0, "Nand"),
+        sort_key: "Basic.sort_key",
+        hashable_content: "Basic._hashable_content",
+        compare: "Basic.compare",
+        sorted_args: "Basic._sorted_args",
+        as_ordered_factors: "",
+        as_ordered_terms: "",
+        str_print: "_print_Basic",
+    },
+    // Nor
+    CompareInfo {
+        class_key: (5, 0, "Nor"),
+        sort_key: "Basic.sort_key",
+        hashable_content: "Basic._hashable_content",
+        compare: "Basic.compare",
+        sorted_args: "Basic._sorted_args",
+        as_ordered_factors: "",
+        as_ordered_terms: "",
+        str_print: "_print_Basic",
+    },
+    // Xnor
+    CompareInfo {
+        class_key: (5, 0, "Xnor"),
+        sort_key: "Basic.sort_key",
+        hashable_content: "Basic._hashable_content",
+        compare: "Basic.compare",
+        sorted_args: "Basic._sorted_args",
+        as_ordered_factors: "",
+        as_ordered_terms: "",
+        str_print: "_print_Basic",
+    },
+    // Implies
+    CompareInfo {
+        class_key: (5, 0, "Implies"),
+        sort_key: "Basic.sort_key",
+        hashable_content: "Basic._hashable_content",
+        compare: "Basic.compare",
+        sorted_args: "Basic._sorted_args",
+        as_ordered_factors: "",
+        as_ordered_terms: "",
+        str_print: "_print_Basic",
+    },
+    // Equivalent
+    CompareInfo {
+        class_key: (5, 0, "Equivalent"),
+        sort_key: "Basic.sort_key",
+        hashable_content: "Basic._hashable_content",
+        compare: "Basic.compare",
+        sorted_args: "Basic._sorted_args",
+        as_ordered_factors: "",
+        as_ordered_terms: "",
+        str_print: "_print_Basic",
+    },
+    // ITE
+    CompareInfo {
+        class_key: (5, 0, "ITE"),
+        sort_key: "Basic.sort_key",
+        hashable_content: "Basic._hashable_content",
+        compare: "Basic.compare",
+        sorted_args: "Basic._sorted_args",
+        as_ordered_factors: "",
+        as_ordered_terms: "",
+        str_print: "_print_Basic",
+    },
+    // Exclusive
+    CompareInfo {
+        class_key: (5, 0, "Exclusive"),
+        sort_key: "Basic.sort_key",
+        hashable_content: "Basic._hashable_content",
+        compare: "Basic.compare",
+        sorted_args: "Basic._sorted_args",
+        as_ordered_factors: "",
+        as_ordered_terms: "",
+        str_print: "_print_Basic",
+    },
 ];
 
 /// `funcs` in `Function.class_key`: `class_key()[1]` by class name.

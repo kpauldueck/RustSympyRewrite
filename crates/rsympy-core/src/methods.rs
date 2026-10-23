@@ -37,6 +37,8 @@ impl Expr {
         match self.method_owner(Method::IsComparable) {
             "Zero" | "Infinity" | "NegativeInfinity" => true,
             "NaN" => false,
+            // Symbol.is_comparable = False
+            "Symbol" => false,
             "Basic" => {
                 if self.is_extended_real() == Some(false) {
                     return false;

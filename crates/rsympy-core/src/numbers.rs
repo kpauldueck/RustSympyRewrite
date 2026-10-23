@@ -1484,10 +1484,16 @@ fn expr_rich(lhs: &Expr, rhs: &Expr, op: Rel) -> bool {
             raise(ErrorKind::TypeError, "Invalid NaN comparison");
         }
     }
-    match op {
-        Rel::Lt => not_ported("StrictLessThan._eval_relation (is_lt) on numbers"),
-        Rel::Gt => not_ported("StrictGreaterThan._eval_relation (is_gt) on numbers"),
+    let cls = match op {
+        Rel::Lt => C::StrictLessThan,
+        Rel::Gt => C::StrictGreaterThan,
+    };
+    // _Inequality.__new__ under the current evaluate flag, then bool() of
+    // what it returns (TypeError for an unevaluated Relational)
+    if !ctx::evaluate() {
+        return crate::relational::raw_rel(cls, lhs, rhs).truthy();
     }
+    crate::relational::eval_relation(cls, lhs, rhs).truthy()
 }
 
 /// `float(n)` for a Number: `Number.__float__`,

@@ -18,7 +18,8 @@
 //! | [`evalf`] | `core.evalf` |
 //! | [`printing`] | `printing.str`, `printing.repr`, `printing.precedence` |
 //! | [`parsing`], [`sympify`] | `parsing.sympy_parser`, `core.sympify` |
-//! | [`relational`] | `core.relational`'s fuzzy comparisons (`is_ge`, `is_eq`, ...) |
+//! | [`relational`] | `core.relational`: `Eq`, `Lt`, ..., the fuzzy comparisons (`is_ge`, `is_eq`, ...) and Python's `<`, `<=`, ... |
+//! | [`logic`] | `logic.boolalg`: `And`, `Or`, `Not`, ..., `to_nnf`, `to_cnf`, ... |
 //! | [`py`] | Python built-ins results depend on (`dict` order, `repr(str)`) |
 //! | [`testing`] | the oracle's expression encoding, for differential tests |
 //!
@@ -45,6 +46,8 @@ pub mod facts;
 pub mod functions;
 mod generated;
 mod generated_compare;
+mod generated_relational;
+pub mod logic;
 pub mod methods;
 pub mod mul;
 pub mod numbers;
