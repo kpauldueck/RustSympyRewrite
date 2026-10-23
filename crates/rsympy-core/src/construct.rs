@@ -62,6 +62,8 @@ pub fn rebuild(e: &Expr, args: Vec<Expr>) -> Expr {
             crate::power::pow(&b, &x)
         }
         _ if e.args().is_empty() && args.is_empty() => e.clone(),
+        // Tuple.__new__: Basic.__new__ of the (sympified) args
+        C::Tuple => raw(C::Tuple, args),
         C::AppliedUndef => {
             let u = e
                 .undef_data()

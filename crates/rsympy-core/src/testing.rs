@@ -45,6 +45,11 @@ pub fn parse(text: &str) -> Expr {
     v
 }
 
+/// The class whose SymPy `__name__` is `name` (`"exp"`, `"Mod"`, ...).
+pub fn class_by_name(name: &str) -> Option<C> {
+    CLASS_BY_NAME.get(name).copied()
+}
+
 /// Encodes `e` the way the oracle does (see the module docs).
 pub fn encode(e: &Expr) -> String {
     let mut out = String::new();

@@ -665,19 +665,87 @@ pub fn expr_eval_transpose(e: &Expr) -> Option<Expr> {
 
 /// `Expr._eval_adjoint()`.
 pub fn expr_eval_adjoint<H: Head + ?Sized>(h: &H, e: &Expr) -> Option<Expr> {
+    expr_eval_adjoint_with(e, |e| h.eval_conjugate(e), |e| h.eval_transpose(e))
+}
+
+/// `Expr._eval_adjoint()`, with the class's `_eval_conjugate` and
+/// `_eval_transpose`.
+fn expr_eval_adjoint_with(
+    e: &Expr,
+    eval_conjugate: impl Fn(&Expr) -> Option<Expr>,
+    eval_transpose: impl Fn(&Expr) -> Option<Expr>,
+) -> Option<Expr> {
     if e.is_hermitian() == Some(true) {
         return Some(e.clone());
     } else if e.is_antihermitian() == Some(true) {
         return Some(-e);
     }
-    if h.eval_conjugate(e).is_some() {
+    if eval_conjugate(e).is_some() {
         // obj = self._eval_conjugate(); if obj is not None: return transpose(obj)
         not_ported("Expr._eval_adjoint: transpose");
     }
-    if let Some(obj) = h.eval_transpose(e) {
+    if let Some(obj) = eval_transpose(e) {
         return Some(call(ClassId::Conjugate, vec![obj]));
     }
     None
+}
+
+/// The class that defines `hook` for `e`'s class, raising
+/// `AttributeError` when none does (a `Basic` that is not an `Expr`).
+fn instance_hook_owner(e: &Expr, hook: Hook, name: &str) -> &'static str {
+    match FUNCTION_INFO[e.cls() as usize].hooks[hook as usize] {
+        "" => raise(
+            ErrorKind::AttributeError,
+            format!("'{}' object has no attribute '{name}'", e.class_name()),
+        ),
+        o => o,
+    }
+}
+
+/// `e._eval_conjugate()` for any expression: the head's for applied
+/// functions, `Expr._eval_conjugate` for classes that inherit it.
+pub fn eval_conjugate_of(e: &Expr) -> Option<Expr> {
+    if e.is_a(Tag::Application) {
+        return head_of(e).eval_conjugate(e);
+    }
+    match instance_hook_owner(e, Hook::EvalConjugate, "_eval_conjugate") {
+        "Expr" => expr_eval_conjugate(e),
+        o => not_ported(format!("{o}._eval_conjugate")),
+    }
+}
+
+/// `e._eval_transpose()` for any expression (as [`eval_conjugate_of`]).
+pub fn eval_transpose_of(e: &Expr) -> Option<Expr> {
+    if e.is_a(Tag::Application) {
+        return head_of(e).eval_transpose(e);
+    }
+    match instance_hook_owner(e, Hook::EvalTranspose, "_eval_transpose") {
+        "Expr" => expr_eval_transpose(e),
+        o => not_ported(format!("{o}._eval_transpose")),
+    }
+}
+
+/// `e._eval_adjoint()` for any expression (as [`eval_conjugate_of`]).
+pub fn eval_adjoint_of(e: &Expr) -> Option<Expr> {
+    if e.is_a(Tag::Application) {
+        return head_of(e).eval_adjoint(e);
+    }
+    match instance_hook_owner(e, Hook::EvalAdjoint, "_eval_adjoint") {
+        "Expr" => expr_eval_adjoint_with(e, eval_conjugate_of, eval_transpose_of),
+        o => not_ported(format!("{o}._eval_adjoint")),
+    }
+}
+
+/// `e._eval_subs(old, new)` for any expression: the head's for applied
+/// functions, `Basic._eval_subs` (`None`) for classes that inherit it.
+pub fn eval_subs_of(e: &Expr, old: &Expr, new: &Expr) -> Option<Expr> {
+    if e.is_a(Tag::Application) {
+        return head_of(e).eval_subs(e, old, new);
+    }
+    match instance_hook_owner(e, Hook::EvalSubs, "_eval_subs") {
+        "Basic" => None,
+        o => not_ported(format!("{o}._eval_subs")),
+    }
 }
 
 // ---------------------------------------------------------------------------
