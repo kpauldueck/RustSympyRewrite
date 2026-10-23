@@ -251,14 +251,22 @@ fn qm(op: &str, v: &Vector) -> Option<Value> {
     })
 }
 
-// Unported: Relational.equals and simplify (Expr.equals, simplify), the
-// evalf of a non-Number difference in _n2 (pi - 1), Float comparisons
-// with comparable non-Numbers (evalf), is_eq's clear_coefficients path,
-// floor/ceiling's _eval_is_eq (rewrite), Interval comparisons (sets) and
-// simplify_logic.
+// The 2924 vectors that reach unported code:
+//   1366 `_monotonic_sign` of an Add or of a symbolic denominator (polys),
+//        from comparisons of sums and products of symbols
+//    774 the evalf of a non-Number difference in `_n2` (pi - 1, ...)
+//    518 `Function.__new__` (floor, ceiling, re, im of their arguments)
+//    167 RoundFunction's `_eval_is_integer` and `_eval_is_finite`
+//     36 `And`, `Or`, `Xor` of Sets (sets)
+//     27 `simplify_logic` past its quick exits (`_get_truthtable` and the
+//        relational substitutions need Basic.xreplace)
+//     24 `Expr._eval_is_extended_positive_negative` of an Add (evalf)
+//     10 `Relational._eval_simplify` (simplify)
+//      1 `Relational.equals` of sides that need `Expr.equals`
+//      1 `Expr.as_real_imag` under evaluate(False)
 #[test]
 fn relational_matches_sympy() {
-    run_partial("relational", 2915, |v| {
+    run_partial("relational", 2924, |v| {
         let p = || v.expr(0);
         let q = || v.expr(1);
         match v.op.as_str() {

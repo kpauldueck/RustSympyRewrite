@@ -22,11 +22,16 @@ and `_find_predicates`.
 Results that SymPy returns as sets (binary_symbols, conjuncts, ...) are
 recorded sorted by `default_sort_key`. Inputs avoid the cases where SymPy's
 own answer depends on set iteration order (ties in `ordered`, and three or
-more related relationals in one Xor or Equivalent).
+more related relationals in one Xor or Equivalent). The vectors that ask
+for facts of infinite symbols are made the way gen_diff_arith_facts.py
+makes its own: `_ask` visits prerequisite facts in sorted order (as
+rsympy does) and a vector whose answer changes under other orders is left
+out, because SymPy has no single answer for it.
 """
 
 import operator
 import random
+import sys
 
 from sympy import (And, Basic, E, Eq, Equivalent, Float, GoldenRatio, Ge, Gt,
                    I, ITE, Implies, Integer, Interval, Le, Lt, Nand, Ne, Nor,
@@ -186,6 +191,43 @@ V = []
 
 def add(op, args, fn, **params):
     V.append(vector(op, args, fn, **params))
+
+
+ORDERS = 4
+_order = None  # None: SymPy's own shuffle; "sorted"; or an RNG to shuffle with
+
+
+def _visit_order(facts):
+    """Stands in for `shuffle` in `sympy.core.assumptions._ask` while
+    `_order` is set (see gen_diff_arith_facts.py)."""
+    if _order is None:
+        _SHUFFLE(facts)
+        return
+    facts.sort()
+    if _order != "sorted":
+        _order.shuffle(facts)
+
+
+# (`sympy.core.assumptions` is a function: the module is shadowed)
+_ASSUMPTIONS = sys.modules["sympy.core.assumptions"]
+_SHUFFLE = _ASSUMPTIONS.shuffle
+_ASSUMPTIONS.shuffle = _visit_order
+
+
+def add_fact_order(op, args, fn, **params):
+    """`add`, with `_ask` visiting facts in sorted order; left out if
+    another order changes the answer."""
+    global _order
+    try:
+        _order = "sorted"
+        vec = vector(op, args, fn, **params)
+        for i in range(ORDERS):
+            _order = random.Random(i)
+            if vector(op, args, fn, **params)["out"] != vec["out"]:
+                return
+    finally:
+        _order = None
+    V.append(vec)
 
 
 # ---------------------------------------------------------------------------
@@ -568,6 +610,76 @@ def quine_mccluskey():
                     simplify_logic(v, form, deep)), form=form, deep=deep)
 
 
+# ---------------------------------------------------------------------------
+# branches the random sections above rarely reach
+
+
+def branches():
+    xirr = Symbol("j", irrational=True)
+    xnint = Symbol("n", noninteger=True)
+    # is_eq: infinite sides split into real and imaginary parts, Float
+    # coefficients against non-integers and irrationals, and the ratio
+    # of the difference
+    for p, q in [(oo + I, oo + 2 * I), (oo + I, oo - I), (oo + I * xr, oo),
+                 (zoo, 1 + I * oo), (oo + I, zoo), (-oo + I, oo + I),
+                 (xinf + I, oo + I), (oo + 2 * I, oo + 2 * I),
+                 (xr + oo * I, oo * I), (xirr + Float(0.5), 0),
+                 (xnint + Float(2.0), 0), (xirr + Float(2.0), 0),
+                 (xnint + Float(0.5), 1), (xi + Float(0.5), 0),
+                 (1 / xinf, 0), (2 / xinf, 0), (x / xinf, 0), (xinf + x, 0),
+                 (xinf + x, y), (xinf * x, 1), (Tuple(1, 2), x + 1),
+                 (x * y, Tuple(1, 2)), (Tuple(1, 2), x), (Tuple(x, 1), y),
+                 (Tuple(1, Tuple(2, 3)), Tuple(1, Tuple(2, 3))),
+                 (Tuple(1, Tuple(2, x)), Tuple(1, Tuple(2, 3))),
+                 (Tuple(x, 2), Tuple(y, 3))]:
+        p, q = S(p), S(q)
+        for name in ("Eq", "Ne"):
+            add_fact_order("rel_new", [p, q], REL_CLASSES[name], cls=name,
+                           evaluate=None, globl=True)
+        add_fact_order("fuzzy", [p, q], is_eq, func="is_eq")
+    # canonical forms whose rebuilt args evaluate
+    for e in [Eq(Gt(1, x), Lt(x, 1), evaluate=False),
+              Ne(Gt(1, x), Lt(x, 1), evaluate=False),
+              Eq(Gt(1, x), Ge(x, 1), evaluate=False),
+              Eq(Gt(1, x), true, evaluate=False),
+              Eq(Lt(-x, -1), Gt(x, 1), evaluate=False)]:
+        for name in ("canonical", "canonical_coeff", "reversed", "negated"):
+            add("prop", [e], prop(name), name=name)
+    # complementary and repeated relationals in the constructors
+    pairs = [(x < 1, x >= 1), (x < 1, 1 > x), (Eq(x, 1), Ne(x, 1)),
+             (Eq(x, 1), Ne(1, x)), (Le(-x, -1), x < 1), (x > 2, Le(x, 2)),
+             (Lt(x, y), Ge(y, x)), (Lt(x, y), Gt(y, x))]
+    for r1, r2 in pairs:
+        for name in ("And", "Or", "Xor", "Equivalent", "Implies"):
+            cls = BOOL_CLASSES[name]
+            add("bool_new", [r1, r2], cls, cls=name, evaluate=None,
+                globl=True)
+            if name != "Implies":
+                add("bool_new", [r1, a, r2], cls, cls=name, evaluate=None,
+                    globl=True)
+        add("bool_new", [r1, r2, true], Xor, cls="Xor", evaluate=None,
+            globl=True)
+    # to_nnf of relationals that are not literals, and Not of them
+    for e in [Lt(x + 1, y), And(Lt(x + 1, y), a), Not(Lt(x + 1, y),
+                                                      evaluate=False),
+              Not(Nand(a, b, evaluate=False), evaluate=False),
+              Or(Eq(x * y, 1), ~a), Not(Xnor(a, b, evaluate=False),
+                                         evaluate=False)]:
+        for simp in (True, False):
+            add("to_nnf", [e], fixed(lambda v, simp=simp: to_nnf(v, simp)),
+                simplify=simp)
+        add("is_literal", [e], is_literal)
+        add("to_cnf", [e], fixed(to_cnf), simplify=False)
+        add("to_dnf", [e], fixed(to_dnf), simplify=False)
+    # algebraic normal form tests on Xors of the wrong shape
+    for e in [Xor(a & ~b, c), Xor(~a, b), Xor(a | b, c), Xor(a & b, c),
+              Xor(a, b, x < 1), Xor(And(a, x < 1), b)]:
+        add("is_anf", [e], fixed(is_anf))
+        for deep in (True, False):
+            add("to_anf", [e], fixed(lambda v, deep=deep: to_anf(v, deep)),
+                deep=deep)
+
+
 def main():
     comparisons()
     constructors()
@@ -577,6 +689,7 @@ def main():
     operators()
     forms()
     quine_mccluskey()
+    branches()
     write("relational", V, __doc__.split("\n\n")[0])
 
 

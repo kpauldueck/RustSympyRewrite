@@ -486687,6 +486687,3992 @@
    "out": {
     "error": "ValueError"
    }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(oo, I)"
+    },
+    {
+     "expr": "Add(oo, Mul(Integer(2), I))"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(oo, I)"
+    },
+    {
+     "expr": "Add(oo, Mul(Integer(2), I))"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(oo, I)"
+    },
+    {
+     "expr": "Add(oo, Mul(Integer(2), I))"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(oo, I)"
+    },
+    {
+     "expr": "Add(oo, Mul(Integer(-1), I))"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(oo, I)"
+    },
+    {
+     "expr": "Add(oo, Mul(Integer(-1), I))"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(oo, I)"
+    },
+    {
+     "expr": "Add(oo, Mul(Integer(-1), I))"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(oo, Mul(I, Symbol('r', real=True)))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(oo, Mul(I, Symbol('r', real=True)))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(oo, Mul(I, Symbol('r', real=True)))"
+    },
+    {
+     "expr": "oo"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "zoo"
+    },
+    {
+     "expr": "Add(Integer(1), Mul(oo, I))"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "zoo"
+    },
+    {
+     "expr": "Add(Integer(1), Mul(oo, I))"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "zoo"
+    },
+    {
+     "expr": "Add(Integer(1), Mul(oo, I))"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(oo, I)"
+    },
+    {
+     "expr": "zoo"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(oo, I)"
+    },
+    {
+     "expr": "zoo"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(oo, I)"
+    },
+    {
+     "expr": "zoo"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(-oo, I)"
+    },
+    {
+     "expr": "Add(oo, I)"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(-oo, I)"
+    },
+    {
+     "expr": "Add(oo, I)"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(-oo, I)"
+    },
+    {
+     "expr": "Add(oo, I)"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(I, Symbol('w', infinite=True))"
+    },
+    {
+     "expr": "Add(oo, I)"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Equality(Add(I, Symbol('w', infinite=True)), Add(oo, I))"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(I, Symbol('w', infinite=True))"
+    },
+    {
+     "expr": "Add(oo, I)"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Unequality(Add(I, Symbol('w', infinite=True)), Add(oo, I))"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(I, Symbol('w', infinite=True))"
+    },
+    {
+     "expr": "Add(oo, I)"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(oo, Mul(Integer(2), I))"
+    },
+    {
+     "expr": "Add(oo, Mul(Integer(2), I))"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(oo, Mul(Integer(2), I))"
+    },
+    {
+     "expr": "Add(oo, Mul(Integer(2), I))"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(oo, Mul(Integer(2), I))"
+    },
+    {
+     "expr": "Add(oo, Mul(Integer(2), I))"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Symbol('r', real=True), Mul(oo, I))"
+    },
+    {
+     "expr": "Mul(oo, I)"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Equality(Add(Symbol('r', real=True), Mul(oo, I)), Mul(oo, I))"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Symbol('r', real=True), Mul(oo, I))"
+    },
+    {
+     "expr": "Mul(oo, I)"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Unequality(Add(Symbol('r', real=True), Mul(oo, I)), Mul(oo, I))"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(Symbol('r', real=True), Mul(oo, I))"
+    },
+    {
+     "expr": "Mul(oo, I)"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Float('0.5', precision=53), Symbol('j', irrational=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Float('0.5', precision=53), Symbol('j', irrational=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(Float('0.5', precision=53), Symbol('j', irrational=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Float('2.0', precision=53), Symbol('n', noninteger=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Float('2.0', precision=53), Symbol('n', noninteger=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(Float('2.0', precision=53), Symbol('n', noninteger=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Float('2.0', precision=53), Symbol('j', irrational=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Float('2.0', precision=53), Symbol('j', irrational=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(Float('2.0', precision=53), Symbol('j', irrational=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Float('0.5', precision=53), Symbol('n', noninteger=True))"
+    },
+    {
+     "expr": "Integer(1)"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Equality(Add(Float('0.5', precision=53), Symbol('n', noninteger=True)), Integer(1))"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Float('0.5', precision=53), Symbol('n', noninteger=True))"
+    },
+    {
+     "expr": "Integer(1)"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Unequality(Add(Float('0.5', precision=53), Symbol('n', noninteger=True)), Integer(1))"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(Float('0.5', precision=53), Symbol('n', noninteger=True))"
+    },
+    {
+     "expr": "Integer(1)"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Float('0.5', precision=53), Symbol('i', integer=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Float('0.5', precision=53), Symbol('i', integer=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(Float('0.5', precision=53), Symbol('i', integer=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Pow(Symbol('w', infinite=True), Integer(-1)))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Pow(Symbol('w', infinite=True), Integer(-1)))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Mul(Integer(2), Pow(Symbol('w', infinite=True), Integer(-1)))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Mul(Symbol('x'), Pow(Symbol('w', infinite=True), Integer(-1)))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Equality(Mul(Symbol('x'), Pow(Symbol('w', infinite=True), Integer(-1))), Integer(0))"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Mul(Symbol('x'), Pow(Symbol('w', infinite=True), Integer(-1)))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Unequality(Mul(Symbol('x'), Pow(Symbol('w', infinite=True), Integer(-1))), Integer(0))"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Mul(Symbol('x'), Pow(Symbol('w', infinite=True), Integer(-1)))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Symbol('x'), Symbol('w', infinite=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Symbol('x'), Symbol('w', infinite=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(Symbol('x'), Symbol('w', infinite=True))"
+    },
+    {
+     "expr": "Integer(0)"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Symbol('x'), Symbol('w', infinite=True))"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Add(Symbol('x'), Symbol('w', infinite=True))"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Add(Symbol('x'), Symbol('w', infinite=True))"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Mul(Symbol('x'), Symbol('w', infinite=True))"
+    },
+    {
+     "expr": "Integer(1)"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Equality(Mul(Symbol('x'), Symbol('w', infinite=True)), Integer(1))"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Mul(Symbol('x'), Symbol('w', infinite=True))"
+    },
+    {
+     "expr": "Integer(1)"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Unequality(Mul(Symbol('x'), Symbol('w', infinite=True)), Integer(1))"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Mul(Symbol('x'), Symbol('w', infinite=True))"
+    },
+    {
+     "expr": "Integer(1)"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Tuple(Integer(1), Integer(2))"
+    },
+    {
+     "expr": "Add(Integer(1), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Tuple(Integer(1), Integer(2))"
+    },
+    {
+     "expr": "Add(Integer(1), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Tuple(Integer(1), Integer(2))"
+    },
+    {
+     "expr": "Add(Integer(1), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Mul(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "Tuple(Integer(1), Integer(2))"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Mul(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "Tuple(Integer(1), Integer(2))"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Mul(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "Tuple(Integer(1), Integer(2))"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Tuple(Integer(1), Integer(2))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Equality(Tuple(Integer(1), Integer(2)), Symbol('x'))"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Tuple(Integer(1), Integer(2))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Unequality(Tuple(Integer(1), Integer(2)), Symbol('x'))"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Tuple(Integer(1), Integer(2))"
+    },
+    {
+     "expr": "Symbol('x')"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Tuple(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Equality(Tuple(Symbol('x'), Integer(1)), Symbol('y'))"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Tuple(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Unequality(Tuple(Symbol('x'), Integer(1)), Symbol('y'))"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Tuple(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('y')"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Tuple(Integer(1), Tuple(Integer(2), Integer(3)))"
+    },
+    {
+     "expr": "Tuple(Integer(1), Tuple(Integer(2), Integer(3)))"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Tuple(Integer(1), Tuple(Integer(2), Integer(3)))"
+    },
+    {
+     "expr": "Tuple(Integer(1), Tuple(Integer(2), Integer(3)))"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Tuple(Integer(1), Tuple(Integer(2), Integer(3)))"
+    },
+    {
+     "expr": "Tuple(Integer(1), Tuple(Integer(2), Integer(3)))"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Tuple(Integer(1), Tuple(Integer(2), Symbol('x')))"
+    },
+    {
+     "expr": "Tuple(Integer(1), Tuple(Integer(2), Integer(3)))"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Equality(Tuple(Integer(1), Tuple(Integer(2), Symbol('x'))), Tuple(Integer(1), Tuple(Integer(2), Integer(3))))"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Tuple(Integer(1), Tuple(Integer(2), Symbol('x')))"
+    },
+    {
+     "expr": "Tuple(Integer(1), Tuple(Integer(2), Integer(3)))"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Unequality(Tuple(Integer(1), Tuple(Integer(2), Symbol('x'))), Tuple(Integer(1), Tuple(Integer(2), Integer(3))))"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Tuple(Integer(1), Tuple(Integer(2), Symbol('x')))"
+    },
+    {
+     "expr": "Tuple(Integer(1), Tuple(Integer(2), Integer(3)))"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "none": null
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Tuple(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "Tuple(Symbol('y'), Integer(3))"
+    }
+   ],
+   "params": {
+    "cls": "Eq",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "rel_new",
+   "args": [
+    {
+     "expr": "Tuple(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "Tuple(Symbol('y'), Integer(3))"
+    }
+   ],
+   "params": {
+    "cls": "Ne",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "fuzzy",
+   "args": [
+    {
+     "expr": "Tuple(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "Tuple(Symbol('y'), Integer(3))"
+    }
+   ],
+   "params": {
+    "func": "is_eq"
+   },
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "canonical"
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "canonical_coeff"
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "reversed"
+   },
+   "out": {
+    "expr": "Equality(StrictLessThan(Symbol('x'), Integer(1)), StrictGreaterThan(Integer(1), Symbol('x')))"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "negated"
+   },
+   "out": {
+    "expr": "Unequality(StrictGreaterThan(Integer(1), Symbol('x')), StrictLessThan(Symbol('x'), Integer(1)))"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Unequality(StrictGreaterThan(Integer(1), Symbol('x')), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "canonical"
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Unequality(StrictGreaterThan(Integer(1), Symbol('x')), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "canonical_coeff"
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Unequality(StrictGreaterThan(Integer(1), Symbol('x')), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "reversed"
+   },
+   "out": {
+    "expr": "Unequality(StrictLessThan(Symbol('x'), Integer(1)), StrictGreaterThan(Integer(1), Symbol('x')))"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Unequality(StrictGreaterThan(Integer(1), Symbol('x')), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "negated"
+   },
+   "out": {
+    "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), StrictLessThan(Symbol('x'), Integer(1)))"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), GreaterThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "canonical"
+   },
+   "out": {
+    "expr": "Equality(GreaterThan(Symbol('x'), Integer(1)), StrictLessThan(Symbol('x'), Integer(1)))"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), GreaterThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "canonical_coeff"
+   },
+   "out": {
+    "expr": "Equality(StrictLessThan(Symbol('x'), Integer(1)), GreaterThan(Symbol('x'), Integer(1)))"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), GreaterThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "reversed"
+   },
+   "out": {
+    "expr": "Equality(GreaterThan(Symbol('x'), Integer(1)), StrictGreaterThan(Integer(1), Symbol('x')))"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), GreaterThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "negated"
+   },
+   "out": {
+    "expr": "Unequality(StrictGreaterThan(Integer(1), Symbol('x')), GreaterThan(Symbol('x'), Integer(1)))"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), true)"
+    }
+   ],
+   "params": {
+    "name": "canonical"
+   },
+   "out": {
+    "expr": "Equality(true, StrictLessThan(Symbol('x'), Integer(1)))"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), true)"
+    }
+   ],
+   "params": {
+    "name": "canonical_coeff"
+   },
+   "out": {
+    "expr": "Equality(StrictLessThan(Symbol('x'), Integer(1)), true)"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), true)"
+    }
+   ],
+   "params": {
+    "name": "reversed"
+   },
+   "out": {
+    "expr": "Equality(true, StrictGreaterThan(Integer(1), Symbol('x')))"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictGreaterThan(Integer(1), Symbol('x')), true)"
+    }
+   ],
+   "params": {
+    "name": "negated"
+   },
+   "out": {
+    "expr": "Unequality(StrictGreaterThan(Integer(1), Symbol('x')), true)"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictLessThan(Mul(Integer(-1), Symbol('x')), Integer(-1)), StrictGreaterThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "canonical"
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictLessThan(Mul(Integer(-1), Symbol('x')), Integer(-1)), StrictGreaterThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "canonical_coeff"
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictLessThan(Mul(Integer(-1), Symbol('x')), Integer(-1)), StrictGreaterThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "reversed"
+   },
+   "out": {
+    "expr": "Equality(StrictGreaterThan(Symbol('x'), Integer(1)), StrictLessThan(Mul(Integer(-1), Symbol('x')), Integer(-1)))"
+   }
+  },
+  {
+   "op": "prop",
+   "args": [
+    {
+     "expr": "Equality(StrictLessThan(Mul(Integer(-1), Symbol('x')), Integer(-1)), StrictGreaterThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "name": "negated"
+   },
+   "out": {
+    "expr": "Unequality(StrictLessThan(Mul(Integer(-1), Symbol('x')), Integer(-1)), StrictGreaterThan(Symbol('x'), Integer(1)))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "GreaterThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "GreaterThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "GreaterThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "GreaterThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "GreaterThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "GreaterThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Not(Symbol('a'))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "GreaterThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "GreaterThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "GreaterThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Implies",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "GreaterThan(Symbol('x'), Integer(1))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "GreaterThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "And(Symbol('a'), StrictLessThan(Symbol('x'), Integer(1)))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Or(Symbol('a'), StrictLessThan(Symbol('x'), Integer(1)))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Symbol('a')"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Equivalent(Symbol('a'), StrictLessThan(Symbol('x'), Integer(1)))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Implies",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Unequality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "Unequality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Unequality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "Unequality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Unequality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "Unequality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Not(Symbol('a'))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Unequality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "Unequality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Unequality(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Implies",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Unequality(Symbol('x'), Integer(1))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Unequality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Unequality(Integer(1), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "Unequality(Integer(1), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Unequality(Integer(1), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "Unequality(Integer(1), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Unequality(Integer(1), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "Unequality(Integer(1), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Not(Symbol('a'))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Unequality(Integer(1), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "Unequality(Integer(1), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Unequality(Integer(1), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Implies",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Unequality(Integer(1), Symbol('x'))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "Equality(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "Unequality(Integer(1), Symbol('x'))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "LessThan(Mul(Integer(-1), Symbol('x')), Integer(-1))"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "LessThan(Mul(Integer(-1), Symbol('x')), Integer(-1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "LessThan(Mul(Integer(-1), Symbol('x')), Integer(-1))"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "LessThan(Mul(Integer(-1), Symbol('x')), Integer(-1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "LessThan(Mul(Integer(-1), Symbol('x')), Integer(-1))"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "LessThan(Mul(Integer(-1), Symbol('x')), Integer(-1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Not(Symbol('a'))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "LessThan(Mul(Integer(-1), Symbol('x')), Integer(-1))"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "LessThan(Mul(Integer(-1), Symbol('x')), Integer(-1))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "LessThan(Mul(Integer(-1), Symbol('x')), Integer(-1))"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    }
+   ],
+   "params": {
+    "cls": "Implies",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "LessThan(Mul(Integer(-1), Symbol('x')), Integer(-1))"
+    },
+    {
+     "expr": "StrictLessThan(Symbol('x'), Integer(1))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictGreaterThan(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "LessThan(Symbol('x'), Integer(2))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictGreaterThan(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "LessThan(Symbol('x'), Integer(2))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictGreaterThan(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "LessThan(Symbol('x'), Integer(2))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictGreaterThan(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "LessThan(Symbol('x'), Integer(2))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictGreaterThan(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "LessThan(Symbol('x'), Integer(2))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictGreaterThan(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "LessThan(Symbol('x'), Integer(2))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Not(Symbol('a'))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictGreaterThan(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "LessThan(Symbol('x'), Integer(2))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictGreaterThan(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "LessThan(Symbol('x'), Integer(2))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictGreaterThan(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "LessThan(Symbol('x'), Integer(2))"
+    }
+   ],
+   "params": {
+    "cls": "Implies",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "LessThan(Symbol('x'), Integer(2))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictGreaterThan(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "LessThan(Symbol('x'), Integer(2))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "GreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "And(GreaterThan(Symbol('y'), Symbol('x')), StrictLessThan(Symbol('x'), Symbol('y')))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "GreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "And(Symbol('a'), GreaterThan(Symbol('y'), Symbol('x')), StrictLessThan(Symbol('x'), Symbol('y')))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "GreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Or(GreaterThan(Symbol('y'), Symbol('x')), StrictLessThan(Symbol('x'), Symbol('y')))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "GreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Or(Symbol('a'), GreaterThan(Symbol('y'), Symbol('x')), StrictLessThan(Symbol('x'), Symbol('y')))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "GreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Xor(GreaterThan(Symbol('y'), Symbol('x')), StrictLessThan(Symbol('x'), Symbol('y')))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "GreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Xor(Symbol('a'), GreaterThan(Symbol('y'), Symbol('x')), StrictLessThan(Symbol('x'), Symbol('y')))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "GreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Equivalent(GreaterThan(Symbol('y'), Symbol('x')), StrictLessThan(Symbol('x'), Symbol('y')))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "GreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Equivalent(Symbol('a'), GreaterThan(Symbol('y'), Symbol('x')), StrictLessThan(Symbol('x'), Symbol('y')))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "GreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Implies",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Implies(StrictLessThan(Symbol('x'), Symbol('y')), GreaterThan(Symbol('y'), Symbol('x')))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "GreaterThan(Symbol('y'), Symbol('x'))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Not(Xor(GreaterThan(Symbol('y'), Symbol('x')), StrictLessThan(Symbol('x'), Symbol('y'))))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "StrictGreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "StrictGreaterThan(Symbol('y'), Symbol('x'))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "StrictGreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "And",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "And(Symbol('a'), StrictGreaterThan(Symbol('y'), Symbol('x')))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "StrictGreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "StrictGreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Or",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Or(Symbol('a'), StrictLessThan(Symbol('x'), Symbol('y')))"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "StrictGreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "false"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "StrictGreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Symbol('a')"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "StrictGreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "Symbol('a')"
+    },
+    {
+     "expr": "StrictGreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Equivalent",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "Symbol('a')"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "StrictGreaterThan(Symbol('y'), Symbol('x'))"
+    }
+   ],
+   "params": {
+    "cls": "Implies",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "bool_new",
+   "args": [
+    {
+     "expr": "StrictLessThan(Symbol('x'), Symbol('y'))"
+    },
+    {
+     "expr": "StrictGreaterThan(Symbol('y'), Symbol('x'))"
+    },
+    {
+     "expr": "true"
+    }
+   ],
+   "params": {
+    "cls": "Xor",
+    "evaluate": null,
+    "globl": true
+   },
+   "out": {
+    "expr": "true"
+   }
+  },
+  {
+   "op": "to_nnf",
+   "args": [
+    {
+     "expr": "StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y'))"
+    }
+   ],
+   "params": {
+    "simplify": true
+   },
+   "out": {
+    "expr": "StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y'))"
+   }
+  },
+  {
+   "op": "to_nnf",
+   "args": [
+    {
+     "expr": "StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y'))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "expr": "StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y'))"
+   }
+  },
+  {
+   "op": "is_literal",
+   "args": [
+    {
+     "expr": "StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y'))"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "to_cnf",
+   "args": [
+    {
+     "expr": "StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y'))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "expr": "StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y'))"
+   }
+  },
+  {
+   "op": "to_dnf",
+   "args": [
+    {
+     "expr": "StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y'))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "expr": "StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y'))"
+   }
+  },
+  {
+   "op": "to_nnf",
+   "args": [
+    {
+     "expr": "And(Symbol('a'), StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+    }
+   ],
+   "params": {
+    "simplify": true
+   },
+   "out": {
+    "expr": "And(Symbol('a'), StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+   }
+  },
+  {
+   "op": "to_nnf",
+   "args": [
+    {
+     "expr": "And(Symbol('a'), StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "expr": "And(Symbol('a'), StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+   }
+  },
+  {
+   "op": "is_literal",
+   "args": [
+    {
+     "expr": "And(Symbol('a'), StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "to_cnf",
+   "args": [
+    {
+     "expr": "And(Symbol('a'), StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "expr": "And(Symbol('a'), StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+   }
+  },
+  {
+   "op": "to_dnf",
+   "args": [
+    {
+     "expr": "And(Symbol('a'), StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "expr": "And(Symbol('a'), StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+   }
+  },
+  {
+   "op": "to_nnf",
+   "args": [
+    {
+     "expr": "Not(StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+    }
+   ],
+   "params": {
+    "simplify": true
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "to_nnf",
+   "args": [
+    {
+     "expr": "Not(StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "is_literal",
+   "args": [
+    {
+     "expr": "Not(StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "to_cnf",
+   "args": [
+    {
+     "expr": "Not(StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "to_dnf",
+   "args": [
+    {
+     "expr": "Not(StrictLessThan(Add(Integer(1), Symbol('x')), Symbol('y')))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "to_nnf",
+   "args": [
+    {
+     "expr": "Not(Nand(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "params": {
+    "simplify": true
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "to_nnf",
+   "args": [
+    {
+     "expr": "Not(Nand(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "is_literal",
+   "args": [
+    {
+     "expr": "Not(Nand(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "to_cnf",
+   "args": [
+    {
+     "expr": "Not(Nand(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "to_dnf",
+   "args": [
+    {
+     "expr": "Not(Nand(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "to_nnf",
+   "args": [
+    {
+     "expr": "Or(Not(Symbol('a')), Equality(Mul(Symbol('x'), Symbol('y')), Integer(1)))"
+    }
+   ],
+   "params": {
+    "simplify": true
+   },
+   "out": {
+    "expr": "Or(Not(Symbol('a')), Equality(Mul(Symbol('x'), Symbol('y')), Integer(1)))"
+   }
+  },
+  {
+   "op": "to_nnf",
+   "args": [
+    {
+     "expr": "Or(Not(Symbol('a')), Equality(Mul(Symbol('x'), Symbol('y')), Integer(1)))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "expr": "Or(Not(Symbol('a')), Equality(Mul(Symbol('x'), Symbol('y')), Integer(1)))"
+   }
+  },
+  {
+   "op": "is_literal",
+   "args": [
+    {
+     "expr": "Or(Not(Symbol('a')), Equality(Mul(Symbol('x'), Symbol('y')), Integer(1)))"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "to_cnf",
+   "args": [
+    {
+     "expr": "Or(Not(Symbol('a')), Equality(Mul(Symbol('x'), Symbol('y')), Integer(1)))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "expr": "Or(Not(Symbol('a')), Equality(Mul(Symbol('x'), Symbol('y')), Integer(1)))"
+   }
+  },
+  {
+   "op": "to_dnf",
+   "args": [
+    {
+     "expr": "Or(Not(Symbol('a')), Equality(Mul(Symbol('x'), Symbol('y')), Integer(1)))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "expr": "Or(Not(Symbol('a')), Equality(Mul(Symbol('x'), Symbol('y')), Integer(1)))"
+   }
+  },
+  {
+   "op": "to_nnf",
+   "args": [
+    {
+     "expr": "Not(Xnor(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "params": {
+    "simplify": true
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "to_nnf",
+   "args": [
+    {
+     "expr": "Not(Xnor(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "is_literal",
+   "args": [
+    {
+     "expr": "Not(Xnor(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "to_cnf",
+   "args": [
+    {
+     "expr": "Not(Xnor(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "to_dnf",
+   "args": [
+    {
+     "expr": "Not(Xnor(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "params": {
+    "simplify": false
+   },
+   "out": {
+    "error": "ValueError"
+   }
+  },
+  {
+   "op": "is_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('c'), And(Symbol('a'), Not(Symbol('b'))))"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "to_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('c'), And(Symbol('a'), Not(Symbol('b'))))"
+    }
+   ],
+   "params": {
+    "deep": true
+   },
+   "out": {
+    "expr": "Xor(Symbol('a'), Symbol('c'), And(Symbol('a'), Symbol('b')))"
+   }
+  },
+  {
+   "op": "to_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('c'), And(Symbol('a'), Not(Symbol('b'))))"
+    }
+   ],
+   "params": {
+    "deep": false
+   },
+   "out": {
+    "expr": "Xor(Symbol('c'), And(Symbol('a'), Not(Symbol('b'))))"
+   }
+  },
+  {
+   "op": "is_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('b'), Not(Symbol('a')))"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "to_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('b'), Not(Symbol('a')))"
+    }
+   ],
+   "params": {
+    "deep": true
+   },
+   "out": {
+    "expr": "Xor(Symbol('a'), Symbol('b'), true)"
+   }
+  },
+  {
+   "op": "to_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('b'), Not(Symbol('a')))"
+    }
+   ],
+   "params": {
+    "deep": false
+   },
+   "out": {
+    "expr": "Xor(Symbol('b'), Not(Symbol('a')))"
+   }
+  },
+  {
+   "op": "is_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('c'), Or(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "to_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('c'), Or(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "params": {
+    "deep": true
+   },
+   "out": {
+    "expr": "Xor(Symbol('a'), Symbol('b'), Symbol('c'), And(Symbol('a'), Symbol('b')))"
+   }
+  },
+  {
+   "op": "to_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('c'), Or(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "params": {
+    "deep": false
+   },
+   "out": {
+    "expr": "Xor(Symbol('c'), Or(Symbol('a'), Symbol('b')))"
+   }
+  },
+  {
+   "op": "is_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('c'), And(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "to_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('c'), And(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "params": {
+    "deep": true
+   },
+   "out": {
+    "expr": "Xor(Symbol('c'), And(Symbol('a'), Symbol('b')))"
+   }
+  },
+  {
+   "op": "to_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('c'), And(Symbol('a'), Symbol('b')))"
+    }
+   ],
+   "params": {
+    "deep": false
+   },
+   "out": {
+    "expr": "Xor(Symbol('c'), And(Symbol('a'), Symbol('b')))"
+   }
+  },
+  {
+   "op": "is_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('a'), Symbol('b'), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "out": {
+    "bool": true
+   }
+  },
+  {
+   "op": "to_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('a'), Symbol('b'), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "deep": true
+   },
+   "out": {
+    "expr": "Xor(Symbol('a'), Symbol('b'), StrictLessThan(Symbol('x'), Integer(1)))"
+   }
+  },
+  {
+   "op": "to_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('a'), Symbol('b'), StrictLessThan(Symbol('x'), Integer(1)))"
+    }
+   ],
+   "params": {
+    "deep": false
+   },
+   "out": {
+    "expr": "Xor(Symbol('a'), Symbol('b'), StrictLessThan(Symbol('x'), Integer(1)))"
+   }
+  },
+  {
+   "op": "is_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('b'), And(Symbol('a'), StrictLessThan(Symbol('x'), Integer(1))))"
+    }
+   ],
+   "out": {
+    "bool": false
+   }
+  },
+  {
+   "op": "to_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('b'), And(Symbol('a'), StrictLessThan(Symbol('x'), Integer(1))))"
+    }
+   ],
+   "params": {
+    "deep": true
+   },
+   "out": {
+    "expr": "Xor(Symbol('b'), And(Symbol('a'), StrictLessThan(Symbol('x'), Integer(1))))"
+   }
+  },
+  {
+   "op": "to_anf",
+   "args": [
+    {
+     "expr": "Xor(Symbol('b'), And(Symbol('a'), StrictLessThan(Symbol('x'), Integer(1))))"
+    }
+   ],
+   "params": {
+    "deep": false
+   },
+   "out": {
+    "expr": "Xor(Symbol('b'), And(Symbol('a'), StrictLessThan(Symbol('x'), Integer(1))))"
+   }
   }
  ]
 }
