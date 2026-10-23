@@ -32,10 +32,36 @@ pub fn gcd_terms(e: &Expr, isprimitive: bool, clear: bool, fraction: bool) -> Ex
     not_ported("gcd_terms")
 }
 
-/// `decompose_power(expr)`: `(base, integer exponent)`.
+/// `decompose_power(expr)`: `(base, integer exponent)`. SymPy returns a
+/// Python int; an exponent beyond `i64` is `NotPortedYet` here.
 pub fn decompose_power(e: &Expr) -> (Expr, i64) {
-    let _ = e;
-    not_ported("decompose_power")
+    use crate::generated::ClassId as C;
+    let expr = e;
+    let (mut base, exp) = expr.as_base_exp();
+    let (base, e) = if exp.is_Number() {
+        if exp.is_Rational() {
+            if !exp.is_Integer() {
+                base = crate::power::pow(&base, &Expr::rational(1, exp.q()));
+            }
+            (base, exp.p())
+        } else {
+            (expr.clone(), rsympy_num::Int::ONE)
+        }
+    } else {
+        let (exp, tail) = exp.as_coeff_Mul(true);
+        if exp.is_cls(C::NegativeOne) {
+            (crate::power::pow(&base, &tail), rsympy_num::Int::NEG_ONE)
+        } else if !exp.is_cls(C::One) {
+            let tail = crate::mul::keep_coeff(&Expr::rational(1, exp.q()), &tail, true, false);
+            (crate::power::pow(&base, &tail), exp.p())
+        } else {
+            (expr.clone(), rsympy_num::Int::ONE)
+        }
+    };
+    let e = e
+        .as_i64()
+        .unwrap_or_else(|| not_ported("decompose_power: an exponent beyond i64"));
+    (base, e)
 }
 
 /// `_monotonic_sign(expr)`: the closest number to zero that `expr` can
