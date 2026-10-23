@@ -7,6 +7,9 @@
 use crate::error::not_ported;
 use crate::expr::Expr;
 use crate::facts::Fact;
+use crate::generated::ClassId as C;
+use crate::numbers::s;
+use crate::ops;
 
 /// `Add(*args)` under the current `global_parameters.evaluate`.
 pub fn add(args: Vec<Expr>) -> Expr {
@@ -34,8 +37,24 @@ pub fn unevaluated_add(args: Vec<Expr>) -> Expr {
 
 /// `Add.__neg__`.
 pub fn neg(a: &Expr) -> Expr {
-    let _ = a;
-    not_ported("Add.__neg__")
+    if crate::ctx::distribute() {
+        // Expr.__neg__
+        return crate::mul::from_args(vec![s::negative_one(), a.clone()], Some(a.is_commutative()));
+    }
+    add(a.args().iter().map(ops::neg).collect())
+}
+
+/// `AssocOp._new_rawargs(*args)`: `_from_args` with `self`'s
+/// commutativity, recomputed when `self` is non-commutative.
+pub(crate) fn assoc_new_rawargs(e: &Expr, args: Vec<Expr>) -> Expr {
+    let c = e.is_commutative();
+    let is_commutative = if c == Some(false) { None } else { Some(c) };
+    crate::construct::assoc_from_args(e.cls(), args, is_commutative)
+}
+
+/// `Add._new_rawargs(*args)`.
+pub fn new_rawargs(e: &Expr, args: Vec<Expr>) -> Expr {
+    assoc_new_rawargs(e, args)
 }
 
 /// `Add._eval_power(expt)`.
@@ -47,14 +66,22 @@ pub fn eval_power(base: &Expr, expt: &Expr) -> Option<Expr> {
 /// `Add.as_coeff_Add(rational)`.
 #[allow(non_snake_case)]
 pub fn as_coeff_Add(e: &Expr, rational: bool) -> (Expr, Expr) {
-    let _ = (e, rational);
-    not_ported("Add.as_coeff_Add")
+    let (coeff, args) = (e.arg(0), &e.args()[1..]);
+    if coeff.is_Number() && !rational || coeff.is_Rational() {
+        return (coeff.clone(), new_rawargs(e, args.to_vec()));
+    }
+    (s::zero(), e.clone())
 }
 
 /// `Add.as_coeff_add(*deps)` with no deps: `(coeff, terms)`.
 pub fn as_coeff_add(e: &Expr) -> (Expr, Vec<Expr>) {
-    let _ = e;
-    not_ported("Add.as_coeff_add")
+    let (coeff, notrat) = e.arg(0).as_coeff_add();
+    if !coeff.is_cls(C::Zero) {
+        let mut v = notrat;
+        v.extend_from_slice(&e.args()[1..]);
+        return (coeff, v);
+    }
+    (s::zero(), e.args().to_vec())
 }
 
 /// `Add.as_numer_denom()`.

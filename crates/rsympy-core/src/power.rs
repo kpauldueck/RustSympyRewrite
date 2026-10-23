@@ -40,8 +40,11 @@ pub fn eval_power(base: &Expr, expt: &Expr) -> Option<Expr> {
 
 /// `Pow.as_base_exp()`.
 pub fn as_base_exp(e: &Expr) -> (Expr, Expr) {
-    let _ = e;
-    not_ported("Pow.as_base_exp")
+    let (b, x) = (e.arg(0), e.arg(1));
+    if b.is_Rational() && b.p().is_one() && !b.q().is_one() {
+        return (Expr::integer(b.q()), crate::ops::neg(x));
+    }
+    (b.clone(), x.clone())
 }
 
 /// `Pow.as_numer_denom()`.
