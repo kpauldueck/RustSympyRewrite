@@ -4,9 +4,24 @@
 
 use rsympy_num::Int;
 
-/// `bitcount(n)`: bits in `|n|`.
+/// `bitcount(n)`, mpmath's `python_bitcount`: the bit length of `n` for
+/// `n > 0`, and 0 for `n <= 0` (it bisects a table of powers of two, so a
+/// negative argument counts as 0; `mpf_cos_sin_pi` depends on that).
 pub fn bitcount(n: &Int) -> i64 {
-    n.bit_length() as i64
+    if n.is_negative() {
+        0
+    } else {
+        n.bit_length() as i64
+    }
+}
+
+/// `bctable[n]`: the bit count of a small `0 <= n < 1024`.
+pub fn bctable(n: &Int) -> i64 {
+    assert!(
+        !n.is_negative() && *n < 1024,
+        "bctable index {n} out of range"
+    );
+    bitcount(n)
 }
 
 /// `trailing(n)`: trailing zero bits of `n` (0 for 0).
@@ -155,6 +170,37 @@ pub fn isqrt(x: &Int) -> Int {
 /// `sqrt_fixed(x, prec)`.
 pub fn sqrt_fixed(x: &Int, prec: i64) -> Int {
     isqrt_fast(&(x << prec as u64))
+}
+
+/// `ifib(n)`: the n-th Fibonacci number, by Dijkstra's logarithmic
+/// algorithm (mpmath's `_cache` only speeds it up).
+pub fn ifib(n: &Int) -> Int {
+    if n.is_negative() {
+        let m = -n;
+        let f = ifib(&m);
+        // (-1)**(-n+1) * ifib(-n)
+        return if (&m + 1).is_odd() { -f } else { f };
+    }
+    let (mut a, mut b, mut p, mut q) = (Int::ONE, Int::ZERO, Int::ZERO, Int::ONE);
+    let mut n = n.clone();
+    while !n.is_zero() {
+        if n.is_odd() {
+            let aq = &a * &q;
+            let na = &(&(&b * &q) + &aq) + &(&a * &p);
+            let nb = &(&b * &p) + &aq;
+            a = na;
+            b = nb;
+            n = &n - 1;
+        } else {
+            let qq = &q * &q;
+            let np = &(&p * &p) + &qq;
+            let nq = &qq + &(&(&p * &q) << 1);
+            p = np;
+            q = nq;
+            n = &n >> 1;
+        }
+    }
+    b
 }
 
 /// `ifac(n)`: n!.

@@ -1,5 +1,6 @@
 //! Port of the mathematical constants in `mpmath.libmp.libelefun`: pi
-//! (Chudnovsky), e, ln 2, ln 10, the golden ratio and the degree.
+//! (Chudnovsky), e, ln 2, ln 10, the golden ratio, the degree, sqrt(pi)
+//! and ln(sqrt(2*pi)).
 //!
 //! mpmath memoizes each constant's fixed-point value at the highest
 //! precision asked for so far (`constant_memo`) and serves lower precisions
@@ -11,8 +12,9 @@ use std::cell::RefCell;
 
 use rsympy_num::Int;
 
-use crate::intmath::{bitcount, isqrt_fast};
-use crate::mpf::{Mpf, Rnd, normalize};
+use crate::elefun::mpf_log;
+use crate::intmath::{bitcount, isqrt_fast, sqrt_fixed};
+use crate::mpf::{Mpf, ROUND_FAST, Rnd, mpf_shift, normalize, to_fixed};
 
 #[derive(Clone, Copy)]
 enum Constant {
@@ -21,10 +23,14 @@ enum Constant {
     Ln2,
     Ln10,
     Phi,
+    SqrtPi,
+    LnSqrt2Pi,
 }
 
+const NCONST: usize = 7;
+
 thread_local! {
-    static MEMO: RefCell<[Option<(i64, Int)>; 5]> = const { RefCell::new([None, None, None, None, None]) };
+    static MEMO: RefCell<[Option<(i64, Int)>; NCONST]> = const { RefCell::new([const { None }; NCONST]) };
 }
 
 /// `constant_memo(f)(prec)`.
@@ -45,9 +51,13 @@ fn memoized(c: Constant, prec: i64, f: fn(i64) -> Int) -> Int {
     out
 }
 
-/// Forgets every memoized constant, as a fresh Python process would have.
+/// Forgets every memoized constant, as a fresh Python process would have,
+/// together with the libelefun caches that can change later results
+/// (`atan_taylor_cache`, whose filling moves the pi memo, and
+/// `log_int_cache`).
 pub fn clear_constant_cache() {
-    MEMO.with(|m| *m.borrow_mut() = [None, None, None, None, None]);
+    MEMO.with(|m| *m.borrow_mut() = [const { None }; NCONST]);
+    crate::elefun::clear_history_caches();
 }
 
 fn bsp_acot(q: &Int, a: i64, b: i64, hyperbolic: bool) -> (Int, Int, Int) {
@@ -218,4 +228,34 @@ pub fn mpf_phi(prec: i64, rnd: Rnd) -> Mpf {
 
 pub fn mpf_degree(prec: i64, rnd: Rnd) -> Mpf {
     mpf_constant(degree_fixed, prec, rnd)
+}
+
+fn ln_sqrt2pi_raw(prec: i64) -> Int {
+    let wp = prec + 10;
+    // ln(sqrt(2*pi)) = ln(2*pi)/2
+    let two_pi = mpf_shift(&mpf_pi(wp, ROUND_FAST), 1);
+    let l = mpf_log(&two_pi, wp, ROUND_FAST).expect("2*pi > 0");
+    to_fixed(&l, prec - 1)
+}
+
+/// `ln_sqrt2pi_fixed(prec)`.
+pub fn ln_sqrt2pi_fixed(prec: i64) -> Int {
+    memoized(Constant::LnSqrt2Pi, prec, ln_sqrt2pi_raw)
+}
+
+fn sqrtpi_raw(prec: i64) -> Int {
+    sqrt_fixed(&pi_fixed(prec), prec)
+}
+
+/// `sqrtpi_fixed(prec)`.
+pub fn sqrtpi_fixed(prec: i64) -> Int {
+    memoized(Constant::SqrtPi, prec, sqrtpi_raw)
+}
+
+pub fn mpf_sqrtpi(prec: i64, rnd: Rnd) -> Mpf {
+    mpf_constant(sqrtpi_fixed, prec, rnd)
+}
+
+pub fn mpf_ln_sqrt2pi(prec: i64, rnd: Rnd) -> Mpf {
+    mpf_constant(ln_sqrt2pi_fixed, prec, rnd)
 }
