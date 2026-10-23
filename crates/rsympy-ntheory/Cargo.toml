@@ -1,0 +1,17 @@
+[package]
+name = "rsympy-ntheory"
+description = "SymPy's number theory base: primality, factorint, perfect powers"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+rsympy-num = { path = "../rsympy-num" }
+
+[dev-dependencies]
+serde_json = "1"
+
+[lints]
+workspace = true
