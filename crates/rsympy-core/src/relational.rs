@@ -181,6 +181,8 @@ pub fn rich_method(a: &Expr, b: &Expr, op: CmpOp) -> Option<Expr> {
         ),
         // Tuple.__lt__ / __le__: _sympify(self.args < other.args)
         "Tuple" => Some(tuple_rich(a, b, op)),
+        "floor" => Some(round_rich(a, b, op, true)),
+        "ceiling" => Some(round_rich(a, b, op, false)),
         // FiniteSet.__lt__ etc.
         "FiniteSet" => {
             if !b.is_a(Tag::Set) {
@@ -306,6 +308,61 @@ fn tuple_rich(a: &Expr, other: &Expr, op: CmpOp) -> Expr {
     boolean(op.ord(&x.len(), &y.len()))
 }
 
+/// `floor.__lt__` / `__le__` / `__gt__` / `__ge__` (`floor` true) and
+/// `ceiling`'s (`functions.elementary.integers`), which all share one
+/// shape and differ in the constants below.
+fn round_rich(a: &Expr, other: &Expr, op: CmpOp, floor: bool) -> Expr {
+    use CmpOp::{Ge, Gt, Le, Lt};
+    // (the shift added to an integer `other`, the comparison then made
+    // with `self.args[0]`, whether `self.args[0] == other` also needs
+    // `other.is_noninteger`, what that case returns, and whether the
+    // infinity that gives `S.true` for a finite self is `oo` or `-oo`)
+    let (shift, cmp, nonint, eq_value, pos_inf) = match (floor, op) {
+        (true, Le) => (1, Lt, false, true, true),
+        (true, Ge) => (0, Ge, true, false, false),
+        (true, Gt) => (1, Ge, false, false, false),
+        (true, Lt) => (0, Lt, true, true, true),
+        (false, Lt) => (-1, Le, false, false, true),
+        (false, Gt) => (0, Gt, true, true, false),
+        (false, Ge) => (-1, Gt, false, true, false),
+        (false, Le) => (0, Le, true, false, true),
+    };
+    let arg = a.arg(0);
+    if arg.is_real() == Some(true) {
+        if other.is_integer() == Some(true) {
+            let o = match shift {
+                1 => ops::add(other, &s::one()),
+                -1 => ops::sub(other, &s::one()),
+                _ => other.clone(),
+            };
+            return richcmp(arg, &o, cmp);
+        }
+        if other.is_number() && other.is_real() == Some(true) {
+            // floor compares with ceiling(other), ceiling with floor(other)
+            let r = crate::functions::call(
+                if floor { C::Ceiling } else { C::Floor },
+                vec![other.clone()],
+            );
+            return richcmp(arg, &r, cmp);
+        }
+    }
+    if arg == other
+        && other.is_real() == Some(true)
+        && (!nonint || other.is_noninteger() == Some(true))
+    {
+        return boolean(eq_value);
+    }
+    let inf = if pos_inf {
+        C::Infinity
+    } else {
+        C::NegativeInfinity
+    };
+    if other.is_cls(inf) && a.is_finite() == Some(true) {
+        return s::true_();
+    }
+    raw_rel(op.class(), a, other)
+}
+
 // ===========================================================================
 // Relational construction
 // ===========================================================================
@@ -357,6 +414,23 @@ pub fn new_rel_with(cls: C, lhs: &Expr, rhs: &Expr, evaluate: bool) -> Expr {
         }
         _ => unreachable!("{cls:?} is not a Relational class"),
     }
+}
+
+/// `cls(*args, evaluate=evaluate)` for a Relational class (`evaluate`
+/// `None`: not passed): `TypeError` unless there are exactly two args
+/// (`Eq(x)`, the deprecated one-argument form, now fails this way).
+pub fn new_rel_args(cls: C, args: &[Expr], evaluate: Option<bool>) -> Expr {
+    let [lhs, rhs] = args else {
+        raise(
+            ErrorKind::TypeError,
+            format!(
+                "{}.__new__() takes 2 positional arguments but {} were given",
+                crate::generated::CLASSES[cls as usize].name,
+                args.len()
+            ),
+        )
+    };
+    new_rel_with(cls, lhs, rhs, evaluate.unwrap_or_else(ctx::evaluate))
 }
 
 /// `Relational.__new__(cls, lhs, rhs)` for a subclass: `Basic.__new__`.
@@ -432,8 +506,9 @@ fn nontriv_bool(side: &Expr) -> bool {
     side.is_a(Tag::Boolean) && !side.is_a(Tag::Atom)
 }
 
-/// `Relational(lhs, rhs, rop)` (`Rel`): the subclass named by `rop`.
-pub fn rel(lhs: &Expr, rhs: &Expr, rop: Option<&str>) -> Expr {
+/// `Relational(lhs, rhs, rop, evaluate=evaluate)` (`Rel`): the subclass
+/// named by `rop` (`evaluate` `None`: not passed).
+pub fn rel(lhs: &Expr, rhs: &Expr, rop: Option<&str>, evaluate: Option<bool>) -> Expr {
     let Some(cls) = class_for_rop(rop) else {
         raise(
             ErrorKind::ValueError,
@@ -447,7 +522,26 @@ pub fn rel(lhs: &Expr, rhs: &Expr, rop: Option<&str>) -> Expr {
              expect real expressions.",
         );
     }
-    new_rel(cls, lhs, rhs)
+    new_rel_with(cls, lhs, rhs, evaluate.unwrap_or_else(ctx::evaluate))
+}
+
+/// `_canonical_coeff(rel)`: `rel.canonical` with the coefficient of the
+/// left side divided out (`-2*x + 1 < 0` becomes `x > 1/2`).
+pub fn canonical_coeff(rel: &Expr) -> Expr {
+    let rel = canonical(rel);
+    if !rel.is_Relational() || rel.arg(1).is_Boolean() {
+        return rel; // Eq(x, True)
+    }
+    if !rel.arg(0).is_a(Tag::Expr) {
+        return reversed(&rel); // e.g.: Eq(True, x) -> Eq(x, True)
+    }
+    let (b, l) = rel.arg(0).as_coeff_Add(true);
+    let (m, lhs) = l.as_coeff_Mul(true);
+    let rhs = ops::div(&ops::sub(rel.arg(1), &b), &m);
+    if lt(&m, &s::zero()).truthy() {
+        return new_rel(reversed(&rel).cls(), &lhs, &rhs);
+    }
+    new_rel(rel.cls(), &lhs, &rhs)
 }
 
 // ===========================================================================
@@ -788,6 +882,22 @@ fn eval_is_eq(lhs: &Expr, rhs: &Expr) -> Option<bool> {
         | "sets(Interval, FiniteSet)"
         | "sets(FiniteSet, Interval)"
         | "sets(Set, Basic)" => Some(false),
+        // And(Eq(lhs.left, rhs.left), Eq(lhs.right, rhs.right),
+        //     lhs.left_open == rhs.left_open,
+        //     lhs.right_open == rhs.right_open)
+        "sets(Interval, Interval)" => {
+            let r = crate::logic::boolalg::and(vec![
+                equality(lhs.arg(0), rhs.arg(0)),
+                equality(lhs.arg(1), rhs.arg(1)),
+                boolean(lhs.arg(2) == rhs.arg(2)),
+                boolean(lhs.arg(3) == rhs.arg(3)),
+            ]);
+            match r.cls() {
+                C::BooleanTrue => Some(true),
+                C::BooleanFalse => Some(false),
+                _ => not_ported("is_eq returning an unevaluated Boolean (Interval == Interval)"),
+            }
+        }
         "relational(Tuple, Tuple)" => {
             if lhs.args().len() != rhs.args().len() {
                 return Some(false);
