@@ -1,9 +1,9 @@
 name: CI
 
+# The checks run locally with ./ci.sh (see README). This workflow runs the
+# same checks on GitHub only when started by hand from the Actions tab.
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
