@@ -652,7 +652,7 @@ pub fn expr_eval_conjugate(e: &Expr) -> Option<Expr> {
 
 /// `Expr._eval_transpose()`.
 pub fn expr_eval_transpose(e: &Expr) -> Option<Expr> {
-    if e.is_complex() == Some(true) || e.is_infinite() == Some(true) {
+    if e.is_commutative() == Some(true) {
         Some(e.clone())
     } else if e.is_hermitian() == Some(true) {
         Some(call(ClassId::Conjugate, vec![e.clone()]))
