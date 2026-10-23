@@ -329,6 +329,16 @@ def properties():
     for e in RELS[:10]:
         add("equals", [e, e.reversed], lambda p, q: p.equals(q))
         add("simplify", [e], lambda p: p.simplify())
+    # Relational.equals without Expr.equals: the same or the reversed
+    # relation, another class, or not a Relational at all
+    for p, q in [(x < 1, x < 1), (x < 1, 1 > x), (x < 1, x <= 1),
+                 (x < 1, 1 >= x), (x < 1, Eq(x, 1)), (Eq(x, 1), Ne(x, 1)),
+                 (Eq(x, 1), Eq(1, x)), (Ne(x, y), Ne(y, x)), (x < 1, x),
+                 (Eq(x, 1), S(1)), (x > 2, Ge(x, 2)), (x >= 2, 2 <= x),
+                 (Lt(2, 1, evaluate=False), Gt(1, 2, evaluate=False)),
+                 (Eq(a, true), Ne(a, true)), (y <= 3, Lt(y, 3)),
+                 (x < 1, y > 3), (Eq(x, 1), x < 1), (Ne(x, 1), x >= 1)]:
+        add("equals", [p, q], lambda p, q: p.equals(q))
 
 
 # ---------------------------------------------------------------------------
@@ -459,6 +469,105 @@ def forms():
                 simplify=True, force=True)
 
 
+# ---------------------------------------------------------------------------
+# SOPform, POSform, ANFform and friends
+
+
+QM = random.Random(20251024)
+QMVARS = symbols("w x y z v u")
+
+
+def spec(term, variables):
+    """A term as SOPform takes it: an int, a list of bits or a dict."""
+    r = QM.random()
+    if r < 0.45:
+        return term
+    bits = [int(b) for b in bin(term)[2:].rjust(len(variables), "0")]
+    if r < 0.9:
+        return bits
+    # a dict fixing a random subset of the variables (at least one)
+    keep = sorted(QM.sample(range(len(variables)),
+                            QM.randint(1, len(variables))))
+    return {variables[i]: bits[i] for i in keep}
+
+
+def quine_mccluskey():
+    from sympy.logic.boolalg import (ANFform, POSform, SOPform, anf_coeffs,
+                                     bool_maxterm, bool_minterm,
+                                     bool_monomial, gateinputcount,
+                                     simplify_logic, term_to_integer,
+                                     to_int_repr)
+    forms = {"SOPform": SOPform, "POSform": POSform}
+    for i in range(420):
+        n = QM.choice([1, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 6])
+        variables = list(QMVARS[:n])
+        everything = list(range(2 ** n))
+        QM.shuffle(everything)
+        k = QM.randint(0, 2 ** n)
+        minterms = everything[:k]
+        rest = everything[k:]
+        dontcares = rest[:QM.randint(0, min(len(rest), 2 ** n // 3))]
+        name = "SOPform" if i % 2 else "POSform"
+        mt = [spec(t, variables) for t in minterms]
+        dc = [spec(t, variables) for t in dontcares]
+        if QM.random() < 0.3:
+            dc = None
+        add("qm_form", [variables, mt, dc], forms[name], name=name)
+    # inputs SOPform rejects or reads oddly
+    v3 = list(QMVARS[:3])
+    for mt, dc in [([[0, 1]], None), ([8], None), ([-1], None), ([S(3)], None),
+                   (["101"], None), ([1, 3], [3]), ([1, 3], [[0, 1, 1]]),
+                   ([{QMVARS[5]: 1}], None), ([], [1]), ([], None),
+                   ([[1, 0, 2]], None), ([[1, 3, 0]], None),
+                   ([{QMVARS[0]: 1, QMVARS[1]: 0, QMVARS[2]: 1}], [5]),
+                   ([(1, 0, 1), 2], [{QMVARS[0]: 0}])]:
+        for name in ("SOPform", "POSform"):
+            add("qm_form", [v3, mt, dc], forms[name], name=name)
+    add("qm_form", [[x, x], [{x: 1}], None], SOPform, name="SOPform")
+    add("qm_form", [[], [0], None], SOPform, name="SOPform")
+    add("qm_form", [[], [0], None], POSform, name="POSform")
+    # ANFform and anf_coeffs
+    for i in range(80):
+        n = QM.choice([0, 1, 2, 3, 4])
+        values = [QM.randint(0, 1) for _ in range(2 ** n)]
+        if i % 10 == 9:
+            values = values[:-1] or [0, 1, 1]
+        add("ANFform", [list(QMVARS[:n]), values], ANFform)
+        add("anf_coeffs", [values], anf_coeffs)
+    add("ANFform", [[x], [0, 2]], ANFform)
+    add("anf_coeffs", [[]], anf_coeffs)
+    add("anf_coeffs", [[1, 3, 0, 2]], anf_coeffs)
+    # the k-th minterm, maxterm and monomial
+    fns = {"bool_minterm": bool_minterm, "bool_maxterm": bool_maxterm,
+           "bool_monomial": bool_monomial}
+    for name, f in fns.items():
+        for k in [0, 1, 5, 7, 8, -1, [1, 0, 1], [0, 0], [1, 1, 1, 1],
+                  [1, 3, 0], [2, 1, 0]]:
+            add("bool_term", [k, v3], f, name=name)
+        add("bool_term", [0, []], f, name=name)
+    for term in [[1, 0, 0], [0], [1], [], [0, 0, 1, 1], [2], [1, 2], [-1],
+                 [-1, 1], [1, -1], [10]]:
+        add("term_to_integer", [term], term_to_integer)
+    clauses = [a | b, b, ~a | c, Or(a, ~b, c), ~c]
+    for cl in [clauses, clauses[:2], [a & b], [d], [a | d]]:
+        add("to_int_repr", [cl, [a, b, c]],
+            lambda cl, sy: [sorted(st) for st in to_int_repr(cl, sy)])
+    add("to_int_repr", [[a | b], [a, b, a]],
+        lambda cl, sy: [sorted(st) for st in to_int_repr(cl, sy)])
+    for e in (BATOMS + RELS[:3] + COMPOUND + [x + 1, S(1),
+              Nand(a, b, c, evaluate=False), Xnor(a, b, evaluate=False),
+              Basic.__new__(And, a, x + 1)]):
+        add("gateinputcount", [e], gateinputcount)
+    # simplify_logic as far as it goes without xreplace
+    for e in [a & b, a | b, ~a, a, true, x < 1, (a | b) & c, (a & b) | c,
+              a & (x < 1), x + 1]:
+        for form in [None, "cnf", "dnf", "foo"]:
+            for deep in (True, False):
+                add("simplify_logic", [e], fixed(
+                    lambda v, form=form, deep=deep:
+                    simplify_logic(v, form, deep)), form=form, deep=deep)
+
+
 def main():
     comparisons()
     constructors()
@@ -467,6 +576,7 @@ def main():
     booleans()
     operators()
     forms()
+    quine_mccluskey()
     write("relational", V, __doc__.split("\n\n")[0])
 
 

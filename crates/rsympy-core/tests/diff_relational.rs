@@ -151,6 +151,102 @@ fn form(op: &str, v: &Vector) -> Option<Value> {
         "conjuncts" => sorted_set(b::conjuncts(&e())),
         "disjuncts" => sorted_set(b::disjuncts(&e())),
         "find_predicates" => sorted_set(b::find_predicates(&e())),
+        "simplify_logic" => ex(b::simplify_logic(
+            &e(),
+            v.params["form"].as_str(),
+            v.params["deep"].as_bool().unwrap(),
+            false,
+        )),
+        _ => return qm(op, v),
+    })
+}
+
+fn exprs(v: &Value) -> Vec<Expr> {
+    match v {
+        Value::List(items) => items
+            .iter()
+            .map(|i| match i {
+                Value::Expr(e) => e.clone(),
+                other => panic!("not an expression: {other:?}"),
+            })
+            .collect(),
+        other => panic!("not a list: {other:?}"),
+    }
+}
+
+fn ints(v: &Value) -> Vec<i64> {
+    match v {
+        Value::List(items) | Value::Tuple(items) => items
+            .iter()
+            .map(|i| match i {
+                Value::Int(n) => n.as_i64().expect("a small int"),
+                other => panic!("not an int: {other:?}"),
+            })
+            .collect(),
+        other => panic!("not a list: {other:?}"),
+    }
+}
+
+/// A minterm as `SOPform` takes it.
+fn term_spec(v: &Value) -> b::TermSpec {
+    match v {
+        Value::Int(n) => b::TermSpec::Int(n.clone()),
+        Value::List(_) | Value::Tuple(_) => b::TermSpec::Bits(ints(v)),
+        Value::Dict(kv) => b::TermSpec::Dict(
+            kv.iter()
+                .map(|(k, x)| match (k, x) {
+                    (Value::Expr(k), Value::Int(x)) => (k.clone(), x.as_i64().unwrap()),
+                    other => panic!("not a variable and a bit: {other:?}"),
+                })
+                .collect(),
+        ),
+        _ => b::TermSpec::Other,
+    }
+}
+
+fn term_specs(v: &Value) -> Vec<b::TermSpec> {
+    match v {
+        Value::List(items) => items.iter().map(term_spec).collect(),
+        Value::None => vec![],
+        other => panic!("not a list: {other:?}"),
+    }
+}
+
+/// `SOPform` and friends.
+fn qm(op: &str, v: &Vector) -> Option<Value> {
+    let int_list =
+        |xs: Vec<i64>| Value::List(xs.into_iter().map(|x| Value::Int(x.into())).collect());
+    Some(match op {
+        "qm_form" => {
+            let vars = exprs(&v.args[0]);
+            let (mt, dc) = (term_specs(&v.args[1]), term_specs(&v.args[2]));
+            ex(match v.param_str("name") {
+                "SOPform" => b::sop_form(&vars, &mt, &dc),
+                _ => b::pos_form(&vars, &mt, &dc),
+            })
+        }
+        "ANFform" => ex(b::anf_form(&exprs(&v.args[0]), &ints(&v.args[1]))),
+        "anf_coeffs" => int_list(b::anf_coeffs(&ints(&v.args[0]))),
+        "bool_term" => {
+            let k = match &v.args[0] {
+                Value::Int(n) => b::TermIndex::Int(n.clone()),
+                other => b::TermIndex::Bits(ints(other)),
+            };
+            let vars = exprs(&v.args[1]);
+            ex(match v.param_str("name") {
+                "bool_minterm" => b::bool_minterm(&k, &vars),
+                "bool_maxterm" => b::bool_maxterm(&k, &vars),
+                _ => b::bool_monomial(&k, &vars),
+            })
+        }
+        "term_to_integer" => Value::Int(b::term_to_integer(&ints(&v.args[0]))),
+        "to_int_repr" => Value::List(
+            b::to_int_repr(&exprs(&v.args[0]), &exprs(&v.args[1]))
+                .into_iter()
+                .map(int_list)
+                .collect(),
+        ),
+        "gateinputcount" => Value::Int((b::gateinputcount(&v.expr(0)) as i64).into()),
         _ => return None,
     })
 }
@@ -162,7 +258,7 @@ fn form(op: &str, v: &Vector) -> Option<Value> {
 // simplify_logic.
 #[test]
 fn relational_matches_sympy() {
-    run_partial("relational", 2899, |v| {
+    run_partial("relational", 2915, |v| {
         let p = || v.expr(0);
         let q = || v.expr(1);
         match v.op.as_str() {

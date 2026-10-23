@@ -22,6 +22,7 @@ use crate::expr::Expr;
 use crate::generated::{ClassId as C, Flag, Method, Tag};
 use crate::numbers::s;
 use crate::relational::{binary_symbols, canonical, negated};
+use rsympy_num::Int;
 
 // ===========================================================================
 // Python equality with bools and small ints
@@ -1365,7 +1366,7 @@ fn to_normal_form(expr: &Expr, simplify: bool, force: bool, cnf: bool) -> Expr {
                  long time and requires the use of `force=True`.",
             );
         }
-        not_ported("simplify_logic (needs SOPform/POSform and xreplace)");
+        return simplify_logic(expr, Some(if cnf { "cnf" } else { "dnf" }), true, force);
     }
     // Don't convert unless we have to
     if if cnf { is_cnf(expr) } else { is_dnf(expr) } {
@@ -1377,6 +1378,46 @@ fn to_normal_form(expr: &Expr, simplify: bool, force: bool, cnf: bool) -> Expr {
     } else {
         distribute_or_over_and(&expr)
     }
+}
+
+/// `simplify_logic(expr, form, deep, force)` (no `dontcare`), as far as
+/// it goes without `Basic.xreplace`: the quick exit for an expression
+/// already in the requested form, and expressions that are not
+/// BooleanFunctions.
+pub fn simplify_logic(expr: &Expr, form: Option<&str>, deep: bool, force: bool) -> Expr {
+    if !matches!(form, None | Some("cnf" | "dnf")) {
+        raise(ErrorKind::ValueError, "form can be cnf or dnf only");
+    }
+    // check for quick exit if form is given: right form and all args are
+    // literal and do not involve Not
+    if let Some(form) = form {
+        let form_ok = if form == "cnf" {
+            is_cnf(expr)
+        } else {
+            is_dnf(expr)
+        };
+        if form_ok && expr.args().iter().all(is_literal) {
+            return expr.clone();
+        }
+    }
+    // `expr.atoms(Relational)`; with none, `expr.xreplace({})` is `expr`
+    let has_relationals = expr.has_a(Tag::Relational);
+    if deep && has_relationals {
+        not_ported("simplify_logic: simplify of the Relationals (simplify, xreplace)");
+    }
+    if !expr.is_a(Tag::BooleanFunction) {
+        return expr.clone();
+    }
+    if has_relationals {
+        not_ported("simplify_logic: replacing the Relationals with Dummies (xreplace)");
+    }
+    // Get new variables after replacing
+    let variables = find_predicates(expr);
+    if !force && variables.len() > 8 {
+        // expr.xreplace(undo), with nothing to undo
+        return expr.clone();
+    }
+    not_ported("simplify_logic: _get_truthtable (needs Basic.xreplace)")
 }
 
 /// `to_cnf(expr, simplify, force)`.
@@ -1455,6 +1496,585 @@ fn bf_to_anf(cls: C, args: Vec<Expr>, deep: bool) -> Expr {
         new_args.push(arg);
     }
     new_keep_true(cls, new_args)
+}
+
+// ===========================================================================
+// Integer representations of terms
+// ===========================================================================
+
+/// `ibin(n, bits)` (`sympy.utilities.iterables`, with an int `bits`): the
+/// bits of `n`, most significant first, left-padded with zeros to `bits`.
+pub fn ibin(n: &Int, bits: usize) -> Vec<i64> {
+    if n.is_negative() {
+        raise(ErrorKind::ValueError, "negative numbers are not allowed");
+    }
+    let nbits = n.bit_length();
+    if nbits > bits as u64 {
+        raise(ErrorKind::ValueError, format!("`bits` must be >= {nbits}"));
+    }
+    // bin(n)[2:].rjust(bits, "0"): bin(0) is '0b0'
+    let width = nbits.max(1);
+    let one = Int::from(1);
+    let mut out = vec![0; (bits as u64).saturating_sub(width) as usize];
+    for i in (0..width).rev() {
+        out.push(if (&(n >> i) & &one).is_one() { 1 } else { 0 });
+    }
+    out
+}
+
+/// `term_to_integer(term)` for a list: `int(''.join(map(str, term)), 2)`.
+pub fn term_to_integer(term: &[i64]) -> Int {
+    let text: String = term.iter().map(i64::to_string).collect();
+    // int(text, 2): an optional sign, then binary digits
+    let (negative, digits) = match text.strip_prefix('-') {
+        Some(rest) => (true, rest),
+        None => (false, text.strip_prefix('+').unwrap_or(&text)),
+    };
+    if digits.is_empty() || !digits.bytes().all(|c| c == b'0' || c == b'1') {
+        raise(
+            ErrorKind::ValueError,
+            format!("invalid literal for int() with base 2: '{text}'"),
+        );
+    }
+    let two = Int::from(2);
+    let mut v = Int::from(0);
+    for c in digits.bytes() {
+        v = &(&v * &two) + &Int::from((c - b'0') as i64);
+    }
+    if negative { -v } else { v }
+}
+
+/// `to_int_repr(clauses, symbols)`: each clause as the set of its
+/// literals, `i` for the `i`-th symbol (from 1) and `-i` for its negation.
+/// The sets are returned sorted.
+pub fn to_int_repr(clauses: &[Expr], symbols: &[Expr]) -> Vec<Vec<i64>> {
+    // symbols = dict(zip(symbols, range(1, len(symbols) + 1))): a repeated
+    // symbol keeps its last number
+    let number = |e: &Expr| -> i64 {
+        match symbols.iter().rposition(|s_| s_ == e) {
+            Some(i) => i as i64 + 1,
+            None => raise(ErrorKind::KeyError, format!("{e:?}")),
+        }
+    };
+    clauses
+        .iter()
+        .map(|c| {
+            let mut set: Vec<i64> = disjuncts(c)
+                .iter()
+                .map(|arg| {
+                    if arg.is_cls(C::Not) {
+                        -number(first_arg(arg))
+                    } else {
+                        number(arg)
+                    }
+                })
+                .collect();
+            set.sort_unstable();
+            set.dedup();
+            set
+        })
+        .collect()
+}
+
+// ===========================================================================
+// SOPform, POSform and ANFform (Quine-McCluskey)
+// ===========================================================================
+
+/// `variables[n]`: `IndexError` past the end.
+fn variable(variables: &[Expr], n: usize) -> Expr {
+    match variables.get(n) {
+        Some(v) => v.clone(),
+        None => raise(ErrorKind::IndexError, "tuple index out of range"),
+    }
+}
+
+/// `_check_pair(minterm1, minterm2)`: the index of the only position
+/// where the terms differ, or -1.
+fn check_pair(minterm1: &[i64], minterm2: &[i64]) -> Option<usize> {
+    let mut index = None;
+    for (x, i) in minterm1.iter().enumerate() {
+        let Some(other) = minterm2.get(x) else {
+            raise(ErrorKind::IndexError, "list index out of range")
+        };
+        if i != other {
+            if index.is_none() {
+                index = Some(x);
+            } else {
+                return None;
+            }
+        }
+    }
+    index
+}
+
+/// `_convert_to_varsSOP(minterm, variables)`.
+fn convert_to_vars_sop(minterm: &[i64], variables: &[Expr]) -> Expr {
+    let temp = minterm
+        .iter()
+        .enumerate()
+        .filter(|&(_, &val)| val != 3)
+        .map(|(n, &val)| {
+            let v = variable(variables, n);
+            if val == 1 { v } else { not(&v) }
+        })
+        .collect();
+    and(temp)
+}
+
+/// `_convert_to_varsPOS(maxterm, variables)`.
+fn convert_to_vars_pos(maxterm: &[i64], variables: &[Expr]) -> Expr {
+    let temp = maxterm
+        .iter()
+        .enumerate()
+        .filter(|&(_, &val)| val != 3)
+        .map(|(n, &val)| {
+            let v = variable(variables, n);
+            if val == 0 { v } else { not(&v) }
+        })
+        .collect();
+    or(temp)
+}
+
+/// `_convert_to_varsANF(term, variables)`.
+fn convert_to_vars_anf(term: &[i64], variables: &[Expr]) -> Expr {
+    let temp: Vec<Expr> = term
+        .iter()
+        .enumerate()
+        .filter(|&(_, &t)| t == 1)
+        .map(|(n, _)| variable(variables, n))
+        .collect();
+    if temp.is_empty() {
+        return s::true_();
+    }
+    and(temp)
+}
+
+/// `_simplified_pairs(terms)`: merges terms that differ in one position
+/// (marked 3, "don't care"), repeatedly.
+fn simplified_pairs(terms: Vec<Vec<i64>>) -> Vec<Vec<i64>> {
+    if terms.is_empty() {
+        return vec![];
+    }
+    let mut simplified_terms: Vec<Vec<i64>> = Vec::new();
+    let mut todo: Vec<Option<usize>> = (0..terms.len()).map(Some).collect();
+    // Count number of ones as _check_pair can only potentially match if
+    // there is at most a difference of a single one
+    let mut termdict: std::collections::BTreeMap<usize, Vec<usize>> = Default::default();
+    for (n, term) in terms.iter().enumerate() {
+        let ones = term.iter().filter(|&&t| t == 1).count();
+        termdict.entry(ones).or_default().push(n);
+    }
+    let empty = Vec::new();
+    let variables = terms[0].len();
+    for k in 0..variables {
+        for &i in termdict.get(&k).unwrap_or(&empty) {
+            for &j in termdict.get(&(k + 1)).unwrap_or(&empty) {
+                if let Some(index) = check_pair(&terms[i], &terms[j]) {
+                    // Mark terms handled
+                    todo[i] = None;
+                    todo[j] = None;
+                    // Copy old term
+                    let mut newterm = terms[i].clone();
+                    // Set differing position to don't care
+                    newterm[index] = 3;
+                    // Add if not already there
+                    if !simplified_terms.contains(&newterm) {
+                        simplified_terms.push(newterm);
+                    }
+                }
+            }
+        }
+    }
+    if !simplified_terms.is_empty() {
+        // Further simplifications only among the new terms
+        simplified_terms = simplified_pairs(simplified_terms);
+    }
+    // Add remaining, non-simplified, terms
+    simplified_terms.extend(todo.iter().flatten().map(|&i| terms[i].clone()));
+    simplified_terms
+}
+
+/// `_rem_redundancy(l1, terms)`: the prime implicants of `l1` that the
+/// prime implicant table method keeps to cover `terms`.
+fn rem_redundancy(l1: &[Vec<i64>], terms: &[Vec<i64>]) -> Vec<Vec<i64>> {
+    if terms.is_empty() {
+        return vec![];
+    }
+    let nterms = terms.len();
+    let nl1 = l1.len();
+    // Create dominating matrix
+    let mut dommatrix = vec![vec![0u8; nl1]; nterms];
+    let mut colcount = vec![0usize; nl1];
+    let mut rowcount = vec![0usize; nterms];
+    for (primei, prime) in l1.iter().enumerate() {
+        for (termi, term) in terms.iter().enumerate() {
+            // Check prime implicant covering term
+            if prime.iter().zip(term).all(|(&t, &mt)| t == 3 || t == mt) {
+                dommatrix[termi][primei] = 1;
+                colcount[primei] += 1;
+                rowcount[termi] += 1;
+            }
+        }
+    }
+    let column = |dommatrix: &[Vec<u8>], coli: usize| -> Vec<u8> {
+        (0..nterms).map(|i| dommatrix[i][coli]).collect()
+    };
+    // Keep track if anything changed
+    let mut anythingchanged = true;
+    // Then, go again
+    while anythingchanged {
+        anythingchanged = false;
+        for rowi in 0..nterms {
+            // Still non-dominated?
+            if rowcount[rowi] != 0 {
+                let row = dommatrix[rowi].clone();
+                for row2i in 0..nterms {
+                    // Still non-dominated?
+                    if rowi != row2i && rowcount[rowi] != 0 && rowcount[rowi] <= rowcount[row2i] {
+                        let row2 = dommatrix[row2i].clone();
+                        if (0..nl1).all(|n| row2[n] >= row[n]) {
+                            // row2 dominating row, remove row2
+                            rowcount[row2i] = 0;
+                            anythingchanged = true;
+                            for (primei, &prime) in row2.iter().enumerate() {
+                                if prime != 0 {
+                                    // Make corresponding entry 0
+                                    dommatrix[row2i][primei] = 0;
+                                    colcount[primei] -= 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        let mut colcache: std::collections::HashMap<usize, Vec<u8>> = Default::default();
+        for coli in 0..nl1 {
+            // Still non-dominated?
+            if colcount[coli] != 0 {
+                let col = colcache
+                    .entry(coli)
+                    .or_insert_with(|| column(&dommatrix, coli))
+                    .clone();
+                for col2i in 0..nl1 {
+                    // Still non-dominated?
+                    if coli != col2i && colcount[col2i] != 0 && colcount[coli] >= colcount[col2i] {
+                        let col2 = colcache
+                            .entry(col2i)
+                            .or_insert_with(|| column(&dommatrix, col2i))
+                            .clone();
+                        if (0..nterms).all(|n| col[n] >= col2[n]) {
+                            // col dominating col2, remove col2
+                            colcount[col2i] = 0;
+                            anythingchanged = true;
+                            for (termi, &term) in col2.iter().enumerate() {
+                                if term != 0 && dommatrix[termi][col2i] != 0 {
+                                    // Make corresponding entry 0
+                                    dommatrix[termi][col2i] = 0;
+                                    rowcount[termi] -= 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if !anythingchanged {
+            // Heuristically select the prime implicant covering most terms
+            let mut maxterms = 0;
+            let mut bestcolidx = None;
+            for (coli, &s_) in colcount.iter().enumerate() {
+                if s_ > maxterms {
+                    bestcolidx = Some(coli);
+                    maxterms = s_;
+                }
+            }
+            // In case we found a prime implicant covering at least two terms
+            if let Some(best) = bestcolidx
+                && maxterms > 1
+            {
+                let Some(bestcol) = colcache.get(&best).cloned() else {
+                    raise(ErrorKind::KeyError, format!("{best}"))
+                };
+                for primei in 0..nl1 {
+                    if primei != best {
+                        for (termi, &term) in bestcol.iter().enumerate() {
+                            if term != 0 && dommatrix[termi][primei] != 0 {
+                                // Make corresponding entry 0
+                                dommatrix[termi][primei] = 0;
+                                anythingchanged = true;
+                                rowcount[termi] -= 1;
+                                colcount[primei] -= 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    (0..nl1)
+        .filter(|&i| colcount[i] != 0)
+        .map(|i| l1[i].clone())
+        .collect()
+}
+
+/// A term in the `minterms` or `dontcares` of `SOPform` and `POSform`.
+#[derive(Clone, Debug)]
+pub enum TermSpec {
+    /// A Python int, read as the bits of a term.
+    Int(Int),
+    /// A list or tuple of bits.
+    Bits(Vec<i64>),
+    /// A dict giving the bits of some of the variables; the term stands
+    /// for every value of the others.
+    Dict(Vec<(Expr, i64)>),
+    /// Anything else (`TypeError`).
+    Other,
+}
+
+/// `_input_to_binlist(inputlist, variables)`.
+fn input_to_binlist(inputlist: &[TermSpec], variables: &[Expr]) -> Vec<Vec<i64>> {
+    let mut binlist = Vec::new();
+    let bits = variables.len();
+    for val in inputlist {
+        match val {
+            TermSpec::Int(n) => binlist.push(ibin(n, bits)),
+            TermSpec::Dict(val) => {
+                let mut nonspecvars = variables.to_vec();
+                for (key, _) in val {
+                    // list.remove: the first equal item, or ValueError
+                    match nonspecvars.iter().position(|v| v == key) {
+                        Some(i) => {
+                            nonspecvars.remove(i);
+                        }
+                        None => raise(ErrorKind::ValueError, "list.remove(x): x not in list"),
+                    }
+                }
+                for t in product01(nonspecvars.len()) {
+                    // d = dict(zip(nonspecvars, t)); d.update(val)
+                    let mut d: Vec<(Expr, i64)> = Vec::new();
+                    let mut set = |k: &Expr, v: i64| match d.iter_mut().find(|(x, _)| x == k) {
+                        Some(slot) => slot.1 = v,
+                        None => d.push((k.clone(), v)),
+                    };
+                    for (k, v) in nonspecvars.iter().zip(&t) {
+                        set(k, *v);
+                    }
+                    for (k, v) in val {
+                        set(k, *v);
+                    }
+                    binlist.push(
+                        variables
+                            .iter()
+                            .map(|v| d.iter().find(|(k, _)| k == v).expect("every variable").1)
+                            .collect(),
+                    );
+                }
+            }
+            TermSpec::Bits(val) => {
+                if val.len() != bits {
+                    raise(
+                        ErrorKind::ValueError,
+                        format!(
+                            "Each term must contain {bits} bits as there are\n{bits} variables \
+                             (or be an integer)."
+                        ),
+                    );
+                }
+                binlist.push(val.clone());
+            }
+            TermSpec::Other => raise(
+                ErrorKind::TypeError,
+                "A term list can only contain lists, ints or dicts.",
+            ),
+        }
+    }
+    binlist
+}
+
+/// `itertools.product((0, 1), repeat=n)`, in its order.
+fn product01(n: usize) -> Vec<Vec<i64>> {
+    let mut out = vec![vec![]];
+    for _ in 0..n {
+        out = out
+            .into_iter()
+            .flat_map(|t| {
+                [0, 1].map(|b| {
+                    let mut t = t.clone();
+                    t.push(b);
+                    t
+                })
+            })
+            .collect();
+    }
+    out
+}
+
+/// The shared start of `SOPform` and `POSform`: the minterms and
+/// don't-cares as bit lists, `ValueError` for a term in both.
+fn minterms_and_dontcares(
+    variables: &[Expr],
+    minterms: &[TermSpec],
+    dontcares: &[TermSpec],
+) -> (Vec<Vec<i64>>, Vec<Vec<i64>>) {
+    let minterms = input_to_binlist(minterms, variables);
+    let dontcares = input_to_binlist(dontcares, variables);
+    for d in &dontcares {
+        if minterms.contains(d) {
+            raise(
+                ErrorKind::ValueError,
+                format!("{d:?} in minterms is also in dontcares"),
+            );
+        }
+    }
+    (minterms, dontcares)
+}
+
+/// `SOPform(variables, minterms, dontcares)`: the smallest sum of
+/// products that is true for the minterms.
+pub fn sop_form(variables: &[Expr], minterms: &[TermSpec], dontcares: &[TermSpec]) -> Expr {
+    if minterms.is_empty() {
+        return s::false_();
+    }
+    let (minterms, dontcares) = minterms_and_dontcares(variables, minterms, dontcares);
+    sop_form_bits(variables, minterms, dontcares)
+}
+
+/// `_sop_form(variables, minterms, dontcares)`.
+fn sop_form_bits(variables: &[Expr], minterms: Vec<Vec<i64>>, dontcares: Vec<Vec<i64>>) -> Expr {
+    let mut all = minterms.clone();
+    all.extend(dontcares);
+    let new = simplified_pairs(all);
+    let essential = rem_redundancy(&new, &minterms);
+    or(essential
+        .iter()
+        .map(|x| convert_to_vars_sop(x, variables))
+        .collect())
+}
+
+/// `POSform(variables, minterms, dontcares)`: the smallest product of
+/// sums that is true for the minterms.
+pub fn pos_form(variables: &[Expr], minterms: &[TermSpec], dontcares: &[TermSpec]) -> Expr {
+    if minterms.is_empty() {
+        return s::false_();
+    }
+    let (minterms, dontcares) = minterms_and_dontcares(variables, minterms, dontcares);
+    let mut maxterms = Vec::new();
+    for t in product01(variables.len()) {
+        if !minterms.contains(&t) && !dontcares.contains(&t) {
+            maxterms.push(t);
+        }
+    }
+    let mut all = maxterms.clone();
+    all.extend(dontcares);
+    let new = simplified_pairs(all);
+    let essential = rem_redundancy(&new, &maxterms);
+    and(essential
+        .iter()
+        .map(|x| convert_to_vars_pos(x, variables))
+        .collect())
+}
+
+/// `anf_coeffs(truthvalues)`: the coefficients of the Zhegalkin
+/// polynomial of a truth table.
+pub fn anf_coeffs(truthvalues: &[i64]) -> Vec<i64> {
+    // s = '{:b}'.format(len(truthvalues)); n = len(s) - 1
+    let len = truthvalues.len();
+    let n = (usize::BITS - len.leading_zeros()).max(1) as usize - 1;
+    if len != 1 << n {
+        raise(
+            ErrorKind::ValueError,
+            format!("The number of truth values must be a power of two, got {len}"),
+        );
+    }
+    let mut coeffs: Vec<Vec<i64>> = truthvalues.iter().map(|&v| vec![v]).collect();
+    for i in 0..n {
+        let mut tmp = Vec::new();
+        for j in 0..1usize << (n - i - 1) {
+            let (a, b) = (&coeffs[2 * j], &coeffs[2 * j + 1]);
+            let mut row = a.clone();
+            row.extend(a.iter().zip(b).map(|(x, y)| x ^ y));
+            tmp.push(row);
+        }
+        coeffs = tmp;
+    }
+    coeffs.swap_remove(0)
+}
+
+/// `ANFform(variables, truthvalues)`: the algebraic normal form of a
+/// truth table.
+pub fn anf_form(variables: &[Expr], truthvalues: &[i64]) -> Expr {
+    let n_vars = variables.len();
+    let n_values = truthvalues.len();
+    if u32::try_from(n_vars).map_or(true, |k| 1usize.checked_shl(k) != Some(n_values)) {
+        raise(
+            ErrorKind::ValueError,
+            format!("The number of truth values must be equal to 2^{n_vars}, got {n_values}"),
+        );
+    }
+    let coeffs = anf_coeffs(truthvalues);
+    let mut terms = Vec::new();
+    for (i, t) in product01(n_vars).into_iter().enumerate() {
+        if coeffs[i] == 1 {
+            terms.push(t);
+        }
+    }
+    xor_with(
+        terms
+            .iter()
+            .map(|x| convert_to_vars_anf(x, variables))
+            .collect(),
+        false,
+    )
+}
+
+/// The `k` of `bool_minterm`, `bool_maxterm` and `bool_monomial`.
+#[derive(Clone, Debug)]
+pub enum TermIndex {
+    /// A Python int: `ibin(k, len(variables))`.
+    Int(Int),
+    /// A list of bits.
+    Bits(Vec<i64>),
+}
+
+impl TermIndex {
+    fn bits(&self, variables: &[Expr]) -> Vec<i64> {
+        match self {
+            TermIndex::Int(k) => ibin(k, variables.len()),
+            TermIndex::Bits(b) => b.clone(),
+        }
+    }
+}
+
+/// `bool_minterm(k, variables)`: the `k`-th minterm.
+pub fn bool_minterm(k: &TermIndex, variables: &[Expr]) -> Expr {
+    convert_to_vars_sop(&k.bits(variables), variables)
+}
+
+/// `bool_maxterm(k, variables)`: the `k`-th maxterm.
+pub fn bool_maxterm(k: &TermIndex, variables: &[Expr]) -> Expr {
+    convert_to_vars_pos(&k.bits(variables), variables)
+}
+
+/// `bool_monomial(k, variables)`: the `k`-th Zhegalkin monomial.
+pub fn bool_monomial(k: &TermIndex, variables: &[Expr]) -> Expr {
+    convert_to_vars_anf(&k.bits(variables), variables)
+}
+
+/// `gateinputcount(expr)`: the number of inputs of the logic gates
+/// (And, Or, Xor, Nand, Nor, Not, Xnor, ITE) that realize `expr`.
+pub fn gateinputcount(expr: &Expr) -> usize {
+    if !expr.is_a(Tag::Boolean) {
+        raise(ErrorKind::TypeError, "Expression must be Boolean");
+    }
+    // BooleanGates
+    if matches!(
+        expr.cls(),
+        C::And | C::Or | C::Xor | C::Nand | C::Nor | C::Not | C::Xnor | C::ITE
+    ) {
+        return expr.args().len() + expr.args().iter().map(gateinputcount).sum::<usize>();
+    }
+    0
 }
 
 #[cfg(test)]
