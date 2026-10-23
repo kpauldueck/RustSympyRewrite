@@ -3,6 +3,7 @@
 //! Ported from `sympy/core/add.py` and `sympy/core/operations.py`. The
 //! `_eval_is_*` handlers live in [`handler`] at the bottom.
 
+use crate::assume::{fuzzy_group, fuzzy_not, fuzzy_or};
 use crate::compare::sort_args;
 use crate::error::{ErrorKind, not_ported, raise};
 use crate::expr::Expr;
@@ -440,6 +441,340 @@ pub fn could_extract_minus_sign(e: &Expr) -> bool {
 
 /// `type(e)._prop_handler[fact](e)` for an Add.
 pub(crate) fn handler(e: &Expr, fact: Fact) -> Option<bool> {
-    let _ = (e, fact);
-    not_ported("Add assumptions")
+    let group = |f: fn(&Expr) -> Option<bool>| fuzzy_group(e.args().iter().map(f), true);
+    match fact {
+        Fact::Real => group(Expr::is_real),
+        Fact::ExtendedReal => group(Expr::is_extended_real),
+        Fact::Complex => group(Expr::is_complex),
+        Fact::Antihermitian => group(Expr::is_antihermitian),
+        Fact::Finite => group(Expr::is_finite),
+        Fact::Hermitian => group(Expr::is_hermitian),
+        Fact::Integer => group(Expr::is_integer),
+        Fact::Rational => group(Expr::is_rational),
+        Fact::Algebraic => group(Expr::is_algebraic),
+        Fact::Commutative => fuzzy_group(e.args().iter().map(Expr::is_commutative), false),
+        Fact::Infinite => eval_is_infinite(e),
+        Fact::Imaginary => eval_is_imaginary(e),
+        Fact::Zero => eval_is_zero(e),
+        Fact::Odd => eval_is_odd(e),
+        Fact::Irrational => eval_is_irrational(e),
+        Fact::ExtendedPositive => eval_is_extended_positive(e),
+        Fact::ExtendedNonnegative => eval_is_extended_nonneg_nonpos(e, true),
+        Fact::ExtendedNonpositive => eval_is_extended_nonneg_nonpos(e, false),
+        Fact::ExtendedNegative => eval_is_extended_negative(e),
+        _ => unreachable!("Add has no handler for {fact:?}"),
+    }
+}
+
+/// `Add._eval_is_infinite`.
+fn eval_is_infinite(e: &Expr) -> Option<bool> {
+    let mut sawinf = false;
+    for a in e.args() {
+        match a.is_infinite() {
+            None => return None,
+            Some(true) => {
+                // infinite+infinite might not be infinite
+                if sawinf {
+                    return None;
+                }
+                sawinf = true;
+            }
+            Some(false) => {}
+        }
+    }
+    Some(sawinf)
+}
+
+/// `a.as_coeff_mul(S.ImaginaryUnit)` for a Mul `a`: the factors without
+/// `I` (as a Mul) and those with it.
+fn coeff_mul_i(a: &Expr) -> (Expr, Vec<Expr>) {
+    let i = s::imaginary_unit();
+    let (l1, l2): (Vec<Expr>, Vec<Expr>) = a.args().iter().cloned().partition(|x| x.has(&i));
+    (crate::mul::new_rawargs(a, l2), l1)
+}
+
+/// `Add._eval_is_imaginary`.
+fn eval_is_imaginary(e: &Expr) -> Option<bool> {
+    let mut nz = Vec::new();
+    let mut im_i = Vec::new();
+    let i = s::imaginary_unit();
+    for a in e.args() {
+        if a.is_extended_real() == Some(true) {
+            match a.is_zero() {
+                Some(true) => {}
+                Some(false) => nz.push(a.clone()),
+                None => return None,
+            }
+        } else if a.is_imaginary() == Some(true) {
+            im_i.push(ops::mul(a, &i));
+        } else if a.is_Mul() && a.args().contains(&i) {
+            let (coeff, ai) = coeff_mul_i(a);
+            if ai == [i.clone()] && coeff.is_extended_real() == Some(true) {
+                im_i.push(ops::neg(&coeff));
+            } else {
+                return None;
+            }
+        } else {
+            return None;
+        }
+    }
+    let b = e.func(nz);
+    if b != *e {
+        if b.is_zero() == Some(true) {
+            return fuzzy_not(e.func(im_i).is_zero());
+        } else if b.is_zero() == Some(false) {
+            return Some(false);
+        }
+    }
+    None
+}
+
+/// `Add._eval_is_zero`.
+fn eval_is_zero(e: &Expr) -> Option<bool> {
+    if e.is_commutative() == Some(false) {
+        // issue 10528: there is no way to know if a nc symbol
+        // is zero or not
+        return None;
+    }
+    let mut nz = Vec::new();
+    let mut z = 0;
+    let mut im_or_z = false;
+    let mut im = 0;
+    let i = s::imaginary_unit();
+    for a in e.args() {
+        if a.is_extended_real() == Some(true) {
+            match a.is_zero() {
+                Some(true) => z += 1,
+                Some(false) => nz.push(a.clone()),
+                None => return None,
+            }
+        } else if a.is_imaginary() == Some(true) {
+            im += 1;
+        } else if a.is_Mul() && a.args().contains(&i) {
+            let (coeff, ai) = coeff_mul_i(a);
+            if ai == [i.clone()] && coeff.is_extended_real() == Some(true) {
+                im_or_z = true;
+            } else {
+                return None;
+            }
+        } else {
+            return None;
+        }
+    }
+    let n = e.args().len();
+    if z == n {
+        return Some(true);
+    }
+    if nz.is_empty() || nz.len() == n {
+        return None;
+    }
+    let b = e.func(nz);
+    if b.is_zero() == Some(true) && !im_or_z {
+        if im == 0 {
+            return Some(true);
+        } else if im == 1 {
+            return Some(false);
+        }
+    }
+    if b.is_zero() == Some(false) {
+        return Some(false);
+    }
+    None
+}
+
+/// `Add._eval_is_odd`.
+fn eval_is_odd(e: &Expr) -> Option<bool> {
+    let l: Vec<Expr> = e
+        .args()
+        .iter()
+        .filter(|f| f.is_even() != Some(true))
+        .cloned()
+        .collect();
+    if l.is_empty() {
+        return Some(false);
+    }
+    if l[0].is_odd() == Some(true) {
+        return new_rawargs(e, l[1..].to_vec()).is_even();
+    }
+    None
+}
+
+/// `Add._eval_is_irrational`.
+fn eval_is_irrational(e: &Expr) -> Option<bool> {
+    for (k, t) in e.args().iter().enumerate() {
+        let a = t.is_irrational();
+        if a == Some(true) {
+            // others = list(self.args); others.remove(t)
+            let first = e.args().iter().position(|x| x == t).unwrap_or(k);
+            let others = e.args().iter().enumerate().filter(|(j, _)| *j != first);
+            if others
+                .into_iter()
+                .all(|(_, x)| x.is_rational() == Some(true))
+            {
+                return Some(true);
+            }
+            return None;
+        }
+        a?;
+    }
+    Some(false)
+}
+
+/// The `_monotonic_sign` shortcut at the top of `Add`'s sign handlers:
+/// `Some(true)` when it proves `test(self)`, `None` to carry on. `test`
+/// is the fact asked about; `a_test` is the extra condition on the
+/// non-constant part (`None` when the handler has none).
+fn monotonic_shortcut(
+    e: &Expr,
+    test: fn(&Expr) -> Option<bool>,
+    a_test: Option<fn(&Expr) -> Option<bool>>,
+    a_first: bool,
+) -> bool {
+    let (c, a) = e.as_coeff_Add(false);
+    if c.is_zero() == Some(true) {
+        return false;
+    }
+    // (the nonnegative/nonpositive handlers test `a` before computing v)
+    if a_first && a_test.is_some_and(|t| t(&a) != Some(true)) {
+        return false;
+    }
+    if let Some(v) = crate::exprtools::monotonic_sign(&a) {
+        let s = ops::add(&v, &c);
+        if s != *e
+            && test(&s) == Some(true)
+            && (a_first || a_test.is_none_or(|t| t(&a) == Some(true)))
+        {
+            return true;
+        }
+        if e.free_symbols().len() == 1
+            && let Some(v) = crate::exprtools::monotonic_sign(e)
+            && v != *e
+            && test(&v) == Some(true)
+        {
+            return true;
+        }
+    }
+    false
+}
+
+/// `Add._eval_is_extended_positive`.
+fn eval_is_extended_positive(e: &Expr) -> Option<bool> {
+    if e.is_number() {
+        return crate::functions::expr_eval_is_extended_positive_negative(e);
+    }
+    if monotonic_shortcut(
+        e,
+        Expr::is_extended_positive,
+        Some(Expr::is_extended_nonnegative),
+        false,
+    ) {
+        return Some(true);
+    }
+    sign_loop(
+        e,
+        Expr::is_extended_positive,
+        Expr::is_extended_nonnegative,
+        Expr::is_extended_nonpositive,
+    )
+}
+
+/// `Add._eval_is_extended_negative`.
+fn eval_is_extended_negative(e: &Expr) -> Option<bool> {
+    if e.is_number() {
+        return crate::functions::expr_eval_is_extended_positive_negative(e);
+    }
+    if monotonic_shortcut(
+        e,
+        Expr::is_extended_negative,
+        Some(Expr::is_extended_nonpositive),
+        false,
+    ) {
+        return Some(true);
+    }
+    sign_loop(
+        e,
+        Expr::is_extended_negative,
+        Expr::is_extended_nonpositive,
+        Expr::is_extended_nonnegative,
+    )
+}
+
+/// The term-by-term loop shared by `Add._eval_is_extended_positive`
+/// (`strict` = positive, `weak` = nonnegative, `opposite` = nonpositive)
+/// and `_eval_is_extended_negative` (the mirror image).
+fn sign_loop(
+    e: &Expr,
+    strict: fn(&Expr) -> Option<bool>,
+    weak: fn(&Expr) -> Option<bool>,
+    opposite: fn(&Expr) -> Option<bool>,
+) -> Option<bool> {
+    let (mut pos, mut nonneg, mut nonpos, mut unknown_sign) = (false, false, false, false);
+    // saw_INF: a set of True/False/None
+    let mut saw_inf: Vec<Option<bool>> = Vec::new();
+    let args: Vec<&Expr> = e
+        .args()
+        .iter()
+        .filter(|a| a.is_zero() != Some(true))
+        .collect();
+    if args.is_empty() {
+        return Some(false);
+    }
+    for a in args {
+        let ispos = strict(a);
+        let infinite = a.is_infinite();
+        if infinite == Some(true) {
+            let v = fuzzy_or([ispos, weak(a)]);
+            if !saw_inf.contains(&v) {
+                saw_inf.push(v);
+            }
+            if saw_inf.contains(&Some(true)) && saw_inf.contains(&Some(false)) {
+                return None;
+            }
+        }
+        if ispos == Some(true) {
+            pos = true;
+            continue;
+        } else if weak(a) == Some(true) {
+            nonneg = true;
+            continue;
+        } else if opposite(a) == Some(true) {
+            nonpos = true;
+            continue;
+        }
+
+        infinite?;
+        unknown_sign = true;
+    }
+
+    if !saw_inf.is_empty() {
+        if saw_inf.len() > 1 {
+            return None;
+        }
+        return saw_inf[0];
+    } else if unknown_sign {
+        return None;
+    } else if !nonpos && !nonneg && pos {
+        return Some(true);
+    } else if !nonpos && pos {
+        return Some(true);
+    } else if !pos && !nonneg {
+        return Some(false);
+    }
+    None
+}
+
+/// `Add._eval_is_extended_nonnegative` (`nonneg`) and
+/// `_eval_is_extended_nonpositive`.
+fn eval_is_extended_nonneg_nonpos(e: &Expr, nonneg: bool) -> Option<bool> {
+    if !e.is_number() {
+        let test = if nonneg {
+            Expr::is_extended_nonnegative
+        } else {
+            Expr::is_extended_nonpositive
+        };
+        if monotonic_shortcut(e, test, Some(test), true) {
+            return Some(true);
+        }
+    }
+    None
 }

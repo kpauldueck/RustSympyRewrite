@@ -26,6 +26,12 @@ pub(crate) struct Node {
     pub(crate) args: Box<[Expr]>,
     hash: u64,
     pub(crate) facts: FactCell,
+    /// The `is_commutative` slot attribute that `AssocOp._from_args` and
+    /// `Pow.__new__` set (`None`: the class has no such slot). It answers
+    /// `obj.is_commutative` directly but is not part of `_assumptions`, so
+    /// `_ask` still runs the class's commutative handler when another fact
+    /// needs it.
+    pub(crate) commutative_slot: Option<Option<bool>>,
 }
 
 /// The atomic part of a node's `_hashable_content`.
@@ -96,6 +102,27 @@ impl Expr {
     }
 
     pub(crate) fn make_with_kb(cls: ClassId, data: Data, args: Vec<Expr>, kb: Kb) -> Expr {
+        Expr::make_full(cls, data, args, kb, None)
+    }
+
+    /// A node with its class's default assumptions and `is_commutative`
+    /// set as a slot attribute (Add, Mul and Pow).
+    pub(crate) fn make_with_commutative_slot(
+        cls: ClassId,
+        args: Vec<Expr>,
+        commutative: Option<bool>,
+    ) -> Expr {
+        let kb = CLASS_DEFAULTS[cls as usize];
+        Expr::make_full(cls, Data::None, args, kb, Some(commutative))
+    }
+
+    fn make_full(
+        cls: ClassId,
+        data: Data,
+        args: Vec<Expr>,
+        kb: Kb,
+        commutative_slot: Option<Option<bool>>,
+    ) -> Expr {
         let hash = Node::compute_hash(cls, &data, &args);
         Expr(Arc::new(Node {
             cls,
@@ -103,6 +130,7 @@ impl Expr {
             args: args.into_boxed_slice(),
             hash,
             facts: FactCell::new(kb),
+            commutative_slot,
         }))
     }
 

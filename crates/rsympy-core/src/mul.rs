@@ -9,7 +9,7 @@ use std::collections::HashSet;
 use rsympy_num::Int;
 
 use crate::add::{Flattened, assoc_new};
-use crate::assume::fuzzy_not;
+use crate::assume::{fuzzy_group, fuzzy_not};
 use crate::compare::sort_args;
 use crate::error::not_ported;
 use crate::expr::Expr;
@@ -837,6 +837,480 @@ pub fn could_extract_minus_sign(e: &Expr) -> bool {
 
 /// `type(e)._prop_handler[fact](e)` for a Mul.
 pub(crate) fn handler(e: &Expr, fact: Fact) -> Option<bool> {
-    let _ = (e, fact);
-    not_ported("Mul assumptions")
+    match fact {
+        Fact::Commutative => fuzzy_group(e.args().iter().map(Expr::is_commutative), false),
+        Fact::Complex => eval_is_complex(e),
+        Fact::Zero => eval_is_zero(e),
+        Fact::Infinite => eval_is_infinite(e),
+        Fact::Rational => eval_is_rational(e),
+        Fact::Algebraic => eval_is_algebraic(e),
+        Fact::Integer => eval_is_integer(e),
+        Fact::Polar => eval_is_polar(e),
+        Fact::ExtendedReal => eval_real_imag(e, true),
+        Fact::Imaginary => eval_is_imaginary(e),
+        Fact::Hermitian => eval_herm_antiherm(e, true),
+        Fact::Antihermitian => eval_herm_antiherm(e, false),
+        Fact::Irrational => eval_is_irrational(e),
+        Fact::ExtendedPositive => eval_pos_neg(e, 1),
+        Fact::ExtendedNegative => eval_pos_neg(e, -1),
+        Fact::Odd => eval_is_odd(e),
+        Fact::Even => eval_is_even(e),
+        Fact::Composite => eval_is_composite(e),
+        _ => unreachable!("Mul has no handler for {fact:?}"),
+    }
+}
+
+/// `Mul._eval_is_complex`.
+fn eval_is_complex(e: &Expr) -> Option<bool> {
+    let comp = fuzzy_group(e.args().iter().map(Expr::is_complex), false);
+    if comp == Some(false) && e.args().iter().any(|a| a.is_infinite() == Some(true)) {
+        if e.args().iter().any(|a| a.is_zero() != Some(false)) {
+            return None;
+        }
+        return Some(false);
+    }
+    comp
+}
+
+/// `Mul._eval_is_zero_infinite_helper`: `(seen_zero, seen_infinite)`.
+fn zero_infinite_helper(e: &Expr) -> (Option<bool>, Option<bool>) {
+    // Three-valued logic: the flags only move from False to True or None,
+    // and as soon as neither is False the answer is (None, None).
+    let mut seen_zero = Some(false);
+    let mut seen_infinite = Some(false);
+    for a in e.args() {
+        if a.is_zero() == Some(true) {
+            if seen_infinite != Some(false) {
+                return (None, None);
+            }
+            seen_zero = Some(true);
+        } else if a.is_infinite() == Some(true) {
+            if seen_zero != Some(false) {
+                return (None, None);
+            }
+            seen_infinite = Some(true);
+        } else {
+            if seen_zero == Some(false) && a.is_zero().is_none() {
+                if seen_infinite != Some(false) {
+                    return (None, None);
+                }
+                seen_zero = None;
+            }
+            if seen_infinite == Some(false) && a.is_infinite().is_none() {
+                if seen_zero != Some(false) {
+                    return (None, None);
+                }
+                seen_infinite = None;
+            }
+        }
+    }
+    (seen_zero, seen_infinite)
+}
+
+/// `Mul._eval_is_zero`.
+fn eval_is_zero(e: &Expr) -> Option<bool> {
+    // True iff any arg is zero and no arg is infinite
+    match zero_infinite_helper(e) {
+        (Some(false), _) => Some(false),
+        (Some(true), Some(false)) => Some(true),
+        _ => None,
+    }
+}
+
+/// `Mul._eval_is_infinite`.
+fn eval_is_infinite(e: &Expr) -> Option<bool> {
+    // True iff any arg is infinite and no arg is zero
+    match zero_infinite_helper(e) {
+        (Some(false), Some(true)) => Some(true),
+        (_, Some(false)) => Some(false),
+        _ => None,
+    }
+}
+
+/// `Mul._eval_is_rational` and `_eval_is_algebraic`.
+fn rational_or_algebraic(e: &Expr, f: fn(&Expr) -> Option<bool>) -> Option<bool> {
+    let r = fuzzy_group(e.args().iter().map(f), true);
+    if r == Some(true) {
+        return r;
+    } else if r == Some(false) {
+        // All args except one are rational
+        if e.args().iter().all(|a| a.is_zero() == Some(false)) {
+            return Some(false);
+        }
+    }
+    None
+}
+
+fn eval_is_rational(e: &Expr) -> Option<bool> {
+    rational_or_algebraic(e, Expr::is_rational)
+}
+
+fn eval_is_algebraic(e: &Expr) -> Option<bool> {
+    rational_or_algebraic(e, Expr::is_algebraic)
+}
+
+/// `Add(*[i.as_base_exp()[1] for i in terms if i.is_even]) - trailing(n)`.
+fn twos_minus_trailing(terms: &[Expr], n: &Int) -> Expr {
+    let exps: Vec<Expr> = terms
+        .iter()
+        .filter(|i| i.is_even() == Some(true))
+        .map(|i| i.as_base_exp().1)
+        .collect();
+    let trailing = n.trailing_zeros().unwrap_or(0);
+    ops::sub(&crate::add::add(exps), &Expr::integer(Int::from(trailing)))
+}
+
+/// `Mul._eval_is_integer`.
+fn eval_is_integer(e: &Expr) -> Option<bool> {
+    let is_rational = eval_is_rational(e);
+    if is_rational == Some(false) {
+        return Some(false);
+    }
+
+    let mut numerators = Vec::new();
+    let mut denominators = Vec::new();
+    let mut unknown = false;
+    for a in e.args() {
+        let mut hit = false;
+        if a.is_integer() == Some(true) {
+            if !ops::abs(a).is_cls(C::One) {
+                numerators.push(a.clone());
+            }
+        } else if a.is_Rational() {
+            let (n, d) = a.as_numer_denom();
+            if !ops::abs(&n).is_cls(C::One) {
+                numerators.push(n);
+            }
+            if !d.is_cls(C::One) {
+                denominators.push(d);
+            }
+        } else if a.is_Pow() {
+            let (b, ex) = a.as_base_exp();
+            if b.is_integer() != Some(true) || ex.is_integer() != Some(true) {
+                hit = true;
+                unknown = true;
+            }
+            if ex.is_negative() == Some(true) {
+                denominators.push(if a.is_cls(C::Half) {
+                    Expr::integer(2)
+                } else {
+                    pow(a, &s::negative_one())
+                });
+            } else if !hit {
+                // int b and pos int e: a = b**e is integer
+                assert!(ex.is_positive() != Some(true));
+                // for rational self and e equal to zero: a = b**e is 1
+                assert!(ex.is_zero() != Some(true));
+                return None; // sign of e unknown -> self.is_integer unknown
+            } else {
+                // x**2, 2**x, or x**y with x and y int-unknown -> unknown
+                return None;
+            }
+        } else {
+            return None;
+        }
+    }
+
+    if denominators.is_empty() && !unknown {
+        return Some(true);
+    }
+
+    let allodd = |x: &[Expr]| x.iter().all(|i| i.is_odd() == Some(true));
+    let alleven = |x: &[Expr]| x.iter().all(|i| i.is_even() == Some(true));
+    let anyeven = |x: &[Expr]| x.iter().any(|i| i.is_even() == Some(true));
+
+    if numerators.is_empty()
+        && !denominators.is_empty()
+        && denominators
+            .iter()
+            .all(|d| crate::relational::is_gt(d, &s::one()) == Some(true))
+    {
+        return Some(false);
+    } else if unknown {
+        return None;
+    } else if allodd(&numerators) && anyeven(&denominators) {
+        return Some(false);
+    } else if anyeven(&numerators) && denominators == [Expr::integer(2)] {
+        return Some(true);
+    } else if alleven(&numerators)
+        && allodd(&denominators)
+        && ops::sub(&mul_with(denominators.clone(), false), &s::one()).is_positive() == Some(true)
+    {
+        return Some(false);
+    }
+    if denominators.len() == 1 {
+        let d = &denominators[0];
+        if d.is_Integer()
+            && d.is_even() == Some(true)
+            // if minimal power of 2 in num vs den is not
+            // negative then we have an integer
+            && twos_minus_trailing(&numerators, &d.p()).is_nonnegative() == Some(true)
+        {
+            return Some(true);
+        }
+    }
+    if numerators.len() == 1 {
+        let n = &numerators[0];
+        if n.is_Integer()
+            && n.is_even() == Some(true)
+            // if minimal power of 2 in den vs num is positive
+            // then we have have a non-integer
+            && twos_minus_trailing(&denominators, &n.p()).is_positive() == Some(true)
+        {
+            return Some(false);
+        }
+    }
+    None
+}
+
+/// `Mul._eval_is_polar`.
+fn eval_is_polar(e: &Expr) -> Option<bool> {
+    let has_polar = e.args().iter().any(|a| a.is_polar() == Some(true));
+    Some(
+        has_polar
+            && e.args()
+                .iter()
+                .all(|a| a.is_polar() == Some(true) || a.is_positive() == Some(true)),
+    )
+}
+
+/// `Mul._eval_real_imag(real)`.
+fn eval_real_imag(e: &Expr, mut real: bool) -> Option<bool> {
+    let mut zero = Some(false);
+    let mut t_not_re_im: Option<Expr> = None;
+    let truthy = |t: &Option<Expr>| t.as_ref().is_some_and(Expr::truthy);
+
+    for t in e.args() {
+        // (t.is_complex or t.is_infinite) is False and t.is_extended_real is False
+        if t.is_complex() != Some(true)
+            && t.is_infinite() == Some(false)
+            && t.is_extended_real() == Some(false)
+        {
+            return Some(false);
+        } else if t.is_imaginary() == Some(true) {
+            // I
+            real = !real;
+        } else if t.is_extended_real() == Some(true) {
+            // 2
+            if zero != Some(true) {
+                let z = t.is_zero();
+                if z != Some(true) && zero == Some(false) {
+                    zero = z;
+                } else if z == Some(true) {
+                    if e.args().iter().all(|a| a.is_finite() == Some(true)) {
+                        return Some(true);
+                    }
+                    return None;
+                }
+            }
+        } else if t.is_extended_real() == Some(false) {
+            // symbolic or literal like `2 + I` or symbolic imaginary
+            if truthy(&t_not_re_im) {
+                return None; // complex terms might cancel
+            }
+            t_not_re_im = Some(t.clone());
+        } else if t.is_imaginary() == Some(false) {
+            // symbolic like `2` or `2 + I`
+            if truthy(&t_not_re_im) {
+                return None; // complex terms might cancel
+            }
+            t_not_re_im = Some(t.clone());
+        } else {
+            return None;
+        }
+    }
+
+    if truthy(&t_not_re_im) {
+        let t = t_not_re_im.expect("set");
+        if t.is_extended_real() == Some(false) && real {
+            // like 3
+            return zero; // 3*(smthng like 2 + I or i) is not real
+        }
+        if t.is_imaginary() == Some(false) && !real {
+            // like I
+            return zero; // I*(smthng like 2 or 2 + I) is not real
+        }
+    } else if zero == Some(false) {
+        return Some(real); // can't be trumped by 0
+    } else if real {
+        return Some(real); // doesn't matter what zero is
+    }
+    None
+}
+
+/// `Mul._eval_is_imaginary`.
+fn eval_is_imaginary(e: &Expr) -> Option<bool> {
+    if e.args()
+        .iter()
+        .all(|a| a.is_zero() == Some(false) && a.is_finite() == Some(true))
+    {
+        return eval_real_imag(e, false);
+    }
+    None
+}
+
+/// `Mul._eval_herm_antiherm(herm)`.
+fn eval_herm_antiherm(e: &Expr, mut herm: bool) -> Option<bool> {
+    for t in e.args() {
+        let (h, ah) = (t.is_hermitian(), t.is_antihermitian());
+        if h.is_none() || ah.is_none() {
+            return None;
+        }
+        if h == Some(true) {
+            continue;
+        } else if ah == Some(true) {
+            herm = !herm;
+        } else {
+            return None;
+        }
+    }
+
+    if herm {
+        return Some(herm);
+    }
+
+    match eval_is_zero(e) {
+        Some(true) => Some(true),
+        Some(false) => Some(herm),
+        None => None,
+    }
+}
+
+/// `Mul._eval_is_irrational`.
+fn eval_is_irrational(e: &Expr) -> Option<bool> {
+    for (k, t) in e.args().iter().enumerate() {
+        let a = t.is_irrational();
+        if a == Some(true) {
+            // others = list(self.args); others.remove(t)
+            let first = e.args().iter().position(|x| x == t).unwrap_or(k);
+            if e.args()
+                .iter()
+                .enumerate()
+                .filter(|(j, _)| *j != first)
+                .all(|(_, x)| x.is_rational() == Some(true) && fuzzy_not(x.is_zero()) == Some(true))
+            {
+                return Some(true);
+            }
+            return None;
+        }
+        a?;
+    }
+    if e.args().iter().all(|x| x.is_real() == Some(true)) {
+        return Some(false);
+    }
+    None
+}
+
+/// `Mul._eval_pos_neg(sign)`.
+fn eval_pos_neg(e: &Expr, mut sign: i32) -> Option<bool> {
+    let (mut saw_non, mut saw_not) = (false, false);
+    for t in e.args() {
+        if t.is_extended_positive() == Some(true) {
+            continue;
+        } else if t.is_extended_negative() == Some(true) {
+            sign = -sign;
+        } else if t.is_zero() == Some(true) {
+            if e.args().iter().all(|a| a.is_finite() == Some(true)) {
+                return Some(false);
+            }
+            return None;
+        } else if t.is_extended_nonpositive() == Some(true) {
+            sign = -sign;
+            saw_non = true;
+        } else if t.is_extended_nonnegative() == Some(true) {
+            saw_non = true;
+        // FIXME: is_positive/is_negative is False doesn't take account of
+        // Symbol('x', infinite=True, extended_real=True) which has
+        // e.g. is_positive is False but has uncertain sign.
+        } else if t.is_positive() == Some(false) {
+            sign = -sign;
+            if saw_not {
+                return None;
+            }
+            saw_not = true;
+        } else if t.is_negative() == Some(false) {
+            if saw_not {
+                return None;
+            }
+            saw_not = true;
+        } else {
+            return None;
+        }
+    }
+    if sign == 1 && !saw_non && !saw_not {
+        return Some(true);
+    }
+    if sign < 0 {
+        return Some(false);
+    }
+    None
+}
+
+/// `Mul._eval_is_odd`.
+fn eval_is_odd(e: &Expr) -> Option<bool> {
+    let is_integer = eval_is_integer(e);
+    if is_integer != Some(true) {
+        return is_integer;
+    }
+
+    let (n, d) = crate::exprtools::fraction(e, false);
+    if d.is_Integer() && d.is_even() == Some(true) {
+        // if minimal power of 2 in num vs den is
+        // positive then we have an even number
+        if twos_minus_trailing(&make_args(&n), &d.p()).is_positive() == Some(true) {
+            return Some(false);
+        }
+        return None;
+    }
+    let mut r = Some(true);
+    let mut acc = s::one();
+    for t in e.args() {
+        if ops::abs(t).is_cls(C::One) {
+            continue;
+        }
+        if t.is_even() == Some(true) {
+            return Some(false);
+        }
+        if r == Some(false) {
+        } else if acc != s::one() && ops::add(&acc, t).is_odd() == Some(true) {
+            r = Some(false);
+        } else if t.is_even().is_none() {
+            r = None;
+        }
+        acc = t.clone();
+    }
+    r
+}
+
+/// `Mul._eval_is_even`.
+fn eval_is_even(e: &Expr) -> Option<bool> {
+    let (n, d) = crate::exprtools::fraction(e, false);
+    if n.is_Integer()
+        && n.is_even() == Some(true)
+        // if minimal power of 2 in den vs num is not
+        // negative then this is not an integer and
+        // can't be even
+        && twos_minus_trailing(&make_args(&d), &n.p()).is_nonnegative() == Some(true)
+    {
+        return Some(false);
+    }
+    None
+}
+
+/// `Mul._eval_is_composite`.
+fn eval_is_composite(e: &Expr) -> Option<bool> {
+    // count of symbols with minimum value greater than one
+    let mut number_of_args = 0;
+    for arg in e.args() {
+        if !(arg.is_integer() == Some(true) && arg.is_positive() == Some(true)) {
+            return None;
+        }
+        if ops::sub(arg, &s::one()).is_positive() == Some(true) {
+            number_of_args += 1;
+        }
+    }
+    if number_of_args > 1 {
+        return Some(true);
+    }
+    None
 }

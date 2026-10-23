@@ -8,7 +8,11 @@
 //! shuffles it with a seeded RNG. Set order of strings depends on the hash
 //! seed, so it can't be reproduced in general; rsympy visits them in fact
 //! order. With handlers consistent with the rules (SymPy's intent), the
-//! order does not change any answer.
+//! order does not change any answer. A few SymPy handlers are not (e.g.
+//! `Mul._eval_is_even` calls `Mul(p, 0)` not even), so some answers, such
+//! as `Mul(p, 0, evaluate=False).is_hermitian`, vary with SymPy's hash
+//! seed; rsympy gives SymPy's answer for fact order, and the oracle leaves
+//! those cases out (oracle/gen_diff_arith_facts.py).
 
 use crate::expr::Expr;
 use crate::facts::{Fact, Kb, facts_in};
@@ -17,6 +21,11 @@ use crate::generated::{ClassId, PREREQ};
 impl Expr {
     /// `self.is_<fact>`.
     pub fn is(&self, fact: Fact) -> Option<bool> {
+        if fact == Fact::Commutative
+            && let Some(c) = self.0.commutative_slot
+        {
+            return c;
+        }
         if let Some(v) = self.assumptions_kb().lookup(fact) {
             return v;
         }

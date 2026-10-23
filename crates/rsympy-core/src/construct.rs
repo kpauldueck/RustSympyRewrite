@@ -3,17 +3,13 @@
 use crate::assume::fuzzy_and;
 use crate::error::not_ported;
 use crate::expr::{Data, Expr};
-use crate::facts::Fact;
 use crate::generated::{ClassId as C, Tag};
 
 /// A node with its class's default assumptions and `is_commutative` set
-/// as an attribute, the way `AssocOp` and `Pow` store it.
+/// as an attribute, the way `AssocOp` and `Pow` store it (outside
+/// `_assumptions`).
 pub(crate) fn node_with_commutative(cls: C, args: Vec<Expr>, commutative: Option<bool>) -> Expr {
-    let e = Expr::make(cls, Data::None, args);
-    let mut kb = e.assumptions_kb();
-    kb.tell(Fact::Commutative, commutative);
-    e.merge_kb(kb);
-    e
+    Expr::make_with_commutative_slot(cls, args, commutative)
 }
 
 /// `AssocOp._from_args(args, is_commutative)` for Add and Mul.

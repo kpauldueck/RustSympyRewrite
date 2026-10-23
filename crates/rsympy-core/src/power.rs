@@ -3,6 +3,7 @@
 //! Ported from `sympy/core/power.py`. The `_eval_is_*` handlers live in
 //! [`handler`] at the bottom.
 
+use crate::assume::{fuzzy_and, fuzzy_not, fuzzy_or};
 use crate::error::{ErrorKind, not_ported, raise};
 use crate::expr::Expr;
 use crate::facts::Fact;
@@ -466,6 +467,501 @@ pub fn expand_power_base_with(p: &Expr, force: bool) -> Expr {
 
 /// `type(e)._prop_handler[fact](e)` for a Pow.
 pub(crate) fn handler(e: &Expr, fact: Fact) -> Option<bool> {
-    let _ = (e, fact);
-    not_ported("Pow assumptions")
+    let (b, x) = (e.arg(0), e.arg(1));
+    match fact {
+        Fact::Even => {
+            if x.is_integer() == Some(true) && x.is_positive() == Some(true) {
+                return b.is_even();
+            }
+            None
+        }
+        Fact::Negative => {
+            let ext_neg = eval_is_extended_negative(b, x);
+            if ext_neg == Some(true) {
+                return e.is_finite();
+            }
+            ext_neg
+        }
+        Fact::ExtendedPositive => eval_is_extended_positive(b, x),
+        Fact::ExtendedNegative => eval_is_extended_negative(b, x),
+        Fact::Zero => eval_is_zero(b, x),
+        Fact::Integer => eval_is_integer(e, b, x),
+        Fact::ExtendedReal => eval_is_extended_real(b, x),
+        Fact::Complex => {
+            // XXX: is_complex should be is_finite_complex
+            if b == &s::exp1() {
+                return fuzzy_or([x.is_complex(), x.is_extended_negative()]);
+            }
+            if e.args().iter().all(|a| a.is_complex() == Some(true))
+                && eval_is_finite(b, x) == Some(true)
+            {
+                return Some(true);
+            }
+            None
+        }
+        Fact::Imaginary => eval_is_imaginary(b, x),
+        Fact::Odd => {
+            if x.is_integer() == Some(true) {
+                if x.is_positive() == Some(true) {
+                    return b.is_odd();
+                } else if x.is_nonnegative() == Some(true) && b.is_odd() == Some(true) {
+                    return Some(true);
+                } else if b.is_cls(C::NegativeOne) {
+                    return Some(true);
+                }
+            }
+            None
+        }
+        Fact::Finite => eval_is_finite(b, x),
+        Fact::Prime => {
+            // An integer raised to the n(>=2)-th power cannot be a prime.
+            if b.is_integer() == Some(true)
+                && x.is_integer() == Some(true)
+                && ops::sub(x, &s::one()).is_positive() == Some(true)
+            {
+                return Some(false);
+            }
+            None
+        }
+        Fact::Composite => {
+            // A power is composite if both base and exponent are greater
+            // than 1
+            if b.is_integer() == Some(true)
+                && x.is_integer() == Some(true)
+                && ((ops::sub(b, &s::one()).is_positive() == Some(true)
+                    && ops::sub(x, &s::one()).is_positive() == Some(true))
+                    || (ops::add(b, &s::one()).is_negative() == Some(true)
+                        && x.is_positive() == Some(true)
+                        && x.is_even() == Some(true)))
+            {
+                return Some(true);
+            }
+            None
+        }
+        Fact::Polar => b.is_polar(),
+        Fact::Rational => eval_is_rational(e),
+        Fact::Algebraic => eval_is_algebraic(e, b, x),
+        _ => unreachable!("Pow has no handler for {fact:?}"),
+    }
+}
+
+fn log(b: &Expr) -> Expr {
+    crate::functions::call(C::Log, vec![b.clone()])
+}
+
+/// `Pow._eval_is_extended_positive`.
+fn eval_is_extended_positive(b: &Expr, x: &Expr) -> Option<bool> {
+    if b == x {
+        if b.is_extended_nonnegative() == Some(true) {
+            return Some(true);
+        }
+    } else if b.is_positive() == Some(true) {
+        if x.is_real() == Some(true) {
+            return Some(true);
+        }
+    } else if b.is_extended_negative() == Some(true) {
+        if x.is_even() == Some(true) {
+            return Some(true);
+        }
+        if x.is_odd() == Some(true) {
+            return Some(false);
+        }
+    } else if b.is_zero() == Some(true) {
+        if x.is_extended_real() == Some(true) {
+            return x.is_zero();
+        }
+    } else if b.is_extended_nonpositive() == Some(true) {
+        if x.is_odd() == Some(true) {
+            return Some(false);
+        }
+    } else if b.is_imaginary() == Some(true) {
+        if x.is_integer() == Some(true) {
+            let m = ops::rem(x, &Expr::integer(4));
+            if m.is_zero() == Some(true) {
+                return Some(true);
+            }
+            if m.is_integer() == Some(true) && m.is_zero() == Some(false) {
+                return Some(false);
+            }
+        }
+        if x.is_imaginary() == Some(true) {
+            return log(b).is_imaginary();
+        }
+    }
+    None
+}
+
+/// `Pow._eval_is_extended_negative`.
+fn eval_is_extended_negative(b: &Expr, x: &Expr) -> Option<bool> {
+    if x.is_cls(C::Half) && (b.is_complex() == Some(true) || b.is_extended_real() == Some(true)) {
+        return Some(false);
+    }
+    if b.is_extended_negative() == Some(true) {
+        if x.is_odd() == Some(true) && b.is_finite() == Some(true) {
+            return Some(true);
+        }
+        if x.is_even() == Some(true) {
+            return Some(false);
+        }
+    } else if b.is_extended_positive() == Some(true) {
+        if x.is_extended_real() == Some(true) {
+            return Some(false);
+        }
+    } else if b.is_zero() == Some(true) {
+        if x.is_extended_real() == Some(true) {
+            return Some(false);
+        }
+    } else if b.is_extended_nonnegative() == Some(true) {
+        if x.is_extended_nonnegative() == Some(true) {
+            return Some(false);
+        }
+    } else if b.is_extended_nonpositive() == Some(true) || b.is_extended_real() == Some(true) {
+        // (two branches in SymPy, both `if exp.is_even: return False`)
+        if x.is_even() == Some(true) {
+            return Some(false);
+        }
+    }
+    None
+}
+
+/// `Pow._eval_is_zero`.
+fn eval_is_zero(b: &Expr, x: &Expr) -> Option<bool> {
+    if b.is_zero() == Some(true) {
+        if x.is_extended_positive() == Some(true) {
+            return Some(true);
+        } else if x.is_extended_nonpositive() == Some(true) {
+            return Some(false);
+        }
+    } else if b == &s::exp1() {
+        return Some(x.is_cls(C::NegativeInfinity));
+    } else if b.is_zero() == Some(false) {
+        if b.is_finite() == Some(true) && x.is_finite() == Some(true) {
+            return Some(false);
+        } else if x.is_negative() == Some(true) {
+            return b.is_infinite();
+        } else if x.is_nonnegative() == Some(true) {
+            return Some(false);
+        } else if x.is_infinite() == Some(true) && x.is_extended_real() == Some(true) {
+            let one_minus_abs = ops::sub(&s::one(), &ops::abs(b));
+            if one_minus_abs.is_extended_positive() == Some(true) {
+                return x.is_extended_positive();
+            } else if one_minus_abs.is_extended_negative() == Some(true) {
+                return x.is_extended_negative();
+            }
+        }
+    } else if b.is_finite() == Some(true) && x.is_negative() == Some(true) {
+        // when self.base.is_zero is None
+        return Some(false);
+    }
+    None
+}
+
+/// `Pow._eval_is_integer`.
+fn eval_is_integer(p: &Expr, b: &Expr, e: &Expr) -> Option<bool> {
+    if b.is_rational() == Some(true)
+        && b.is_integer() == Some(false)
+        && e.is_positive() == Some(true)
+    {
+        return Some(false); // rat**nonneg
+    }
+    if b.is_integer() == Some(true) && e.is_integer() == Some(true) {
+        if b.is_cls(C::NegativeOne) {
+            return Some(true);
+        }
+        if e.is_nonnegative() == Some(true) || e.is_positive() == Some(true) {
+            return Some(true);
+        }
+    }
+    if b.is_integer() == Some(true)
+        && e.is_negative() == Some(true)
+        && (e.is_finite() == Some(true) || e.is_integer() == Some(true))
+        && fuzzy_not(ops::sub(b, &s::one()).is_zero()) == Some(true)
+        && fuzzy_not(ops::add(b, &s::one()).is_zero()) == Some(true)
+    {
+        return Some(false);
+    }
+    if b.is_Number() && e.is_Number() {
+        let check = p.func(p.args().to_vec());
+        return Some(check.is_Integer());
+    }
+    if e.is_negative() == Some(true)
+        && b.is_positive() == Some(true)
+        && ops::sub(b, &s::one()).is_positive() == Some(true)
+    {
+        return Some(false);
+    }
+    if e.is_negative() == Some(true)
+        && b.is_negative() == Some(true)
+        && ops::add(b, &s::one()).is_negative() == Some(true)
+    {
+        return Some(false);
+    }
+    None
+}
+
+/// `Pow._eval_is_extended_real`.
+fn eval_is_extended_real(b: &Expr, x: &Expr) -> Option<bool> {
+    if b.is_cls(C::Exp1) {
+        if x.is_extended_real() == Some(true) {
+            return Some(true);
+        } else if x.is_imaginary() == Some(true) {
+            let f = ops::div(
+                &ops::mul(&ops::mul(&Expr::integer(2), &s::imaginary_unit()), x),
+                &s::pi(),
+            );
+            return f.is_even();
+        }
+    }
+
+    let real_b = b.is_extended_real();
+    let Some(real_b) = real_b else {
+        if b.is_cls(C::Exp) && b.arg(0).is_imaginary() == Some(true) {
+            return x.is_imaginary();
+        }
+        if b.is_cls(C::Pow) && b.arg(0).is_cls(C::Exp1) && b.arg(1).is_imaginary() == Some(true) {
+            return x.is_imaginary();
+        }
+        return None;
+    };
+    let real_e = x.is_extended_real()?;
+    if real_b && real_e {
+        if b.is_extended_positive() == Some(true) {
+            return Some(true);
+        } else if b.is_extended_nonnegative() == Some(true)
+            && x.is_extended_nonnegative() == Some(true)
+        {
+            return Some(true);
+        } else if x.is_integer() == Some(true) && b.is_extended_nonzero() == Some(true) {
+            return Some(true);
+        } else if x.is_integer() == Some(true) && x.is_nonnegative() == Some(true) {
+            return Some(true);
+        } else if b.is_extended_negative() == Some(true) && x.is_Rational() {
+            return Some(false);
+        }
+    }
+    if real_e && x.is_extended_negative() == Some(true) && b.is_zero() == Some(false) {
+        return pow(b, &ops::neg(x)).is_extended_real();
+    }
+    let im_b = b.is_imaginary();
+    let im_e = x.is_imaginary();
+    if im_b == Some(true) {
+        if x.is_integer() == Some(true) {
+            if x.is_even() == Some(true) {
+                return Some(true);
+            } else if x.is_odd() == Some(true) {
+                return Some(false);
+            }
+        } else if im_e == Some(true) && log(b).is_imaginary() == Some(true) {
+            return Some(true);
+        } else if x.is_Add() {
+            let (c, a) = x.as_coeff_Add(false);
+            if c.truthy() && c.is_Integer() {
+                return crate::mul::mul_with(vec![pow(b, &c), pow(b, &a)], false)
+                    .is_extended_real();
+            }
+        } else if (b == &ops::neg(&s::imaginary_unit()) || b == &s::imaginary_unit())
+            && ops::div(x, &Expr::integer(2)).is_integer() == Some(false)
+        {
+            return Some(false);
+        }
+    }
+    if real_b && im_e == Some(true) {
+        if b.is_cls(C::NegativeOne) {
+            return Some(true);
+        }
+        not_ported("Pow._eval_is_extended_real: exp.coeff(I) (needs Expr.coeff)");
+    }
+
+    if !real_b && real_e {
+        // we already know it's not imag
+        if x.is_Rational() && x.p().is_one() {
+            return Some(false);
+        }
+        let i = ops::div(
+            &ops::mul(&crate::functions::call(C::Arg, vec![b.clone()]), x),
+            &s::pi(),
+        );
+        if i.is_complex() == Some(true) {
+            // finite
+            return i.is_integer();
+        }
+    }
+    None
+}
+
+/// `Pow._eval_is_imaginary`.
+fn eval_is_imaginary(b: &Expr, x: &Expr) -> Option<bool> {
+    if b.is_commutative() == Some(false) {
+        return Some(false);
+    }
+
+    if b.is_imaginary() == Some(true) && x.is_integer() == Some(true) {
+        return x.is_odd();
+    }
+
+    if b == &s::exp1() {
+        let f = ops::div(
+            &ops::mul(&Expr::integer(2), x),
+            &ops::mul(&s::pi(), &s::imaginary_unit()),
+        );
+        // exp(pi*integer) = 1 or -1, so not imaginary
+        if f.is_even() == Some(true) {
+            return Some(false);
+        }
+        // exp(pi*integer + pi/2) = I or -I, so it is imaginary
+        if f.is_odd() == Some(true) {
+            return Some(true);
+        }
+        return None;
+    }
+
+    if x.is_imaginary() == Some(true) && log(b).is_imaginary().is_some() {
+        return Some(false); // I**i -> real; (2*I)**i -> complex ==> not imaginary
+    }
+
+    if b.is_extended_real() == Some(true) && x.is_extended_real() == Some(true) {
+        if b.is_positive() == Some(true) {
+            return Some(false);
+        } else {
+            let rat = x.is_rational();
+            if rat != Some(true) {
+                return rat;
+            }
+            if x.is_integer() == Some(true) {
+                return Some(false);
+            } else {
+                let half = ops::mul(&Expr::integer(2), x).is_integer();
+                if half == Some(true) {
+                    return b.is_negative();
+                }
+                return half;
+            }
+        }
+    }
+
+    if b.is_extended_real() == Some(false) {
+        // we already know it's not imag
+        let i = ops::div(
+            &ops::mul(&crate::functions::call(C::Arg, vec![b.clone()]), x),
+            &s::pi(),
+        );
+        let isodd = ops::mul(&Expr::integer(2), &i).is_odd();
+        if isodd.is_some() {
+            return isodd;
+        }
+    }
+    None
+}
+
+/// `Pow._eval_is_finite`.
+fn eval_is_finite(b: &Expr, x: &Expr) -> Option<bool> {
+    if x.is_negative() == Some(true) {
+        if b.is_zero() == Some(true) {
+            return Some(false);
+        }
+        if b.is_infinite() == Some(true) || b.is_nonzero() == Some(true) {
+            return Some(true);
+        }
+    }
+    let c1 = b.is_finite()?;
+    let c2 = x.is_finite()?;
+    if c1 && c2 && (x.is_nonnegative() == Some(true) || fuzzy_not(b.is_zero()) == Some(true)) {
+        return Some(true);
+    }
+    None
+}
+
+/// `Pow._eval_is_rational`.
+fn eval_is_rational(e: &Expr) -> Option<bool> {
+    let (b, x) = (e.arg(0), e.arg(1));
+    // The evaluation of self.func below can be very expensive in the case
+    // of integer**integer if the exponent is large.  We should try to exit
+    // before that if possible:
+    if x.is_integer() == Some(true)
+        && b.is_rational() == Some(true)
+        && fuzzy_not(fuzzy_and([x.is_negative(), b.is_zero()])) == Some(true)
+    {
+        return Some(true);
+    }
+    let (bb, ee) = e.as_base_exp();
+    let p = pow(&bb, &ee); // in case it's unevaluated
+    if !p.is_Pow() {
+        return p.is_rational();
+    }
+    let (b, e) = p.as_base_exp();
+    if e.is_Rational() && b.is_Rational() {
+        // we didn't check that e is not an Integer
+        // because Rational**Integer autosimplifies
+        return Some(false);
+    }
+    if e.is_integer() == Some(true) {
+        if b.is_rational() == Some(true) {
+            if fuzzy_not(b.is_zero()) == Some(true) || e.is_nonnegative() == Some(true) {
+                return Some(true);
+            }
+            if b == e {
+                // always rational, even for 0**0
+                return Some(true);
+            }
+        } else if b.is_irrational() == Some(true) {
+            return e.is_zero();
+        }
+    }
+    if b.is_cls(C::Exp1) && e.is_rational() == Some(true) && e.is_nonzero() == Some(true) {
+        return Some(false);
+    }
+    None
+}
+
+/// `Pow._eval_is_algebraic`.
+fn eval_is_algebraic(p: &Expr, b: &Expr, x: &Expr) -> Option<bool> {
+    // _is_one(expr): (expr - 1).is_zero (False if the subtraction raises
+    // ValueError)
+    let is_one = |e: &Expr| -> Option<bool> {
+        crate::error::catch_kind(ErrorKind::ValueError, || ops::sub(e, &s::one()).is_zero())
+            .unwrap_or(Some(false))
+    };
+
+    if b.is_zero() == Some(true) || is_one(b) == Some(true) {
+        return Some(true);
+    } else if b.is_cls(C::Exp1) {
+        let s = p.func(p.args().to_vec());
+        if s.is_cls(C::Pow) {
+            if x.is_nonzero() == Some(true) {
+                if x.is_algebraic() == Some(true) {
+                    return Some(false);
+                } else if ops::div(x, &s::pi()).is_rational() == Some(true) {
+                    return Some(false);
+                } else if ops::div(x, &ops::mul(&s::imaginary_unit(), &s::pi())).is_rational()
+                    == Some(true)
+                {
+                    return Some(true);
+                }
+            }
+        } else {
+            return s.is_algebraic();
+        }
+    } else if x.is_rational() == Some(true) {
+        if b.is_algebraic() == Some(false) {
+            return x.is_zero();
+        }
+        if b.is_zero() == Some(false) {
+            if x.is_nonzero() == Some(true) {
+                return b.is_algebraic();
+            } else if b.is_algebraic() == Some(true) {
+                return Some(true);
+            }
+        }
+        if x.is_positive() == Some(true) {
+            return b.is_algebraic();
+        }
+    } else if b.is_algebraic() == Some(true)
+        && x.is_algebraic() == Some(true)
+        && ((fuzzy_not(b.is_zero()) == Some(true) && fuzzy_not(is_one(b)) == Some(true))
+            || b.is_integer() == Some(false)
+            || b.is_irrational() == Some(true))
+    {
+        return x.is_rational();
+    }
+    None
 }

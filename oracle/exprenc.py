@@ -164,6 +164,10 @@ def vector(op, args, fn, **params):
     if params:
         vec["params"] = params
     fresh_state()
+    # Call fn on fresh copies, as the Rust side does: SymPy objects cache
+    # the facts they work out (obj._assumptions), so reusing an object
+    # would make this answer depend on earlier vectors.
+    args = [dec(enc(a)) if isinstance(a, sp.Basic) else a for a in args]
     try:
         out = fn(*args)
     except Exception as exc:  # noqa: BLE001: the exception is the answer

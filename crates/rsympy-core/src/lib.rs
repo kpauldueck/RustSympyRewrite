@@ -28,6 +28,9 @@
 #![allow(dead_code)]
 // Expr caches assumptions in an atomic, but Hash and Eq never read it.
 #![allow(clippy::mutable_key_type)]
+// Ports keep SymPy's if/elif chains branch for branch, so they can be read
+// side by side, even where two branches return the same value.
+#![allow(clippy::if_same_then_else)]
 
 pub mod add;
 pub mod assume;
