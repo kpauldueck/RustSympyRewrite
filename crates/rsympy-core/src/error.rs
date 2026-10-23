@@ -36,6 +36,12 @@ pub enum ErrorKind {
     OverflowError,
     IndexError,
     KeyError,
+    /// `sympy.core.function.BadSignatureError` (a `TypeError` subclass).
+    BadSignatureError,
+    /// `sympy.core.function.BadArgumentsError` (a `TypeError` subclass).
+    BadArgumentsError,
+    /// `sympy.core.function.ArgumentIndexError` (a `ValueError` subclass).
+    ArgumentIndexError,
     NotPortedYet,
 }
 
@@ -60,6 +66,9 @@ impl ErrorKind {
             ErrorKind::OverflowError => "OverflowError",
             ErrorKind::IndexError => "IndexError",
             ErrorKind::KeyError => "KeyError",
+            ErrorKind::BadSignatureError => "BadSignatureError",
+            ErrorKind::BadArgumentsError => "BadArgumentsError",
+            ErrorKind::ArgumentIndexError => "ArgumentIndexError",
             ErrorKind::NotPortedYet => "NotPortedYet",
         }
     }
@@ -74,6 +83,9 @@ impl ErrorKind {
                     | (ErrorKind::ComplexResult, ErrorKind::ValueError)
                     | (ErrorKind::SympifyError, ErrorKind::ValueError)
                     | (ErrorKind::TokenError, ErrorKind::SyntaxError)
+                    | (ErrorKind::BadSignatureError, ErrorKind::TypeError)
+                    | (ErrorKind::BadArgumentsError, ErrorKind::TypeError)
+                    | (ErrorKind::ArgumentIndexError, ErrorKind::ValueError)
             )
     }
 }

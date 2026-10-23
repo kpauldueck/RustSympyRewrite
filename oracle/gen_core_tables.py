@@ -133,6 +133,8 @@ CLASSES = [
     ("IndexedBase", sp.IndexedBase),
     ("Idx", sp.Idx),
     ("AccumulationBounds", sp.AccumBounds),
+    ("IdentityFunction", sp.functions.elementary.miscellaneous.IdentityFunction),
+    ("WildFunction", sp.core.function.WildFunction),
 ]
 
 # Abstract classes code asks `isinstance` about. Each class row gets a bit

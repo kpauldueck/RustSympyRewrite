@@ -1,0 +1,201 @@
+"""Generate the tables rsympy-core's function framework (the `Head` trait of
+crates/rsympy-core/src/functions/mod.rs) dispatches on, from the pinned SymPy.
+
+    PYTHONHASHSEED=0 SYMPY_GROUND_TYPES=python .venv/bin/python oracle/gen_tables_function.py
+
+Writes crates/rsympy-core/src/generated_function.rs. For every class in
+oracle/gen_core_tables.py's CLASSES (the `ClassId` order) it records, read
+off the live classes:
+
+- `cls._nargs`, as `FunctionClass.__init__` canonicalized it (for
+  `Application` subclasses; `None` means any number of arguments);
+- the `nargs` an instance gets in `Application.__new__`: the canonicalized
+  `nargs` class attribute when the MRO has one, else `cls._nargs`;
+- the classes of CLASSES it is a subclass of (for `isinstance(obj, cls)`);
+- for each hook in HOOKS, the class in the MRO that defines it ('' if
+  none), so a class overriding a hook rsympy has not ported raises
+  NotPortedYet instead of silently getting the inherited behaviour;
+- every `_eval_rewrite_as_<target>` and `_eval_expand_<hint>` method the
+  class has, with the class that defines it;
+- the mpmath function `Function._eval_evalf` looks up for the class
+  (`_get_mpmath_func(cls.__name__)`, through lambdify's
+  `MPMATH_TRANSLATIONS`), '' when it finds none.
+
+CI regenerates the file and fails if it differs from what is committed.
+"""
+
+import pathlib
+import subprocess
+
+import mpmath
+import sympy as sp
+from sympy.core.function import AppliedUndef, Application
+from sympy.external.gmpy import GROUND_TYPES
+from sympy.utilities.iterables import is_sequence
+from sympy.utilities.misc import as_int
+from sympy.core.sorting import ordered
+from sympy.utilities.lambdify import MPMATH_TRANSLATIONS
+
+from gen_core_tables import CLASSES, method_variant
+
+assert sp.__version__ == "1.14.0", sp.__version__
+assert GROUND_TYPES == "python", "set SYMPY_GROUND_TYPES=python"
+
+OUT = (pathlib.Path(__file__).parent.parent / "crates" / "rsympy-core" / "src"
+       / "generated_function.rs")
+
+# The methods (and attributes) of the Head trait, by their SymPy names.
+HOOKS = [
+    "__new__", "eval", "_should_evalf", "class_key", "fdiff", "inverse",
+    "_eval_subs", "_eval_evalf", "_eval_conjugate", "_eval_transpose",
+    "_eval_adjoint", "_eval_power", "as_base_exp", "as_numer_denom",
+    "as_real_imag", "_eval_derivative", "_eval_nseries",
+    "_eval_as_leading_term", "_eval_aseries", "_eval_simplify",
+    "_eval_is_meromorphic", "_eval_rewrite", "_eval_Abs", "_eval_Mod",
+    "doit", "_eval_mpmath", "_imp_", "_sympystr", "_sympyrepr", "_latex",
+    "_pretty", "__call__", "matches", "free_symbols", "taylor_term",
+    "is_singular", "rewrite", "_rewrite",
+]
+
+
+def hook_variants():
+    """Rust variant names for HOOKS: `method_variant`, with a `_` appended
+    when two names map to the same variant (`rewrite`, `_rewrite`)."""
+    out = []
+    for m in HOOKS:
+        v = method_variant(m)
+        while v in out:
+            v += "_"
+        out.append(v)
+    return out
+
+
+def owner(cls, attr):
+    """The `__qualname__` of the class in `cls`'s MRO that defines `attr`."""
+    for k in cls.__mro__:
+        if attr in vars(k):
+            return k.__qualname__
+    return ""
+
+
+def canonical_nargs(nargs):
+    """`FunctionClass.__init__`'s canonicalization (also used by
+    `Application.__new__` for an instance's `nargs` attribute)."""
+    if is_sequence(nargs):
+        return tuple(ordered(set(nargs)))
+    if nargs is not None:
+        return (as_int(nargs),)
+    return None
+
+
+def instance_nargs(cls):
+    """What `Application.__new__` stores in `obj.nargs` (as a tuple, or None
+    for Naturals0): `getattr(obj, "nargs")` finds a class attribute in the
+    MRO, else `obj._nargs` is used."""
+    for k in cls.__mro__:
+        if "nargs" in vars(k):
+            v = vars(k)["nargs"]
+            assert not isinstance(v, property), (cls, k)
+            return canonical_nargs(v) or None
+    return cls._nargs or None
+
+
+def methods_with_prefix(cls, prefix):
+    names = sorted({m for k in cls.__mro__ for m in vars(k) if m.startswith(prefix)})
+    return [(m[len(prefix):], owner(cls, m)) for m in names]
+
+
+def mpmath_func(cls):
+    """The name of the mpmath function `Function._eval_evalf`'s
+    `_get_mpmath_func(self.func.__name__)` returns for instances of `cls`
+    ('' for None)."""
+    if not issubclass(cls, Application) or issubclass(cls, AppliedUndef):
+        return ""
+    fname = cls.__name__
+    if not hasattr(mpmath, fname):
+        fname = MPMATH_TRANSLATIONS.get(fname, None)
+        if fname is None:
+            return ""
+    assert callable(getattr(mpmath, fname)), fname
+    return fname
+
+
+def rust_str(s):
+    return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+def rust_nargs(n):
+    if n is None:
+        return "None"
+    assert all(isinstance(i, int) for i in n), n
+    return "Some(&[" + ", ".join(str(i) for i in n) + "])"
+
+
+def lines():
+    out = ["// @generated by oracle/gen_tables_function.py from SymPy 1.14.0. Do not edit.", ""]
+    out.append("use crate::generated::{ClassId, NUM_CLASSES};")
+    out.append("")
+    out.append("/// The hooks of the `Head` trait whose defining class `FUNCTION_INFO`")
+    out.append("/// records (`FunctionInfo::hooks`), by their SymPy names.")
+    out.append("#[allow(non_camel_case_types)]")
+    out.append("#[derive(Clone, Copy, Debug, PartialEq, Eq)]")
+    out.append("#[repr(u8)]")
+    out.append("pub enum Hook {")
+    for i, (m, v) in enumerate(zip(HOOKS, hook_variants())):
+        out.append(f"    /// `{m}`")
+        out.append(f"    {v} = {i},")
+    out.append("}")
+    out.append("")
+    out.append(f"pub(crate) const NUM_HOOKS: usize = {len(HOOKS)};")
+    out.append("")
+    out.append("/// What the function framework dispatches on, per class.")
+    out.append("pub(crate) struct FunctionInfo {")
+    out.append("    /// `cls._nargs` for an `Application` subclass: the allowed numbers of")
+    out.append("    /// arguments, sorted, or `None` for any number (`Naturals0`).")
+    out.append("    pub nargs: Option<&'static [i64]>,")
+    out.append("    /// The `nargs` an instance gets in `Application.__new__` (from a `nargs`")
+    out.append("    /// class attribute when the MRO has one, else `cls._nargs`).")
+    out.append("    pub instance_nargs: Option<&'static [i64]>,")
+    out.append("    /// The classes (in `ClassId` order) this class is a subclass of,")
+    out.append("    /// itself included.")
+    out.append("    pub supers: &'static [ClassId],")
+    out.append("    /// For each [`Hook`], the class whose `__dict__` defines it first in")
+    out.append("    /// the MRO, or \"\" if none does.")
+    out.append("    pub hooks: [&'static str; NUM_HOOKS],")
+    out.append("    /// `_eval_rewrite_as_<target>` methods: `(target, defining class)`.")
+    out.append("    pub rewrites: &'static [(&'static str, &'static str)],")
+    out.append("    /// `_eval_expand_<hint>` methods: `(hint, defining class)`.")
+    out.append("    pub expand_hints: &'static [(&'static str, &'static str)],")
+    out.append("    /// The mpmath function `Function._eval_evalf` evaluates instances with")
+    out.append("    /// (`_get_mpmath_func`), or \"\" when it finds none.")
+    out.append("    pub mpmath_func: &'static str,")
+    out.append("}")
+    out.append("")
+    out.append("/// Indexed by `ClassId`.")
+    out.append("pub(crate) static FUNCTION_INFO: [FunctionInfo; NUM_CLASSES] = [")
+    for name, cls in CLASSES:
+        is_app = issubclass(cls, Application)
+        out.append(f"    // {name}")
+        out.append("    FunctionInfo {")
+        out.append(f"        nargs: {rust_nargs(cls._nargs if is_app else None)},")
+        out.append(f"        instance_nargs: {rust_nargs(instance_nargs(cls) if is_app else None)},")
+        supers = [n for n, k in CLASSES if issubclass(cls, k)]
+        out.append("        supers: &[" + ", ".join(f"ClassId::{n}" for n in supers) + "],")
+        out.append("        hooks: [" + ", ".join(rust_str(owner(cls, h)) for h in HOOKS) + "],")
+        rw = methods_with_prefix(cls, "_eval_rewrite_as_")
+        out.append("        rewrites: &[" + ", ".join(
+            f"({rust_str(t)}, {rust_str(o)})" for t, o in rw) + "],")
+        ex = methods_with_prefix(cls, "_eval_expand_")
+        out.append("        expand_hints: &[" + ", ".join(
+            f"({rust_str(t)}, {rust_str(o)})" for t, o in ex) + "],")
+        out.append(f"        mpmath_func: {rust_str(mpmath_func(cls))},")
+        out.append("    },")
+    out.append("];")
+    out.append("")
+    return out
+
+
+if __name__ == "__main__":
+    OUT.write_text("\n".join(lines()))
+    subprocess.run(["rustfmt", "--edition", "2024", str(OUT)], check=True)
+    print(f"wrote {OUT}")

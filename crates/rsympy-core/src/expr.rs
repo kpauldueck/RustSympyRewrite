@@ -47,6 +47,9 @@ pub(crate) enum Data {
     Sym(Arc<SymbolData>),
     /// An undefined function's name, for `AppliedUndef` nodes.
     Undef(Arc<UndefData>),
+    /// A `WildFunction`'s `name` and `nargs` attributes, which its
+    /// `__eq__` and `__hash__` ignore (they compare `args` only).
+    WildFunction(Arc<WildFunctionData>),
     /// `Str.name`.
     Str(Arc<str>),
 }
@@ -72,6 +75,31 @@ pub struct UndefData {
     pub kwargs: Kb,
     /// The class's `default_assumptions`, which each `f(x)` starts from.
     pub assumptions: Kb,
+    /// The `nargs` keyword as given to `Function(name, nargs=...)` (`None`
+    /// when not given). It is part of `_kwargs`, so `__eq__` compares it as
+    /// given: `nargs=1` and `nargs=(1,)` make different functions.
+    pub nargs: Option<crate::functions::NargsArg>,
+}
+
+/// The attributes `WildFunction.__init__` sets on an instance: `name` (the
+/// string given) and `nargs`. Neither is part of `_hashable_content`, so
+/// they never make two `WildFunction`s unequal.
+#[derive(Clone, Debug)]
+pub struct WildFunctionData {
+    pub name: Arc<str>,
+    pub nargs: crate::functions::Nargs,
+}
+
+impl PartialEq for WildFunctionData {
+    fn eq(&self, _: &WildFunctionData) -> bool {
+        true
+    }
+}
+
+impl Eq for WildFunctionData {}
+
+impl Hash for WildFunctionData {
+    fn hash<H: Hasher>(&self, _: &mut H) {}
 }
 
 impl Node {
@@ -271,6 +299,7 @@ impl Expr {
             Data::Sym(s) => Some(&s.name),
             Data::Undef(u) => Some(&u.name),
             Data::Str(s) => Some(s),
+            Data::WildFunction(w) => Some(&w.name),
             _ => None,
         }
     }
@@ -278,6 +307,13 @@ impl Expr {
     pub(crate) fn undef_data(&self) -> Option<&Arc<UndefData>> {
         match &self.0.data {
             Data::Undef(u) => Some(u),
+            _ => None,
+        }
+    }
+
+    pub(crate) fn wild_function_data(&self) -> Option<&Arc<WildFunctionData>> {
+        match &self.0.data {
+            Data::WildFunction(w) => Some(w),
             _ => None,
         }
     }
