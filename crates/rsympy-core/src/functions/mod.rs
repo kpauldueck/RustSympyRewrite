@@ -185,6 +185,9 @@ pub trait Head: Send + Sync {
     }
 
     /// `cls(*args, evaluate=evaluate)`; `None` uses `global_parameters`.
+    /// (Named after `__new__`; it builds an instance of the class, which
+    /// is an `Expr`, not a `Head`.)
+    #[allow(clippy::new_ret_no_self, clippy::wrong_self_convention)]
     fn new(&self, args: Vec<Expr>, evaluate: Option<bool>) -> Expr {
         match hook_owner(self, Hook::New) {
             "DefinedFunction" | "Function" => application::function_new(self, args, evaluate),
@@ -566,16 +569,11 @@ pub(crate) fn expr_eval_is_extended_positive_negative(e: &Expr) -> Option<bool> 
         return None;
     }
     // check to see that we can get a value
-    let n2 = match crate::error::catch_kind(ErrorKind::ValueError, || eval_evalf_of(e, 2)) {
-        // XXX: This shouldn't be caught here
-        // Catches ValueError: hypsum() failed to converge to the requested
-        // number of digits
-        None => return None,
-        Some(n2) => n2,
-    };
-    if n2.is_none() {
-        return None;
-    }
+    // (`?`: the ValueError is caught and gives None, and so does n2 None)
+    // XXX: This shouldn't be caught here
+    // Catches ValueError: hypsum() failed to converge to the requested
+    // number of digits
+    let _n2 = crate::error::catch_kind(ErrorKind::ValueError, || eval_evalf_of(e, 2))??;
     not_ported(format!(
         "Expr._eval_is_extended_positive_negative for {} (needs evalf)",
         e.class_name()

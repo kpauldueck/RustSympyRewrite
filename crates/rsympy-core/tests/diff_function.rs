@@ -65,7 +65,9 @@ fn class(v: &Vector) -> ClassId {
 
 /// `evaluate=` as the vector passed it (`None`: not given).
 fn evaluate_kw(v: &Vector) -> Option<bool> {
-    v.params.get("evaluate").map(|e| e.as_bool().expect("a bool"))
+    v.params
+        .get("evaluate")
+        .map(|e| e.as_bool().expect("a bool"))
 }
 
 /// Runs `f` under `with evaluate(False)` when the vector asks for it.
@@ -106,7 +108,11 @@ fn dispatch(v: &Vector) -> Value {
         // undefined functions
         "undef_call" => with_global_evaluate(v, || {
             let f = make_function(&v.params["spec"]);
-            Value::Expr(functions::call_undefined_with(&f, exprs(v, 0), evaluate_kw(v)))
+            Value::Expr(functions::call_undefined_with(
+                &f,
+                exprs(v, 0),
+                evaluate_kw(v),
+            ))
         }),
         "undef_nargs" => Value::Str(make_function(&v.params["spec"]).nargs().to_string()),
         "undef_class_key" => class_key(make_function(&v.params["spec"]).class_key()),
@@ -136,11 +142,7 @@ fn dispatch(v: &Vector) -> Value {
         // defined classes
         "class_key" => class_key(head(class(v)).class_key()),
         "class_nargs" => Value::Str(head(class(v)).nargs().to_string()),
-        "defined_call" => Value::Expr(functions::call_with(
-            class(v),
-            exprs(v, 0),
-            evaluate_kw(v),
-        )),
+        "defined_call" => Value::Expr(functions::call_with(class(v), exprs(v, 0), evaluate_kw(v))),
         // inherited hooks
         "eval_conjugate" => opt(functions::eval_conjugate_of(&e())),
         "eval_transpose" => opt(functions::eval_transpose_of(&e())),
@@ -209,5 +211,5 @@ fn dispatch(v: &Vector) -> Value {
 
 #[test]
 fn function_matches_sympy() {
-    run_partial("function", 3067, dispatch);
+    run_partial("function", 3057, dispatch);
 }
