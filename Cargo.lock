@@ -85,6 +85,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "rsympy-core"
+version = "0.0.0"
+dependencies = [
+ "rsympy-mpf",
+ "rsympy-ntheory",
+ "rsympy-num",
+ "serde_json",
+]
+
+[[package]]
 name = "rsympy-mpf"
 version = "0.0.0"
 dependencies = [

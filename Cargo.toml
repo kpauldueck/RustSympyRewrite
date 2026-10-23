@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/rsympy-num", "crates/rsympy-ntheory", "crates/rsympy-mpf", "crates/rsympy"]
+members = ["crates/rsympy-num", "crates/rsympy-ntheory", "crates/rsympy-mpf", "crates/rsympy-core", "crates/rsympy"]
 
 [workspace.package]
 version = "0.0.0"

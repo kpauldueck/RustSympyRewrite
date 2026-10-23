@@ -10,7 +10,8 @@
 # Python 3.13. The first oracle run creates .venv/ with the pinned SymPy;
 # set PYTHON=/path/to/python to use an existing environment instead.
 #
-# The oracle step rewrites oracle/cases/ and oracle/diff/ from live SymPy,
+# The oracle step rewrites oracle/cases/, oracle/diff/ (every
+# oracle/gen_diff*.py) and rsympy-core's generated tables from live SymPy,
 # under two hash seeds, and fails if either run changes a committed file.
 # Those files are generated, never hand-edited, so nothing is lost.
 
@@ -61,8 +62,16 @@ oracle_checks() {
         step "regenerating the answer key (PYTHONHASHSEED=$seed)"
         PYTHONHASHSEED=$seed "$py" oracle/gen_cases.py
         PYTHONHASHSEED=$seed "$py" oracle/gen_diff.py
-        git diff --exit-code --stat oracle/cases oracle/diff \
+        for gen in oracle/gen_diff_*.py; do
+            PYTHONHASHSEED=$seed "$py" "$gen"
+        done
+        PYTHONHASHSEED=$seed "$py" oracle/gen_core_tables.py
+        git diff --exit-code --stat oracle/cases oracle/diff crates/rsympy-core/src/generated.rs \
             || fail "regenerated answers differ from the committed ones (seed $seed); see git diff oracle/"
+        if [[ -n "$(git ls-files --others --exclude-standard oracle/cases oracle/diff)" ]]; then
+            git ls-files --others --exclude-standard oracle/cases oracle/diff
+            fail "generators wrote files that are not committed (seed $seed)"
+        fi
     done
 }
 
