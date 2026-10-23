@@ -35,7 +35,7 @@ use rsympy_num::Int;
 /// `NotImplemented`.
 pub fn eq_py_bool(e: &Expr, b: bool) -> bool {
     match e.method_owner(Method::Eq) {
-        "Integer" => e.p() == rsympy_num::Int::from(b as i64),
+        "Integer" => e.p() == b as i64,
         "BooleanTrue" => b,
         "BooleanFalse" => !b,
         // Rational.__eq__: _sympify(b) is not a Number; Float.__eq__ ->
@@ -56,7 +56,7 @@ pub fn in_true_false(e: &Expr) -> bool {
 /// Python's `e == n` for a Python int `n`.
 fn eq_py_int(e: &Expr, n: i64) -> bool {
     match e.method_owner(Method::Eq) {
-        "Integer" => e.p() == rsympy_num::Int::from(n),
+        "Integer" => e.p() == n,
         // Rational.__eq__: a non-integer never equals Integer(n);
         // `BooleanTrue.__eq__(1)` -> Basic.__eq__ -> NotImplemented, and
         // `int.__eq__` -> NotImplemented, so identity decides.
@@ -235,7 +235,7 @@ fn or_new_args_filter(args: Vec<Expr>) -> Result<Vec<Expr>, ShortCircuit> {
                 continue;
             }
             let nc = canonical(&negated(&c));
-            if rel.iter().any(|r| *r == nc) {
+            if rel.contains(&nc) {
                 return Ok(vec![s::true_()]);
             }
             rel.push(c);
@@ -398,7 +398,7 @@ fn implies_eval(args: &[Expr]) -> Option<Expr> {
         unreachable!("bools are in (True, False)")
     };
     if a == b {
-        return Some(s::true_());
+        Some(s::true_())
     } else if a.is_Relational() && b.is_Relational() {
         if canonical(a) == canonical(b) {
             return Some(s::true_());
@@ -912,7 +912,7 @@ fn shift(a: &rsympy_num::Int, n: &rsympy_num::Int, left: bool) -> rsympy_num::In
         // word count of `PY_SSIZE_T_MAX / sizeof(digit)` or more to that,
         // and `_PyLong_New` refuses more than `MAX_LONG_DIGITS` digits.
         const SHIFT: u64 = 30;
-        let clip = Int::from((i64::MAX / 4) as i64);
+        let clip = Int::from(i64::MAX / 4);
         let max_long_digits = Int::from((i64::MAX - 24) / 4);
         let (wordshift, remshift) = if n.as_i64().is_some() {
             let k = n.as_u64().expect("a non-negative i64");
